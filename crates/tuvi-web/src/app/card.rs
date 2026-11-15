@@ -1,4 +1,4 @@
-//! `POST /card`: draws a card on the picked date (`features::gacha`).
+//! `POST /card`: casts the card of the birth form (`features::cast`).
 
 use topcoat::{
     Result,
@@ -7,24 +7,24 @@ use topcoat::{
     view::{View, view},
 };
 
-use crate::features::gacha::{BirthDate, gacha_screen, roll};
+use crate::features::cast::{BirthForm, CardCode, cast_screen};
 
 pub mod code;
 
-/// Draws a random hour and gender on the posted date, then opens the
-/// Bản mệnh deck of that card. A date that is not on the calendar shows the
-/// draw screen again with the date and the error.
+/// Checks the birth form, then opens the card. On bad input, shows the form
+/// again with the sent values and the error.
 #[page(POST)]
-pub async fn draw(cx: &Cx, Form(date): Form<BirthDate>) -> Result<impl View> {
-    let error = match roll(&mut rand::rng(), date) {
-        Ok((card, _)) => {
+pub async fn draw(cx: &Cx, Form(form): Form<BirthForm>) -> Result<impl View> {
+    let error = match form.validate() {
+        Ok(birth) => {
+            let card = CardCode(birth);
             return Err(see_other(href!(code::show, code: card).resolve(cx)).into());
         }
         Err(error) => error.message(cx),
     };
     Ok(view! {
         <main class="mx-auto max-w-5xl px-4 pb-16">
-            gacha_screen(date: Some(date), error: Some(error))
+            cast_screen(sent: Some(&form), error: Some(error))
         </main>
     })
 }

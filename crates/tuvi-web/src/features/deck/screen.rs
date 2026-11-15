@@ -8,17 +8,14 @@
 use topcoat::{
     Result,
     context::Cx,
-    router::error::not_found,
+    router::{error::not_found, href},
     view::{View, view},
 };
 use tuvi_core::Chart;
 
 use super::{destiny::destiny_card, facts::Facts};
 use crate::{
-    features::{
-        gacha::{BirthDate, card_name, redraw_button},
-        today::today_roadmap,
-    },
+    features::{cast::card_name, today::today_roadmap},
     i18n::Lang,
     t,
 };
@@ -85,7 +82,13 @@ pub async fn deck_screen(cx: &Cx, chart: &Chart, chart_url: String) -> Result<im
             <div class="w-full min-w-0">today_roadmap(chart: chart)</div>
         </div>
         <div class="mx-auto flex max-w-sm flex-col gap-3 px-4">
-            redraw_button(date: BirthDate::of(chart.input))
+            <a
+                href=(href!(crate::app::home).resolve(cx))
+                class="pill-primary flex h-[52px] items-center justify-center rounded-full text-[15px] font-semibold"
+            >
+                "✦ "
+                (t!(draw_again))
+            </a>
             <a
                 href=(chart_url)
                 class="pill-ghost flex h-12 items-center justify-center rounded-full text-sm font-semibold"

@@ -1,9 +1,9 @@
 # Thiên Hạc
 
-Thiên Hạc is a gacha app for **Lá Số Tử Vi** (Vietnamese astrology charts).
-The user picks a date, and one tap draws a Bản mệnh card on it: a real chart
-for that date, with a random hour and gender. Next to the card, a roadmap
-says what to do today, hour by hour.
+Thiên Hạc turns a birth moment into a **Lá Số Tử Vi** card (Vietnamese
+astrology). The user picks a birth date, hour and gender; the constellation
+of cung Mệnh lights up on the card as they pick; one tap draws the card.
+Next to it, a roadmap says what to do today, hour by hour.
 
 Thiên Hạc is one Rust binary. It has no database, no accounts and no AI.
 English is the main language; Vietnamese is the second.
@@ -24,11 +24,14 @@ English is the main language; Vietnamese is the second.
 Browser ──► tuvi-web (:3000, server-rendered HTML) ──► tuvi-core (chart engine)
 ```
 
-1. The home page shows date wheels (day, month, year 1900–2099), a
-   face-down card and the button **Draw a card**.
-2. The button posts the date to `/card`. The server picks a random hour
-   (0–23) and gender, so each of the 48 cards of a date is equally likely.
-   A date that is not on the calendar (for example 30/02) shows an error.
+1. The home page shows the birth form: date wheels (day, month, year
+   1900–2099), a 12-hour birth clock with AM/PM, and gender. Once the hour
+   is picked, the preview shard (`/cast/preview`) shows the constellation
+   of cung Mệnh on the card (or the open sky of vô chính diệu) and tints the
+   page accent.
+2. **Draw a card** posts the form to `/card`. The server checks every field;
+   a missing hour or gender, or a date that is not on the calendar, shows
+   the form again with an error.
 3. The server redirects to the card: `/card/{code}`, for example
    `/card/1996-04-15-22-nu`. The code is the birth moment.
 4. The card page builds the chart from the code. It shows Lá Bài Bản Mệnh
@@ -69,8 +72,8 @@ Nothing is stored. The URL is the card, so a card link can be shared. One
 chart takes about 1 µs to build, so each page builds it again.
 
 Topcoat renders all HTML on the server. There is no separate API and no
-JavaScript build step. One small static script (`gacha.js`) turns the date
-wheels, checks the date and shows the shuffle animation before the draw.
+JavaScript build step. One small static script (`cast.js`) turns the date
+wheels, winds the clock, shows the toasts and the casting animation.
 
 ## Setup
 
@@ -119,10 +122,10 @@ crates/
     src/i18n.rs                   languages: locale of a request, Lang, Text
     src/app.rs                    root layout, locale layer, home page (URL /), web manifest
     src/app/lang.rs               POST /lang (the language switch)
-    src/app/card.rs               POST /card (draws a card)
+    src/app/card.rs               POST /card (checks the birth form, opens the card)
     src/app/card/code.rs          GET /card/{code} (the Bản mệnh deck and today)
     src/app/card/code/chart.rs    GET /card/{code}/chart (the 12 cung)
-    src/features/gacha/           the draw, the card code, draw screen, loader, gacha.js
+    src/features/cast/            birth form, preview shard, card code, loader, cast.js
     src/features/deck/            Bản mệnh deck: destiny text, chart facts, constellations
     src/features/today/           today's roadmap: guide data, Vietnam clock, timeline
     src/features/charts/          chart grid, accent

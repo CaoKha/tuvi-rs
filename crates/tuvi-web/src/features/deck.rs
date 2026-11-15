@@ -14,5 +14,5 @@ mod destiny;
 mod facts;
 mod screen;
 
-pub use constellation::sky;
+pub use constellation::{chom_figure, chom_sao_of, sky};
 pub use screen::deck_screen;

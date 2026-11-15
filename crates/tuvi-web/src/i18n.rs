@@ -47,14 +47,6 @@ impl Lang {
         }
     }
 
-    /// The other language, for the switch.
-    pub fn other(self) -> Self {
-        match self {
-            Self::En => Self::Vi,
-            Self::Vi => Self::En,
-        }
-    }
-
     /// `en` or `vi`, by language.
     pub fn pick<T>(self, en: T, vi: T) -> T {
         match self {

@@ -5,18 +5,19 @@ use topcoat::{
     context::Cx,
     cookie::CookieLayer,
     font::{Font, RouterBuilderFontExt, fontsource::fontsource_font},
+    icon::{icon, iconify::iconify_icon},
     router::{
         Body, Next, RouterBuilder, Slot, content::Json, href, layer, layout, module_router, page,
         request::uri, response::Response, route,
     },
     runtime::RuntimeLayer,
     tailwind,
-    view::{View, view},
+    view::{View, class, view},
 };
 
 use crate::{
     features::{
-        gacha::gacha_screen,
+        cast::{cast_screen, menh_preview},
         shell::{LOGO, brand},
     },
     i18n::{Lang, request_locale},
@@ -58,6 +59,8 @@ pub fn router() -> RouterBuilder {
         .font(BODY_FONT)
         .assets(AssetBundle::load().unwrap())
         .route(web_manifest)
+        // The live preview of the birth form.
+        .route(menh_preview)
         // Reads and writes the language cookie.
         .layer(CookieLayer::new())
         // Lets the browser runtime rerun pages; register it after other layers.
@@ -131,7 +134,7 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                         class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 pt-6 pb-5"
                     >
                         brand()
-                        language_switch(lang: lang)
+                        language_menu(lang: lang)
                     </header>
                     (slot)
                 </div>
@@ -140,27 +143,61 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
     })
 }
 
-/// The language switch: one button that turns the page into the other
-/// language and comes back to it.
+/// The language menu: a language icon that opens a dropdown with every
+/// language; the page's own is checked. The dropdown is an HTML `popover`, so
+/// the browser opens and closes it without a script. Each choice posts to
+/// `/lang` and comes back to this page.
 #[topcoat::view::component]
-async fn language_switch(cx: &Cx, lang: Lang) -> Result<impl View> {
-    let other = lang.other();
+async fn language_menu(cx: &Cx, lang: Lang) -> Result<impl View> {
     let back = uri(cx)
         .path_and_query()
         .map_or("/", |path| path.as_str())
         .to_owned();
+    let action = href!(lang::switch).resolve(cx);
     Ok(view! {
-        <form method="post" action=(href!(lang::switch).resolve(cx))>
-            <input type="hidden" name="lang" value=(other.code())>
-            <input type="hidden" name="back" value=(back)>
+        <div class="relative">
             <button
-                type="submit"
-                lang=(other.code())
-                class="pill-ghost cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-semibold"
+                type="button"
+                popovertarget="language-menu"
+                aria-label=(t!(lang_menu_aria).resolve(cx))
+                style="anchor-name: --language-button"
+                class="pill-ghost inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-semibold"
             >
-                (other.pick("English", "Tiếng Việt"))
+                <span class="text-base text-accent">icon(data: iconify_icon!("lucide:languages"))</span>
+                (lang.pick("En", "Vi"))
             </button>
-        </form>
+            <div
+                id="language-menu"
+                popover="auto"
+                class="language-menu glass m-0 min-w-44 p-1.5 text-sm"
+            >
+                for option in [Lang::En, Lang::Vi] {
+                    <form method="post" action=(action.as_str())>
+                        <input type="hidden" name="lang" value=(option.code())>
+                        <input type="hidden" name="back" value=(back.as_str())>
+                        <button
+                            type="submit"
+                            lang=(option.code())
+                            aria-current=((option == lang).then_some("true"))
+                            class=(class!(
+                                "flex w-full cursor-pointer items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left transition-colors hover:bg-white/8",
+                                "font-semibold text-accent" if option == lang,
+                            ))
+                        >
+                            <span>
+                                <b class="mr-2 inline-block w-5 font-semibold">(option.pick("En", "Vi"))</b>
+                                <span class=(if option == lang { "" } else { "text-muted" })>
+                                    (option.pick("English", "Tiếng Việt"))
+                                </span>
+                            </span>
+                            if option == lang {
+                                <span aria-hidden="true">"✓"</span>
+                            }
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
     })
 }
 
@@ -183,6 +220,6 @@ async fn cosmos(cx: &Cx) -> Result<impl View> {
 #[page]
 pub async fn home(cx: &Cx) -> Result<impl View> {
     Ok(view! {
-        <main class="mx-auto max-w-5xl px-4 pb-16">gacha_screen(date: None, error: None)</main>
+        <main class="mx-auto max-w-5xl px-4 pb-16">cast_screen(sent: None, error: None)</main>
     })
 }

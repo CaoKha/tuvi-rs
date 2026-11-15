@@ -3,23 +3,31 @@
 use topcoat::{
     Result,
     context::Cx,
+    runtime::{Event, Signal},
     view::{View, view},
 };
 
-/// One wheel. `options` are the form values, shown as they are. `checked`
-/// is the value picked when the page opens.
+/// One wheel. `options` are the form values, shown as they are. `picked`
+/// holds the checked value; a change of radio updates it.
 #[topcoat::view::component]
 pub(super) async fn wheel(
     cx: &Cx,
     name: &'static str,
     label: String,
     options: Vec<String>,
-    checked: String,
+    picked: &Signal<String>,
 ) -> Result<impl View> {
+    let checked = picked.get_untracked();
     Ok(view! {
         <div>
             <p class="dial-label">(label.as_str())</p>
-            <div class="wheel" role="radiogroup" aria-label=(label.as_str()) data-wheel="">
+            <div
+                class="wheel"
+                role="radiogroup"
+                aria-label=(label.as_str())
+                data-wheel=""
+                @change=$(|e: Event| picked.set(e.target.value))
+            >
                 <div class="h-[55px]" aria-hidden="true"></div>
                 for option in options {
                     <label>

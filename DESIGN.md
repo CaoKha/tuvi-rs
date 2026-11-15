@@ -68,7 +68,9 @@ Both fonts load with the Vietnamese subset. Small labels are uppercase, bold,
 
 Every page has one header: the logo and the name, linked to the draw screen
 (`crates/tuvi-web/src/features/shell/`), and on the right the language switch
-(`pill-ghost`, labelled in the other language: "Tiếng Việt" or "English").
+(`pill-ghost`): the lucide `languages` icon and the page language, "En" or "Vi".
+A tap opens a `popover` dropdown (`.language-menu`) with "En · English" and
+"Vi · Tiếng Việt"; the current one is checked.
 There is no tab bar and no login.
 
 ## Language
@@ -80,24 +82,29 @@ the English text glosses them where it helps, e.g. "Bureau (Cục)".
 
 ## Draw screen
 
-The home page (`crates/tuvi-web/src/features/gacha/`). It is not in the
-prototype: it reuses the prototype's An sao title, card and loader styles.
+The home page (`crates/tuvi-web/src/features/cast/`). It reuses the
+prototype's An sao parts (`.picker`, `.birth-clock`, `.segment`, `.reward`,
+the casting loader) around a face-down card.
 
-- Order on a phone: title, the face-down card, the date wheels, the main
-  button. From 768px: the title, the wheels and the button on the left, the
-  card on the right.
-- The date wheels (`.wheel`, from the prototype's `.picker`): day, month and
-  year 1900–2099 in a `glass` card, three scroll-snap wheels over one accent
-  band. Each row is a native radio; the picked row has the accent gradient.
-  A date that is not on the calendar shows a toast and does not post.
-- The face-down card (`.card-back`): the 9:16 twilight card of Lá Bài Bản
-  Mệnh, with "THIÊN HẠC" and "TỬ VI", two quiet skies and a ✦. It floats on
-  a 6 s cycle.
-- The main button "✦ Draw a card" posts the date. `gacha.js` first shows the
-  shuffle loader for 2.6 s: orbit rings, the crane video
-  (`mix-blend-mode: screen`) and three rotating lines. Under reduced motion,
-  the crane stays on its first frame.
-- Without JavaScript the form still posts; only the loader is missing.
+- Order on a phone: title, the card, the birth form, the main button. From
+  768px: the title, the form and the button on the left; the card on the
+  right, with the same top and bottom as the form card (its width follows
+  from 9:16).
+- The birth form (`glass`): three scroll-snap date wheels (day, month, year
+  1900–2099) over one accent band, then AM/PM (`.segment`), the birth clock
+  (`.birth-clock`) and gender (`.segment`). The picked segment has the accent
+  gradient and `bg-0` text. The clock: 12 at the top; a tap picks an hour, a
+  drag winds the hand one hour per 22px, arrow keys step; the center shows
+  the hour, its canh giờ and range.
+- The card (`.card-back`): the 9:16 twilight card with "THIÊN HẠC" and
+  "TỬ VI". Before an hour is picked it is face down: a quiet sky and a ✦.
+  Then the preview shows each chính tinh of cung Mệnh as its constellation
+  (`.chom-*`) and the page accent takes the chart's color; vô chính diệu
+  keeps the sky. It floats on a 6 s cycle.
+- "✦ Draw a card" posts the form. `cast.js` first shows the casting loader
+  for 2.6 s. A missing hour or gender, or a date that is not on the
+  calendar, shows a toast instead (the clock pulses for a missing hour).
+- Every control is a native radio, so the form works without JavaScript.
 
 ## Bản mệnh screen
 
@@ -129,8 +136,8 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
     to 55%. "✦ Best" marks up to three hours; "Take care" (coral) marks
     hours with Hóa Kỵ.
   - A "Method and sources" `<details>` under the panels.
-- Under the deck: "✦ Draw another card for this date" (`pill-primary`) and
-  "See all 12 palaces" (`pill-ghost`).
+- Under the deck: "✦ Draw another card" (`pill-primary`, back to the form)
+  and "See all 12 palaces" (`pill-ghost`).
 - Each chính tinh of cung Mệnh shows its constellation (`.chom-*`): a faint
   ghost portrait (24% opacity, radial mask) under a star pattern in the
   accent. A wave draws the lines every 4.2 s, and each star pulses on a

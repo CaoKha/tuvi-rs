@@ -3,27 +3,25 @@
 
 ## Page
 meta_title = Draw a Tử Vi card
-meta_description = Pick a date and draw a Tử Vi card: a real chart for that day, with a roadmap for today.
+meta_description = Pick a birth date and hour and draw your Tử Vi card: a real chart, with a roadmap for today.
 brand_tagline = Tử Vi cards
 
 ## Draw screen
 draw_kicker = Tử Vi · draw a card
-draw_title_1 = Pick a day,
-draw_title_2 = draw a card
-draw_intro = Spin the wheels to pick a birth date. Thiên Hạc draws the hour and gender, then places the stars exactly as a Tử Vi chart would.
+draw_title_1 = Your birth moment,
+draw_title_2 = your card
+draw_intro = Spin the wheels to pick your birth date, set the hour on the clock and pick a gender. Your constellation lights up on the card as you go.
 draw_day = Day
 draw_month = Month
 draw_year = Year
 draw_button = Draw a card
-draw_again = Draw another card for this date
+draw_again = Draw another card
 draw_toast_invalid = That date is not on the calendar. Please check it ✦
-draw_error_invalid_date = That date is not on the calendar.
-draw_error_year_range = Thiên Hạc can read charts from 25/01/1800 to 31/12/2199.
 
 ## Shuffle loader
 loader_title = drawing your card
 loader_line_1 = Thiên Hạc is shuffling the deck of stars…
-loader_line_2 = Picking an hour on the calendar…
+loader_line_2 = Placing the stars in the twelve palaces…
 loader_line_3 = Your destiny card is turning over…
 
 ## Destiny card
@@ -79,3 +77,28 @@ chart_year_luck = Yearly luck (Tiểu hạn) in { $chi } years
 chart_main_stars = Main stars
 chart_transformations = Four transformations (Tứ Hóa)
 chart_minor_stars = Minor stars
+
+## Language menu
+lang_menu_aria = Language
+
+## Birth form
+cast_hour_label = Birth hour
+cast_gender_label = Gender
+cast_required = · required
+cast_buoi_aria = Half of the day
+cast_hour_aria = Birth hour
+cast_clock_pick = Pick an hour
+cast_clock_hour_prefix = {""}
+cast_clock_hour_suffix = {" "}hour
+cast_clock_hint = Swipe left or right, or tap a number, to set the hour
+cast_toast_no_hour = Set your birth hour on the clock ✦
+cast_toast_no_gender = Pick a gender ✦
+cast_error_no_hour = Set the birth hour on the clock.
+cast_error_no_gender = Pick a gender.
+cast_error_invalid_date = That date is not on the calendar.
+cast_error_year_range = Thiên Hạc can read charts from 25/01/1800 to 31/12/2199.
+cast_preview_asleep = Set the hour to wake your constellation
+cast_preview_off_calendar = That date is not on the calendar
+cast_preview_out_of_range = Thiên Hạc reads charts from 1800 to 2199
+cast_preview_empty_menh = No main star in Mệnh · an open sky
+cast_preview_awake = The { $names } constellation is awake

@@ -3,27 +3,25 @@
 
 ## Page
 meta_title = Rút lá bài Tử Vi
-meta_description = Chọn một ngày và rút một lá bài Tử Vi: lá số thật cho ngày ấy, kèm lộ trình cho hôm nay.
+meta_description = Chọn ngày giờ sinh và rút lá bài Tử Vi của bạn: lá số thật, kèm lộ trình cho hôm nay.
 brand_tagline = Rút lá bài Tử Vi
 
 ## Draw screen
 draw_kicker = Gieo quẻ · rút lá bài
-draw_title_1 = Chọn một ngày,
-draw_title_2 = rút một lá bài
-draw_intro = Xoay các vòng để chọn ngày sinh. Thiên Hạc rút giờ sinh và giới tính, rồi an sao đúng như một lá số Tử Vi.
+draw_title_1 = Khoảnh khắc bạn sinh ra,
+draw_title_2 = lá bài của bạn
+draw_intro = Xoay các vòng để chọn ngày sinh, chỉnh giờ trên đồng hồ và chọn giới tính. Chòm sao mệnh của bạn sẽ hiện lên trên lá bài.
 draw_day = Ngày
 draw_month = Tháng
 draw_year = Năm
 draw_button = Rút lá bài
-draw_again = Rút lá khác cùng ngày
+draw_again = Rút lá bài khác
 draw_toast_invalid = Ngày này không có trên lịch, bạn xem lại nhé ✦
-draw_error_invalid_date = Ngày này không có trên lịch.
-draw_error_year_range = Thiên Hạc an được từ 25/01/1800 đến 31/12/2199.
 
 ## Shuffle loader
 loader_title = đang rút bài
 loader_line_1 = Thiên Hạc đang xáo bộ bài tinh tú…
-loader_line_2 = Đang chọn một giờ trên lịch…
+loader_line_2 = Đang xếp 12 cung mệnh của bạn…
 loader_line_3 = Lá bài bản mệnh đang lật mở…
 
 ## Destiny card
@@ -79,3 +77,28 @@ chart_year_luck = Tiểu hạn năm { $chi }
 chart_main_stars = Chính tinh
 chart_transformations = Tứ Hóa
 chart_minor_stars = Phụ tinh
+
+## Language menu
+lang_menu_aria = Ngôn ngữ
+
+## Birth form
+cast_hour_label = Giờ sinh
+cast_gender_label = Giới tính
+cast_required = · bắt buộc
+cast_buoi_aria = Buổi trong ngày
+cast_hour_aria = Giờ sinh
+cast_clock_pick = Chọn giờ
+cast_clock_hour_prefix = Giờ{" "}
+cast_clock_hour_suffix = {""}
+cast_clock_hint = Vuốt trái phải hoặc chạm vào số để chọn giờ
+cast_toast_no_hour = Chọn giờ sinh để an sao chính xác nhé ✦
+cast_toast_no_gender = Cho Thiên Hạc biết giới tính của bạn nhé ✦
+cast_error_no_hour = Chọn giờ sinh trên đồng hồ.
+cast_error_no_gender = Chọn giới tính.
+cast_error_invalid_date = Ngày sinh không có trên lịch.
+cast_error_year_range = Ngày sinh phải từ 25/01/1800 đến 31/12/2199.
+cast_preview_asleep = Chọn giờ để đánh thức chòm sao mệnh
+cast_preview_off_calendar = Ngày này không có trên lịch
+cast_preview_out_of_range = Thiên Hạc an được từ 1800 đến 2199
+cast_preview_empty_menh = Mệnh vô chính diệu · trời rộng mở
+cast_preview_awake = Chòm sao { $names } đã thức

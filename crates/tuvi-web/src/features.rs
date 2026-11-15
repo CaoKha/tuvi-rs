@@ -5,7 +5,7 @@ pub mod charts;
 
 pub mod deck;
 
-pub mod gacha;
+pub mod cast;
 
 pub mod shell;
 

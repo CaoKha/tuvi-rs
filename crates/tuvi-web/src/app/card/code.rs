@@ -8,7 +8,7 @@ use topcoat::{
 };
 use tuvi_core::{Chart, build_chart};
 
-use crate::features::{charts::accent_style, deck::deck_screen, gacha::CardCode};
+use crate::features::{cast::CardCode, charts::accent_style, deck::deck_screen};
 
 module_param!(pub code: CardCode else not_found);
 

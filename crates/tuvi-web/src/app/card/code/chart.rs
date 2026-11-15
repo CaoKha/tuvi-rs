@@ -10,8 +10,8 @@ use topcoat::{
 // `href!` needs the path parameter in scope.
 use super::{card_chart, code};
 use crate::features::{
+    cast::card_name,
     charts::{accent_style, chart_grid},
-    gacha::card_name,
 };
 use crate::{i18n::Lang, t};
 

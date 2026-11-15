@@ -1,4 +1,4 @@
-//! The shuffle loader: orbit rings and the crane, shown by `gacha.js`
+//! The shuffle loader: orbit rings and the crane, shown by `cast.js`
 //! between the tap on the draw button and the deck.
 
 use crate::t;
@@ -14,7 +14,7 @@ use topcoat::{
 const CRANE_VIDEO: Asset = asset!("assets/golden_crane_loading_md.webm");
 
 #[topcoat::view::component]
-pub(super) async fn shuffle_loader(cx: &Cx) -> Result<impl View> {
+pub(super) async fn casting_loader(cx: &Cx) -> Result<impl View> {
     Ok(view! {
         <div
             hidden=""
