@@ -1,13 +1,11 @@
 # Data
 
-Reference data. The app reads `daily_guide.json`; the other files are for
-features that are not ported yet.
+`daily_guide.json` holds the texts of the "Today" plan, in English and
+Vietnamese:
 
-| File | What it is | Format |
-| --- | --- | --- |
-| `daily_guide.json` | The roadmap texts, in English and Vietnamese, with sources: each cung role (theme, do, avoid), each Hóa in each cung, each hour god. The app reads it. | JSON |
-| `star_patterns.yaml` | Cách cục: known star patterns, their conditions and meanings | Rules in the language of [`docs/star_pattern_rules.md`](../docs/star_pattern_rules.md) |
-| `verses.json` | Câu phú: a classic verse for each mix of chính tinh, position and Tuần/Triệt in cung Mệnh (480 cases) | JSON |
+- each palace role: theme, what to do, what to avoid
+- each of the four transformations in each palace
+- each hour god
 
-The book *Tử Vi Tân Biên* is not in git. Its files go in `data/tuvitanbien*/`,
-which git ignores. Ask a maintainer for them.
+The app builds it in and checks at start-up that every entry is there. The
+file also lists the sources of the texts; the page does not show them.
