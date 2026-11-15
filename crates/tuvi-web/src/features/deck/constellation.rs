@@ -118,10 +118,11 @@ fn pulse_phases(chom: &ChomSao) -> Vec<f64> {
     phases
 }
 
-/// One figure: the ghost portrait under its star pattern. `song_tinh`
-/// makes it smaller, to fit two side by side. `fill` sizes it to the width
-/// of its parent instead, for a card with room to spare; there twin stars
-/// stack, each 62% wide.
+/// One figure: the ghost portrait under its star pattern. It takes the
+/// height of its parent (a flex column), or 54% of it with `song_tinh`, so
+/// twin stars stack with their faded edges overlapping. `fill` sizes it to
+/// the width of its parent instead, for a card with room to spare; there
+/// twin stars stack, each 62% wide.
 #[topcoat::view::component]
 pub async fn chom_figure(
     cx: &Cx,
@@ -137,8 +138,8 @@ pub async fn chom_figure(
             class=(match (fill, song_tinh) {
                 (true, true) => "chom-figure -my-1 w-[62%]",
                 (true, false) => "chom-figure w-full",
-                (false, true) => "chom-figure w-[min(150px,44vw)] md:w-[min(170px,44vw)]",
-                (false, false) => "chom-figure w-[170px] md:w-[min(250px,78vw)]",
+                (false, true) => "chom-figure -my-2.5 h-[54%] max-w-full",
+                (false, false) => "chom-figure h-full max-w-full",
             })
             style=(format!("animation-delay: {delay_ms}ms"))
         >

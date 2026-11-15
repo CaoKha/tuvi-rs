@@ -51,7 +51,7 @@ pub(super) async fn destiny_card(cx: &Cx, facts: &Facts<'_>) -> Result<impl View
                 <span class="text-accent">"✦ "</span>
                 (archetype)
             </p>
-            <div class="lit flex min-h-0 flex-1 items-center justify-center gap-0.5">
+            <div class="lit flex min-h-0 flex-1 flex-col items-center justify-center py-2">
                 if figures.is_empty() {
                     sky(class: "h-[45%] w-full")
                 }

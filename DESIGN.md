@@ -187,8 +187,9 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
 - Each chính tinh of cung Mệnh shows its constellation (`.chom-*`): a faint
   ghost portrait (24% opacity, radial mask) under a star pattern in the
   accent. A wave draws the lines every 4.2 s, and each star pulses on a
-  4.5 s cycle. On this card, song tinh show two smaller figures side by
-  side. Vô chính diệu shows the scattered sky. Under reduced motion, the lines and stars
+  4.5 s cycle. On this card a figure fills the room between the archetype
+  chip and the mantra; song tinh stack, their faded edges overlapping.
+  Vô chính diệu shows the scattered sky. Under reduced motion, the lines and stars
   stay still and lit.
 
 ## Chart
