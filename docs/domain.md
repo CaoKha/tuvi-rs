@@ -1,88 +1,54 @@
-# La So Tu Vi
+# Tử Vi in short
 
-Lá Số Tử Vi is a position-based chart built from a person's birth time. The chart is used both for personal-trait interpretation and for future-period guidance through vận hạn (tiểu hạn, đại hạn and lưu niên đại hạn).
+A Tử Vi chart (lá số) places stars on 12 palaces (cung), from a birth date,
+hour and gender. `tuvi-core` builds it; this page explains the parts.
 
-Its static layer places components such as sao, cung roles, tràng sinh, tứ hóa, tuần/triệt, thiên can, and địa chi onto the 12 Cung positions. The important dynamic layers are TIEU_HAN, DAI_HAN, and LUU_NIEN_DAI_HAN. These layers can add or move dynamic components and cung roles without changing the natal/static chart.
+## The chart
 
-The model should make various questions easy:
-- What components are in this Cung?
-- In which Cung (with which position and role) does a component stay?
-- What are the DiaChiEntity, ThienCanEntity, and static role of a Cung?
-- What appears in related positions such as tam hợp, xung chiếu, nhị hợp, and lục hại?
-- What dynamic components or roles appear for a selected vận hạn period?
-- How do dynamic placements interact with static placements?
+- **12 positions.** The 12 Địa Chi (Tý to Hợi) go around the chart. Each
+  position also has a Thiên Can.
+- **Palace roles.** Each position gets a role: Mệnh (self), Huynh Đệ
+  (siblings), Phu Thê (spouse), and so on. Mệnh comes from the lunar birth
+  month and hour. Thân is a second "self" palace.
+- **Cục.** An element and a number, from the Thiên Can and Địa Chi of Mệnh.
+  It decides where the star Tử Vi goes, and the start age of the 10-year
+  periods.
+- **Main stars (chính tinh).** 14 stars, placed from Tử Vi and Thiên Phủ.
+  A palace with none is "vô chính diệu".
+- **Minor stars (phụ tinh).** The other natal stars, and the 12 stages of
+  the Tràng Sinh ring.
+- **Tứ Hóa.** Lộc, Quyền, Khoa and Kỵ attach to four stars, from the
+  Thiên Can of the birth year.
+- **Tuần and Triệt.** Two "void" marks, each over two positions.
+- **Bản mệnh.** The element of the birth year.
 
-The core invariant is that static chart data stays stable while selected dynamic period data is replaceable per layer.
+## Periods
 
+- **Đại hạn.** 10-year periods. The first starts in Mệnh at the Cục number,
+  then moves one palace per period.
+- **Tiểu hạn.** One palace per year.
 
-# Organization
+The chart shows the ages and years of each palace. Stars that move per
+period are not computed.
 
-There are 2 main aspects of a La So Tu Vi:
-- the placement: where a component is placed (which DiaChi, which Cung)
-- the data: all the properties about a component
+## One day
 
+The "Today" plan follows the day over the chart, in Vietnam time:
 
-# Placement ruleset
+- **Đẩu Quân** gives the palace of the first lunar month of the year. The
+  month's palace moves one step per month, the day's palace one step per
+  lunar day.
+- **Tứ Hóa of the day** comes from the day's Thiên Can.
+- **The 12 hours (canh giờ)** start at the day's palace and move one step
+  per hour. Each hour has an hour god; six are auspicious (hoàng đạo).
 
-There are placement rules for every entities in a La So Tu Vi:
-- Dia Chi, Thien Can
-- Menh, Cuc
-- Sao
-- Cung role
+## Words
 
-Placement rules are the functions, used to compute the position of the components in the placement map of a La So Tu Vi, based on an input, which we call the context.
-
-There are different kinds of context: natal context always applied, alongside with some among periodic and Tu Hoa Phai contexts, resulting in a multi-layer placement map where each layer corresponding to a specific context. !!IMPORTANT: for each layer, there is only 1 and unique presence of a component.
-
-
-## Natal context
-
-Natal context includes the birth time (hour, day, month, year) and some information derived from that. The components placed with natal context result in the natal placement part/layer of the placement map.
-
-## *Dynamic* periodic context (Van Han)
-
-There are 3 kinds: TIEU_HAN, DAI_HAN, and LUU_NIEN_DAI_HAN. Those contexts vary by the year in which we want to study.
-
-With those contexts, we can compute the placement of a subset of components, resulting overlay layers on the placement map. It means that at the same position, we can have multiple "presence" of the same components, one placed with natal context, and others placed with periodic context.
-
-For each kind of periodic context, there is a specific rule to compute the focus position - the position on the placement chart (i.e. the position of the Cung) in which we should focus on to give prediction for such period.
-
-### Tieu Han
-
-To compute focus_position for Tieu Han, the steps are:
-
-1. Use the Dia Chi of birth year to compute the anchor position
-    - If Dia Chi of birth year is Dan / Ngo / Tuat -> anchor at Thin
-    - If Dia Chi of birth year is Than / Ty / Thin -> anchor at Tuat
-    - If Dia Chi of birth year is Ti / Dau / Suu -> anchor at Mui
-    - If Dia Chi of birth year is Hoi / Mao / Mui -> anchor at Suu
-2. At the anchor position, assign the anchor value to the Dia Chi of birth year
-3. Following van direction, place other Dia Chi following the cycle of Dia Chi => Obtain a map of [DiaChi -> DiaChi], which is the DiaChi of Tieu Han year mapped to position of Cung
-4. Use the DiaChi of year to xem Tieu Han, query the map and get the position of the Cung => focus_position
-
-From the steps above, we can see that step 1 -> 3 are always static. The result is a map (i.e. lookup table) so that we can find focus_position from the Dia Chi of Tieu Han year. Step 4 is the part where we get focus_position from that lookup table with the Dia Chi of Tieu Han year
-
-### Dai Han
-
-To compute focus_position for Dai Han, the steps are:
-
-1. From cuc number, we have a tuple of class that represents a range of 10 years. Having "x" is the value of cuc number, the tuple contains 12 elements: (TenYearRange(since=x), TenYearRange(since=x+10), ...)
-2. With menh_position (DiaChi), create a maping between that class and the position (DiaChi), starting from menh_position, following van direction to place the every next 10 years.
-3. From the current year, compute the current age, then check in that map to get the DiaChi position => focus_position
-
-In a similar way with Tieu Han, step 1 and 2 are always static. The result is a map of each period of 10 years and the focus_position. Step 3 is derived from current age to find focus_position.
-
-### Luu Nien Dai Han
-
-To compute focus_position for Luu Nien Dai Han, the steps are:
-
-1. Get the focus_position from Dai Han
-2. Subtract current age to the minimum age of that Dai Han period:
-   a. if it's 0 (current age == minimum age Dai Han) => focus_position = Dai Han focus_position
-   b. if it's 1 => focus_position = xung_chieu(Dai Han focus_position)
-   c. if it's >= 2 => focus_position = xung_chieu(Dai Han focus_position) + (current_age - minimum_age_dai_han - 3) * van_direction
-
-
-## Tu Hoa Phai context
-
-Tu Hoa Phai is another category of context, which is not dynamic like periodic context, but also contributes to the overlay layers of the placement map. It only applies for Tu Hoa, in which the ThienCan of each Cung can be used to compute the placement for Tu Hoa on the whole placement. Therefore, it results into 12 additional placement layers for Tu Hoa.
+| Word | Meaning |
+| --- | --- |
+| Lá số | The chart |
+| Cung | A palace: one of the 12 boxes |
+| Địa Chi | The 12 branches (Tý to Hợi) |
+| Thiên Can | The 10 stems (Giáp to Quý) |
+| Sao | Star |
+| Âm / Dương | Yin / yang; with gender it sets the direction of the periods |

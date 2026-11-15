@@ -1,4 +1,4 @@
-//! The shuffle loader: orbit rings and the crane, shown by `cast.js`
+//! The casting loader: orbit rings and the crane, shown by `cast.js`
 //! between the tap on the draw button and the deck.
 
 use crate::t;
