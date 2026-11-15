@@ -1,0 +1,8 @@
+target
+.git
+.github
+.claude
+.env
+.env.*
+data/tuvitanbien*
+data/tan_bien.md

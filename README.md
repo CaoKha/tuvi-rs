@@ -92,6 +92,44 @@ cargo up                  # http://127.0.0.1:3000
 `cargo up` runs `topcoat dev`. The dev server rebuilds the app and reloads
 the page when you save a file. Press Ctrl-C to stop it.
 
+## Deploy
+
+GitHub Pages serves only static files, and Thiên Hạc is a server: it renders
+pages, takes the form POST and the live preview, and keeps the language in a
+cookie. So it runs as a container. The `Dockerfile` builds the binary and its
+asset bundle (139 MB image):
+
+```bash
+docker build -t thien-hac .
+docker run -p 3000:3000 thien-hac          # http://localhost:3000
+```
+
+The app listens on `HOST` and `PORT`; the image sets `HOST=0.0.0.0` and
+`PORT=3000`, and hosts that set `PORT` themselves work as is.
+
+**Render (free plan).** `render.yaml` describes the service. To set it up
+once:
+
+1. On [render.com](https://render.com), choose **New → Blueprint** and pick
+   this repository. Render creates the `thien-hac` web service.
+2. In the service settings, copy the **Deploy Hook** URL.
+3. In GitHub, add it as the repository secret `RENDER_DEPLOY_HOOK_URL`
+   (Settings → Secrets and variables → Actions).
+
+Then every push to `main` that passes CI deploys. A free Render service
+sleeps when nobody visits for a while, so the first visit after that takes
+some seconds.
+
+## CI
+
+`.github/workflows/ci.yml` runs on every push and pull request:
+
+- `cargo fmt --check`, `cargo clippy -D warnings`, `cargo test`
+- `topcoat l10n check` (every message in `en` and `vi`)
+- builds the Docker image, starts it and opens the home and a card page
+- on `main`, when both pass: calls the Render deploy hook (skipped while the
+  secret is not set)
+
 ## Folders
 
 ```text
@@ -155,7 +193,7 @@ Measure the speed of the engine:
 cargo test --release -p tuvi-core --test bench -- --ignored --nocapture
 ```
 
-There is no CI. Run the tests before you open a PR.
+CI runs these on every push and pull request (see [CI](#ci)).
 
 ## How to contribute
 

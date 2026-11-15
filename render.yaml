@@ -1,0 +1,11 @@
+# Render Blueprint: the free web service runs the Dockerfile.
+# CI (.github/workflows/ci.yml) triggers the deploy with a deploy hook after
+# the checks pass, so Render does not deploy on every push by itself.
+services:
+  - type: web
+    name: thien-hac
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: false
+    healthCheckPath: /
