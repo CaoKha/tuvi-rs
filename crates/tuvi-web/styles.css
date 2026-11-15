@@ -702,8 +702,15 @@
     linear-gradient(180deg, #d4c7ea 0%, #ddd1ec 48%, #e8d5d2 100%);
 }
 
+/* The loader's crane by day: inverted (the hue kept), its black backdrop
+   turns white and multiplies away, leaving a bronze crane on the dawn. */
+.light .crane {
+  mix-blend-mode: multiply;
+  filter: invert(1) hue-rotate(180deg) saturate(1.3);
+}
+
 /* The nebulae soften into the day. */
-.light .cosmos > div {
+.light .nebula {
   opacity: 0.28;
 }
 

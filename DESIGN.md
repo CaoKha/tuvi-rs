@@ -91,7 +91,8 @@ mint and sky blue in the corners, a peach glow at the bottom, deep plum ink
 orchid `#b45aa8`; darker element colors) so they read on a light page. The
 crane logo tones down a touch, with a faint shade instead of a glow. The cards turn to
 a dawn of their own (lavender to peach), with white star hearts ringed in
-the accent. The 12-cung grid keeps the night palette (`.night`). Where the
+the accent. The 12-cung grid keeps the night palette (`.night`). The casting loader
+takes the dawn sky; its crane is inverted and multiplied, a bronze crane. Where the
 browser can, the switch cross-fades.
 
 ## Draw screen

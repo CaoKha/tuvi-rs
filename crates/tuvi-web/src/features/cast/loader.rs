@@ -10,7 +10,8 @@ use topcoat::{
 };
 
 /// The crane. It has no alpha channel: `mix-blend-mode: screen` drops its
-/// black background.
+/// black background at night. By day styles.css inverts it and multiplies
+/// instead, so it shows as a bronze crane on the dawn sky.
 const CRANE_VIDEO: Asset = asset!("assets/golden_crane_loading_md.webm");
 
 #[topcoat::view::component]
@@ -40,7 +41,7 @@ pub(super) async fn casting_loader(cx: &Cx) -> Result<impl View> {
                     loop=""
                     playsinline=""
                     preload="auto"
-                    class="size-[172px] mix-blend-screen"
+                    class="crane size-[172px] mix-blend-screen"
                     data-crane=""
                 ></video>
             </div>

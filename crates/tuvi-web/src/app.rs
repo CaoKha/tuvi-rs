@@ -213,10 +213,10 @@ async fn cosmos(cx: &Cx) -> Result<impl View> {
     Ok(view! {
         <div aria-hidden="true" class="cosmos fixed inset-0 z-0 overflow-hidden">
             <div
-                class="animate-breathe absolute top-[-15vmax] left-[-10vmax] h-[60vmax] w-[60vmax] rounded-full bg-[radial-gradient(circle,rgba(123,79,166,0.6),transparent_60%)] opacity-50 blur-[60px] max-sm:hidden"
+                class="nebula animate-breathe absolute top-[-15vmax] left-[-10vmax] h-[60vmax] w-[60vmax] rounded-full bg-[radial-gradient(circle,rgba(123,79,166,0.6),transparent_60%)] opacity-50 blur-[60px] max-sm:hidden"
             ></div>
             <div
-                class="animate-breathe absolute right-[-12vmax] bottom-[-10vmax] h-[50vmax] w-[50vmax] rounded-full bg-[radial-gradient(circle,rgba(79,157,224,0.35),transparent_60%)] opacity-50 blur-[60px] [animation-delay:-4s] max-sm:hidden"
+                class="nebula animate-breathe absolute right-[-12vmax] bottom-[-10vmax] h-[50vmax] w-[50vmax] rounded-full bg-[radial-gradient(circle,rgba(79,157,224,0.35),transparent_60%)] opacity-50 blur-[60px] [animation-delay:-4s] max-sm:hidden"
             ></div>
         </div>
     })
