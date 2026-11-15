@@ -97,7 +97,9 @@ element colors).
   hearts ringed in the accent.
 - The casting loader takes the dawn sky; its crane is inverted and
   multiplied, so it shows in bronze.
-- The 12-cung grid keeps the night palette (`.night`).
+- The chart turns to frosted dawn glass (`.chart-grid`, `.cung-cell`,
+  `.cung-menh`, `.chart-center`); a cung popup (`.cung-popup`) is a pale
+  sheet over a soft plum veil.
 
 ## Draw screen
 
@@ -205,6 +207,9 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
   Tràng Sinh stage, Đại hạn and Tiểu hạn, all chính tinh with Tứ Hóa (in the
   order Lộc, Quyền, Khoa, Kỵ), and all phụ tinh. Each star has a dot in the
   color of its element; stars without a known element use `muted`.
+- The popup header: the Can Chi kicker, the palace name, coral flags, then
+  the Tràng Sinh stage, Đại hạn and Tiểu hạn on one muted line under the
+  title.
 - Popups use the HTML `popover` attribute, so the browser handles Esc, a tap
   outside and focus. Do not add a script for this.
 

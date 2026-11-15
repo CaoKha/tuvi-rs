@@ -174,7 +174,7 @@ pub async fn chart_grid(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View>
             </dl>
         </section>
         <div
-            class="night grid grid-cols-4 grid-rows-[repeat(4,minmax(112px,auto))] overflow-hidden rounded-lg border border-glass-line bg-[rgba(14,8,32,0.34)] shadow-[0_18px_42px_rgba(8,4,20,0.28)] sm:grid-rows-[repeat(4,minmax(150px,auto))]"
+            class="chart-grid grid grid-cols-4 grid-rows-[repeat(4,minmax(112px,auto))] overflow-hidden rounded-lg border border-glass-line sm:grid-rows-[repeat(4,minmax(150px,auto))]"
         >
             for view in &cungs {
                 cung_cell(view: view)
@@ -213,12 +213,9 @@ async fn cung_cell(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
             popovertarget=(view.popup_id())
             aria-label=(t!(chart_palace_at, palace: cung.role, chi: cung.dia_chi).resolve(cx))
             class=(class!(
-                "relative flex min-w-0 cursor-pointer flex-col overflow-hidden px-1.5 pt-2 pb-5 text-left shadow-[inset_-1px_-1px_0_var(--color-glass-line)] transition-colors focus-visible:outline-1 focus-visible:outline-accent sm:px-2.5 sm:pt-2.5",
+                "cung-cell relative flex min-w-0 cursor-pointer flex-col overflow-hidden px-1.5 pt-2 pb-5 text-left transition-colors focus-visible:outline-1 focus-visible:outline-accent sm:px-2.5 sm:pt-2.5",
                 CUNG_CELL[view.index],
-                "bg-white/[0.025] hover:bg-white/[0.055]" if !view.is_menh(),
-                "z-[2] bg-[color-mix(in_srgb,var(--accent)_11%,rgba(26,16,51,0.78))] shadow-[inset_0_0_0_1.5px_var(--accent),inset_0_0_24px_color-mix(in_srgb,var(--accent)_9%,transparent)]" if view.is_menh(
-
-                ),
+                "cung-menh z-[2]" if view.is_menh(),
             ))
         >
             <span class="flex min-h-6 items-start justify-between gap-1">
@@ -284,7 +281,7 @@ async fn center_panel(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View> {
         .map_or("", |cung| cung.role);
     Ok(view! {
         <section
-            class="col-span-2 col-start-2 row-span-2 row-start-2 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_50%_40%,color-mix(in_srgb,var(--accent)_14%,transparent),transparent_52%),rgba(26,16,51,0.76)] px-3 py-4 text-center shadow-[inset_-1px_-1px_0_var(--color-glass-line)]"
+            class="chart-center col-span-2 col-start-2 row-span-2 row-start-2 flex flex-col items-center justify-center px-3 py-4 text-center"
         >
             <span
                 aria-hidden="true"
@@ -324,7 +321,7 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
             id=(id.as_str())
             popover="auto"
             aria-label=(t!(chart_palace, palace: cung.role).resolve(cx))
-            class="night m-auto max-h-[85dvh] w-[min(370px,calc(100%-32px))] overflow-y-auto rounded-lg border border-accent-glow bg-[linear-gradient(155deg,rgba(59,32,99,0.97),rgba(26,16,51,0.98))] p-5 text-ink shadow-[0_24px_70px_rgba(8,4,20,0.72),0_0_30px_color-mix(in_srgb,var(--accent)_12%,transparent)] backdrop:bg-[rgba(10,5,24,0.72)] backdrop:backdrop-blur-[7px]"
+            class="cung-popup m-auto max-h-[85dvh] w-[min(370px,calc(100%-32px))] overflow-y-auto rounded-lg border border-accent-glow p-5 text-ink"
         >
             <button
                 type="button"
@@ -335,28 +332,27 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
             >
                 "×"
             </button>
-            <header class="flex items-start justify-between gap-3 pt-6 pb-3.5">
-                <div>
-                    <p class="text-[10px] font-bold text-accent uppercase">
-                        (cung.thien_can)
-                        " "
-                        (cung.dia_chi)
-                        " · "
-                        (view.am_duong())
+            <header class="pt-1 pr-10 pb-3.5">
+                <p class="text-[10px] font-bold tracking-[0.2em] text-accent uppercase">
+                    (cung.thien_can)
+                    " "
+                    (cung.dia_chi)
+                    " · "
+                    (view.am_duong())
+                </p>
+                <h3 class="mt-1 text-[26px] leading-tight font-semibold">
+                    (t!(chart_palace, palace: cung.role))
+                </h3>
+                if !view.flags.is_empty() {
+                    <p class="mt-1.5 text-[9px] font-bold tracking-[0.2em] text-coral uppercase">
+                        (view.flags.join(" · "))
                     </p>
-                    <h3 class="mt-1 text-[26px] leading-tight font-semibold">
-                        (t!(chart_palace, palace: cung.role))
-                    </h3>
-                    if !view.flags.is_empty() {
-                        <p class="mt-2 text-[9px] font-bold text-coral uppercase">
-                            (view.flags.join(" · "))
-                        </p>
+                }
+                <p class="mt-2.5 text-[11px] leading-relaxed text-muted">
+                    if let Some(stage) = view.trang_sinh {
+                        <b class="font-semibold text-ink">(stage)</b>
+                        " · "
                     }
-                </div>
-                <p class="shrink-0 text-right text-[10px] leading-normal text-muted">
-                    <b class="block text-xs font-semibold text-ink">
-                        (view.trang_sinh.unwrap_or(""))
-                    </b>
                     (t!(chart_decade_luck, ages: dai_han.as_str()))
                     <br>
                     (t!(chart_year_luck, chi: cung.tieu_han))
