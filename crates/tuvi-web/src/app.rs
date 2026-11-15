@@ -3,29 +3,19 @@ use topcoat::{
     Result,
     asset::{Asset, AssetBundle, RouterBuilderAssetExt, asset, asset_config},
     context::Cx,
-    cookie::CookieLayer,
     font::{Font, RouterBuilderFontExt, fontsource::fontsource_font},
-    router::{RouterBuilder, Slot, content::Json, href, layout, module_router, page, route},
+    router::{RouterBuilder, Slot, content::Json, layout, module_router, page, route},
     runtime::RuntimeLayer,
     tailwind,
-    view::{View, class, view},
+    view::{View, view},
 };
 
 use crate::features::{
-    an_sao::{an_sao_screen, menh_preview},
-    auth::current_user,
-    charts::recent,
-    shell::{LOGO, app_nav, brand},
+    gacha::gacha_screen,
+    shell::{LOGO, brand},
 };
 
-pub mod charts;
-pub mod ho_so;
-pub mod login;
-pub mod logout;
-pub mod register;
-
-// `href!` needs the path parameter in scope.
-use charts::chart_id::chart_id;
+pub mod la_bai;
 
 /// Display font for titles and star names.
 const DISPLAY_FONT: Font = fontsource_font!(
@@ -52,9 +42,6 @@ const ANDROID_ICON_192: Asset = asset!("assets/icons/android-chrome-192x192.png"
 const ANDROID_ICON_512: Asset = asset!("assets/icons/android-chrome-512x512.png");
 const MASKABLE_ICON_512: Asset = asset!("assets/icons/maskable-icon-512x512.png");
 
-/// How many saved charts the home page lists.
-const RECENT_LIMIT: usize = 20;
-
 /// Builds the application's router.
 pub fn router() -> RouterBuilder {
     module_router!()
@@ -62,10 +49,6 @@ pub fn router() -> RouterBuilder {
         .font(BODY_FONT)
         .assets(AssetBundle::load().unwrap())
         .route(web_manifest)
-        // The live preview of the An sao screen.
-        .route(menh_preview)
-        // Reads and writes the session cookie.
-        .layer(CookieLayer::new())
         // Lets the browser runtime rerun pages; register it after other layers.
         .layer(RuntimeLayer::new())
 }
@@ -78,7 +61,7 @@ async fn web_manifest(cx: &Cx) -> Result<Json<serde_json::Value>> {
     Ok(Json(json!({
         "name": "Thiên Hạc",
         "short_name": "Thiên Hạc",
-        "description": "Thiên Hạc: lá số và luận giải Tử Vi",
+        "description": "Thiên Hạc: rút lá bài Tử Vi",
         "start_url": "/",
         "display": "standalone",
         // A manifest cannot read CSS variables: these are the `page` and
@@ -95,7 +78,6 @@ async fn web_manifest(cx: &Cx) -> Result<Json<serde_json::Value>> {
 
 #[layout]
 async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
-    let user = current_user(cx).await?;
     Ok(view! {
         <!DOCTYPE html>
         <html lang="vi" class="dark">
@@ -106,10 +88,10 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                     content="width=device-width, initial-scale=1, viewport-fit=cover"
                 >
                 <meta name="theme-color" content="#1a1033">
-                <title>"Thiên Hạc · An sao & luận giải Tử Vi"</title>
+                <title>"Thiên Hạc · Rút lá bài Tử Vi"</title>
                 <meta
                     name="description"
-                    content="An sao, đọc lá số và trò chuyện cùng Thiên Hạc."
+                    content="Rút một lá bài Tử Vi: mỗi lá là một ngày giờ có thật, an sao đúng như lá số."
                 >
                 <link rel="icon" href=(FAVICON) sizes="any">
                 <link rel="icon" type="image/png" sizes="16x16" href=(FAVICON_16)>
@@ -125,30 +107,11 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
             </head>
             <body>
                 cosmos()
-                <div
-                    class=(class!(
-                        "relative z-10",
-                        "pb-tabbar lg:pt-8 lg:pl-rail" if user.is_some(),
-                    ))
-                >
-                    if let Some(user) = &user {
-                        app_nav(user_id: user.id)
-                    }
+                <div class="relative z-10">
                     <header
-                        class=(class!(
-                            "mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 pt-6 pb-5",
-                            "lg:hidden" if user.is_some(),
-                        ))
+                        class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 pt-6 pb-5"
                     >
                         brand()
-                        if user.is_none() {
-                            <a
-                                href=(href!(login::page))
-                                class="pill-ghost rounded-full px-4 py-1.5 text-xs font-semibold"
-                            >
-                                "Đăng nhập"
-                            </a>
-                        }
                     </header>
                     (slot)
                 </div>
@@ -173,97 +136,9 @@ async fn cosmos(cx: &Cx) -> Result<impl View> {
     })
 }
 
-/// Logged out: what the app is, and the way in.
-#[topcoat::view::component]
-async fn landing(cx: &Cx) -> Result<impl View> {
-    Ok(view! {
-        <main
-            class="mx-auto flex max-w-xl flex-col items-center px-4 pt-10 pb-16 text-center"
-        >
-            <span
-                aria-hidden="true"
-                class="text-4xl text-accent drop-shadow-[0_0_12px_var(--accent-glow)]"
-            >
-                "✦"
-            </span>
-            <h1 class="mt-3 text-4xl leading-tight font-semibold">
-                "An sao & luận giải Tử Vi"
-            </h1>
-            <p class="mt-4 text-[15px] leading-relaxed font-light text-muted">
-                "Lập lá số từ ngày giờ sinh, xem đủ 12 cung với chính tinh, phụ tinh, Tứ Hóa và vận hạn, rồi hỏi Thiên Hạc về bất cứ cung nào."
-            </p>
-            <div class="mt-8 grid w-full max-w-sm grid-cols-2 gap-3">
-                <a
-                    href=(href!(register::page))
-                    class="pill-primary flex h-12 items-center justify-center rounded-full text-sm font-semibold"
-                >
-                    "Tạo tài khoản"
-                </a>
-                <a
-                    href=(href!(login::page))
-                    class="pill-ghost flex h-12 items-center justify-center rounded-full text-sm font-semibold"
-                >
-                    "Đăng nhập"
-                </a>
-            </div>
-        </main>
-    })
-}
-
 #[page]
 pub async fn home(cx: &Cx) -> Result<impl View> {
-    let user = current_user(cx).await?;
-    let saved_charts = match &user {
-        Some(user) => recent(cx, user.id, RECENT_LIMIT).await?,
-        None => Vec::new(),
-    };
-
     Ok(view! {
-        if user.is_none() {
-            landing()
-        } else {
-            <main class="mx-auto max-w-5xl px-4 pb-16">
-                an_sao_screen(
-                    action: href!(charts::create).resolve(cx),
-                    sent: None,
-                    error: None
-                )
-                <section class="glass mt-10 p-6">
-                    <p
-                        class="text-[10px] font-bold tracking-[0.26em] text-accent uppercase"
-                    >
-                        "Lá số đã lưu"
-                    </p>
-                    <h2 class="mt-1 text-xl font-semibold">"Mới nhất ở trên"</h2>
-                    if saved_charts.is_empty() {
-                        <p class="mt-4 text-sm font-light text-muted">
-                            "Chưa có lá số nào."
-                        </p>
-                    } else {
-                        <ul class="mt-4 divide-y divide-glass-line">
-                            for saved in &saved_charts {
-                                <li>
-                                    <a
-                                        href=(href!(charts::chart_id::show, chart_id: saved.id))
-                                        class="flex justify-between gap-4 py-3 transition-colors hover:text-accent"
-                                    >
-                                        <span class="truncate font-display text-base">
-                                            (saved.name.as_str())
-                                        </span>
-                                        <span class="shrink-0 text-sm text-muted tabular-nums">
-                                            (saved.day)
-                                            "/"
-                                            (saved.month)
-                                            "/"
-                                            (saved.year)
-                                        </span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    }
-                </section>
-            </main>
-        }
+        <main class="mx-auto max-w-5xl px-4 pb-16">gacha_screen()</main>
     })
 }

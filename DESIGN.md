@@ -41,9 +41,9 @@ The accent is the element of the chính tinh in cung Mệnh:
 - Two stars: `accent` is the first element, `accent-2` is the second.
 - No star (vô chính diệu) or no chart: the neutral lavender `#bca6f5`.
 
-The chart page sets `--accent` on its `<main>`
-(`crates/tuvi-web/src/features/charts/accent.rs`). The An sao preview sets it
-on `:root` with a `<style>` rule, so the whole page changes.
+The card pages set `--accent` on their `<main>`
+(`crates/tuvi-web/src/features/charts/accent.rs`). The draw screen has no
+chart, so it keeps the neutral accent.
 
 ## Type
 
@@ -64,76 +64,55 @@ Both fonts load with the Vietnamese subset. Small labels are uppercase, bold,
 | `pill-ghost` | Other choices, for example the gender toggle |
 | `cosmos` | The fixed page backdrop, with two slow nebulae |
 
-## Navigation
+## Header
 
-A logged-in user gets one `<nav>` (`crates/tuvi-web/src/features/shell/`).
-The prototype calls it `.tabbar`.
+Every page has one header: the logo and the name, linked to the draw screen
+(`crates/tuvi-web/src/features/shell/`). There is no tab bar and no login.
 
-- Below `lg` (1024px) it is a bottom tab bar, fixed and as wide as the phone
-  column (480px). Pages keep room for it with `pb-tabbar`. Sticky and fixed
-  parts at the bottom add `var(--spacing-tabbar)` to their offset.
-- From `lg` it is a 250px rail on the left (`lg:pl-rail`) with the brand on
-  top. The page header then hides, so the brand shows once.
-- Five tabs, in order: Bản mệnh, Vận hạn, Hỏi AI, Nâng cao (the 12-cung
-  chart), Hồ sơ. The icons are lucide icons.
-- The current tab has the accent text in the bar and the `pill-primary` fill
-  in the rail.
-- The chart tabs open the chart in the URL, else the newest chart. Without a
-  chart they are locked: an `<a>` without `href`, at 40% opacity. A screen
-  that is not ported yet shows a small "Sắp có" label.
+## Draw screen
+
+The home page (`crates/tuvi-web/src/features/gacha/`). It is not in the
+prototype: it reuses the prototype's An sao title, card and loader styles.
+
+- Order on a phone: title, the face-down card, the main button. From 768px:
+  the title and the button on the left, the card on the right.
+- The face-down card (`.card-back`): the 9:16 twilight card of Lá Bài Bản
+  Mệnh, with "THIÊN HẠC" and "TỬ VI", two quiet skies and a ✦. It floats on
+  a 6 s cycle.
+- The main button "✦ Rút lá bài" posts the draw. `gacha.js` first shows the
+  shuffle loader for 2.6 s: orbit rings, the crane video
+  (`mix-blend-mode: screen`) and three rotating lines. Under reduced motion,
+  the crane stays on its first frame.
+- Without JavaScript the form still posts; only the loader is missing.
 
 ## Bản mệnh screen
 
-A new chart lands here (`crates/tuvi-web/src/features/ban_menh/`). The
+A new draw lands here (`crates/tuvi-web/src/features/ban_menh/`). The
 prototype calls it `#s-home`.
 
-- The header: "Chào bạn", the chart name, and a badge with the chính tinh of
-  cung Mệnh. With song tinh, the first name has `accent` and the second has
-  `accent-2`.
+- The header: the card name ("Nữ mạng Bính Tý"), the solar date as the
+  title, a line with the hour, giờ and the lunar date, and a badge with the
+  chính tinh of cung Mệnh. With song tinh, the first name has `accent` and
+  the second has `accent-2`.
 - Below `lg` the three cards are a row that scrolls sideways and snaps to
   each card. The next card peeks in at the edge. From `lg` the main card is
   on the left (364px) and the two other cards are on the right.
 - Lá Bài Bản Mệnh (main card): 9:16, a twilight gradient, an accent border
-  and glow. It shows the archetype chip, the constellations of the An sao
-  preview (`.chom-*`) and the mantra in italic Fraunces. Vô chính diệu shows
+  and glow. It shows the archetype chip, the constellations (`.chom-*`) and
+  the mantra in italic Fraunces. Vô chính diệu shows
   the scattered sky.
 - Lá bài phụ (Vận May, Lời Khuyên): `glass` with a border and a corner glow
   in the card's own hue (`--t-hue`). Vận May takes the lucky color, the
   element of Bản mệnh. Lời Khuyên takes `accent-2`. The page accent does not
   change.
-
-## An sao screen
-
-The home page for a logged-in user. It casts a new chart
-(`crates/tuvi-web/src/features/an_sao/`).
-
-- Order on a phone: title, the preview, the input card, the main button, then
-  the saved charts. From 768px: title and preview on the left, the input card
-  and the button on the right.
-- The input card (`glass`): name, then three scroll-snap wheels (day, month,
-  year 1900–2099) over one accent band, then AM/PM, the birth clock and gender.
-- AM/PM and gender are segments (`.segment`): the picked one has the accent
-  gradient and `bg-0` text.
-- The birth clock (`.birth-clock`) has 12 hours, 12 at the top. A tap on the
-  ring picks an hour, a drag left or right winds the hand one hour per 22px,
-  and arrow keys step one hour. The center shows the hour, the canh giờ and
-  its range. The hand always turns the short way.
-- The preview (`.reward`) sleeps until the user picks an hour: a scattered
-  sky in `muted`. Then the page accent takes the color of the chart, and the
-  caption says "Chòm sao … đã thức". Each chính tinh of cung Mệnh shows its
-  constellation (`.chom-*`): a faint ghost portrait (24% opacity, radial
-  mask) under a star pattern in the accent. A wave draws the lines every
-  4.2 s, and each star pulses on a 4.5 s cycle. Song tinh show two smaller
-  figures side by side. Vô chính diệu keeps the sky and the neutral accent.
-  Under reduced motion, the lines and stars stay still and lit.
-- The main button opens the confirm dialog (`.confirm-card`, a native
-  `<dialog>`). "Không nhắc lại" skips it next time (in `localStorage`).
-- Then the casting loader covers the page for 2.6 s: orbit rings, the crane
-  video (`mix-blend-mode: screen`) and three rotating lines. Under reduced
-  motion, the crane stays on its first frame.
-- A missing hour or gender shows a toast, and the clock pulses.
-- Every control is a native radio, so the form works without JavaScript. The
-  clock hand and the picked styles then come from CSS `:has()`.
+- Under the deck: "✦ Rút lá khác" (`pill-primary`, a new draw) and
+  "Xem đủ 12 cung" (`pill-ghost`, the chart).
+- Each chính tinh of cung Mệnh shows its constellation (`.chom-*`): a faint
+  ghost portrait (24% opacity, radial mask) under a star pattern in the
+  accent. A wave draws the lines every 4.2 s, and each star pulses on a
+  4.5 s cycle. Song tinh show two smaller figures side by side. Vô chính
+  diệu shows the scattered sky. Under reduced motion, the lines and stars
+  stay still and lit.
 
 ## Chart
 
@@ -150,13 +129,6 @@ The home page for a logged-in user. It casts a new chart
   color of its element; stars without a known element use `muted`.
 - Popups use the HTML `popover` attribute, so the browser handles Esc, a tap
   outside and focus. Do not add a script for this.
-
-## Chat
-
-- Thiên Hạc's messages: `glass` bubble on the left, a small "THIÊN HẠC" label
-  in the accent color. The user's messages: `pill-primary` bubble on the right.
-- The composer sticks to the bottom: one round field and a round send button.
-- Answers are markdown. `strong` text uses the accent color.
 
 ## Rules
 

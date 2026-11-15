@@ -1,20 +1,13 @@
-//! Saved charts.
+//! The chart of a card.
 //!
-//! - `form`: the "new chart" form data and its checks
-//! - `store`: the database model and queries
 //! - `grid`: the chart drawing and the cung popups
 //! - `accent`: the chart's accent color from cung Mệnh
 //!
-//! The database keeps only the birth data. Pages build the chart again with
-//! `tuvi_core` on each read. This takes microseconds, so engine changes need no
-//! data migration.
+//! Nothing is stored. Pages build the chart from the card code in the URL
+//! with `tuvi_core` on each request; this takes about a microsecond.
 
 mod accent;
-mod form;
 mod grid;
-mod store;
 
 pub use accent::{accent_style, menh_chinh_tinh};
-pub use form::{Buoi, NewChart, ValidChart, gender_value, hour_24};
 pub use grid::chart_grid;
-pub use store::{create, load, recent};

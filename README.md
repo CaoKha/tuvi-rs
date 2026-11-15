@@ -1,19 +1,18 @@
-# TuviLM
+# Thiên Hạc
 
-TuviLM makes a **Lá Số Tử Vi** (Vietnamese astrology chart) from a birth date
-and hour.
+Thiên Hạc is a gacha app for **Lá Số Tử Vi** (Vietnamese astrology charts).
+One tap draws a random Bản mệnh card. Each card is a real chart: a real date
+and hour on the calendar, with the stars placed by the chart engine.
 
-TuviLM is one Rust binary with a Postgres database. It replaces the old
-Next.js app, FastAPI server and MongoDB. The old code is in git history.
+Thiên Hạc is one Rust binary. It has no database, no accounts and no AI.
 
 ## Parts
 
 | Folder | What it is | Tech |
 | --- | --- | --- |
 | `crates/tuvi-core/` | Chart engine. No IO, no network, no database. | Rust |
-| `crates/tuvi-web/` | Web app: pages, forms, database | [Topcoat](https://github.com/tokio-rs/topcoat), [Toasty](https://github.com/tokio-rs/toasty), Postgres |
-| `crates/tuvi-llm/` | LLM client: OpenCode Go and OpenRouter | Rust, reqwest |
-| `crates/tuvi-cli/` | Dev commands: `cargo up`, `cargo down` | Rust, [clap](https://docs.rs/clap) |
+| `crates/tuvi-web/` | Web app: pages and the draw | [Topcoat](https://github.com/tokio-rs/topcoat) |
+| `crates/tuvi-cli/` | Dev command: `cargo up` | Rust, [clap](https://docs.rs/clap) |
 | `data/` | Cách cục rules and câu phú text, for later features | YAML, JSON |
 | `docs/` | Domain notes and the cách cục rule language | Markdown |
 
@@ -21,109 +20,48 @@ Next.js app, FastAPI server and MongoDB. The old code is in git history.
 
 ```text
 Browser ──► tuvi-web (:3000, server-rendered HTML) ──► tuvi-core (chart engine)
-                    └─────────────────────────────────► Postgres (saved charts)
 ```
 
-1. On the An sao screen, the user enters a name, a solar birth date (three
-   wheels), an hour (a 12-hour clock with AM/PM) and a gender. A preview shows
-   the chính tinh of cung Mệnh while the user picks.
-2. The form posts to `/charts`. `tuvi-web` checks the input and calls
-   `tuvi_core::build_chart`.
-3. `tuvi-web` saves the birth data in Postgres and opens the Bản mệnh deck
-   (`/charts/{id}/ban-menh`): three cards from the chart.
-4. Each chart page builds the chart again. The Nâng cao tab
-   (`/charts/{id}`) draws the 12 cung.
+1. The home page shows a face-down card and the button **Rút lá bài**.
+2. The button posts to `/la-bai`. The server picks a random year (1900–2099),
+   month, day, hour (0–23) and gender. When the date is not on the calendar
+   (for example 30/02), it draws again. So every real date, hour and gender
+   is equally likely.
+3. The server redirects to the card: `/la-bai/{code}`, for example
+   `/la-bai/1996-04-15-22-nu`. The code is the birth moment.
+4. The card page builds the chart from the code and shows the Bản mệnh deck:
+   three cards, with the solar date, the hour, and the lunar date. The link
+   **Xem đủ 12 cung** (`/la-bai/{code}/la-so`) draws the whole chart.
 
-The database stores only the birth data, not the chart. One chart takes about
-300 ns to build, so the app builds it on each read. When the engine changes,
-you do not need to migrate data.
+Nothing is stored. The URL is the card, so a card link can be shared. One
+chart takes about 1 µs to build, so each page builds it again.
 
 Topcoat renders all HTML on the server. There is no separate API and no
-JavaScript build step. One small static script (`an_sao.js`) adds the wheel
-scroll, the clock drag and the confirm dialog to the An sao screen.
+JavaScript build step. One small static script (`gacha.js`) shows the
+shuffle animation before the draw.
 
 ## Setup
 
-You need: Rust (stable, edition 2024), Docker, and the Topcoat CLI:
+You need Rust (stable, edition 2024) and the Topcoat CLI:
 
 ```bash
 cargo install topcoat-cli
 ```
 
-Start everything with one command (from any folder in the repo):
+Start the app (from any folder in the repo):
 
 ```bash
 cargo up                  # http://127.0.0.1:3000
 ```
 
-`cargo up` does three steps:
-
-1. It starts Postgres with `docker compose` and waits until it is ready. It
-   skips this step when Postgres already runs on port 5432, or when you set
-   `DATABASE_URL`.
-2. It applies the database migrations.
-3. It starts `topcoat dev`. The dev server rebuilds the app and reloads the
-   page when you save a file. Press Ctrl-C to stop it.
-
-`cargo down` stops Postgres. The data stays in the Docker volume.
-
-The app uses `postgres://tuvi:tuvi@localhost:5432/tuvi`. Set `DATABASE_URL` to
-use a different database.
-
-If your user is not in the `docker` group, `cargo up` and `cargo down` run
-Docker with `sudo` and ask for your password.
-
-### LLM key
-
-The AI features need a key from **OpenCode Go** or **OpenRouter**:
-
-```bash
-cp .env.example .env          # then set OPENCODE_API_KEY or OPENROUTER_API_KEY
-cargo tuvi ask "Tử Vi là gì?" # checks the key: prints the answer as it streams
-```
-
-- When both keys are set, OpenCode Go wins. Set `TUVI_LLM_PROVIDER` to choose.
-- Set `TUVI_LLM_MODEL` to change the model. On OpenCode Go, use a model with
-  the `chat-completions` format: `curl -s https://opencode.ai/zen/go/v1/models`.
-  Models with the `messages`, `responses` or Google formats do not work yet.
-- `.env.example` lists every setting. `cargo up` and `cargo tuvi` both read `.env`.
-- Without a key the app still runs. The chat page says what is missing.
-
-### Accounts
-
-Open the app and press **Tạo tài khoản** (`/register`). Every chart belongs to
-the account that saved it. Other accounts get "404 Not Found" for it.
-
-- `/register`, `/login`, `/ho-so` (profile and log out).
-- Passwords are hashed with Argon2id. The session token is in a `__Host-`
-  cookie (Secure, HttpOnly, SameSite=Lax). The database keeps only its SHA-256
-  hash (`user_sessions`). A session lasts 30 days.
-- The Secure cookie needs HTTPS. Browsers allow it on `localhost` and
-  `127.0.0.1`, so local development works without HTTPS.
-
-Charts saved before accounts existed have no owner, and nobody can open them.
-To give them to your account (find your id in the `users` table):
-
-```bash
-sudo docker compose exec postgres psql -U tuvi -c "UPDATE saved_charts SET user_id = 1 WHERE user_id IS NULL"
-```
-
-### AI chat
-
-Open a chart and press **Hỏi Thiên Hạc**, or go to `/charts/{id}/hoi-ai`.
-
-1. The question is saved in Postgres (`chat_messages`), then the page reloads.
-2. The page sends the model a system prompt with the whole chart as text,
-   plus the last 20 messages.
-3. The answer streams into the page (Topcoat `live!`) and is saved when it ends.
-4. If the answer fails, the question stays. A reload tries again.
+`cargo up` runs `topcoat dev`. The dev server rebuilds the app and reloads
+the page when you save a file. Press Ctrl-C to stop it.
 
 ## Folders
 
 ```text
 Cargo.toml                        workspace: every crate is in crates/
-.cargo/config.toml                aliases: cargo tuvi, cargo up, cargo down
-docker-compose.yaml               Postgres
+.cargo/config.toml                aliases: cargo tuvi, cargo up
 crates/
   tuvi-core/                      chart engine
     src/lib.rs                    module list and public API
@@ -143,28 +81,18 @@ crates/
     tests/parity.rs               compares 359 charts with saved reference data
     tests/bench.rs                speed test
   tuvi-web/                       web app
-    src/main.rs                   start-up, database connection
+    src/main.rs                   start-up
     src/app.rs                    root layout, home page (URL /), web manifest
-    src/app/charts.rs             POST /charts (saves the An sao form)
-    src/app/charts/chart_id.rs    GET /charts/{id}
-    src/features/charts/          form checks, database queries, chart grid, accent
-    src/features/an_sao/          An sao screen, preview shard, constellations, an_sao.js
-    src/features/ban_menh/        Bản mệnh deck: card text, chart facts, the three cards
-    src/features/chat/            chat messages, system prompt, markdown, LLM service
-    src/features/auth/            users, sessions, Argon2 passwords, form checks
-    src/features/shell/           app navigation: tab bar, rail, brand
-    src/app/login.rs, register.rs, logout.rs, ho_so.rs   account pages
-    src/app/charts/chart_id/hoi_ai.rs   GET and POST /charts/{id}/hoi-ai
-    src/app/charts/chart_id/ban_menh.rs GET /charts/{id}/ban-menh
+    src/app/la_bai.rs             POST /la-bai (draws a card)
+    src/app/la_bai/code.rs        GET /la-bai/{code} (the Bản mệnh deck)
+    src/app/la_bai/code/la_so.rs  GET /la-bai/{code}/la-so (the 12 cung)
+    src/features/gacha/           the draw, the card code, draw screen, loader, gacha.js
+    src/features/ban_menh/        Bản mệnh deck: card text, chart facts, constellations
+    src/features/charts/          chart grid, accent
+    src/features/shell/           the logo and the name
     styles.css                    theme: tokens and utilities (see DESIGN.md)
     assets/                       app icons, crane video, god-ghosts/ portraits (asset!)
-    toasty/                       database migrations
-  tuvi-llm/                       LLM client (OpenAI chat-completions format)
-    src/config.rs                 provider, key, model and URL from the environment
-    src/client.rs                 chat: whole answer or a stream of text
-    src/sse.rs                    server-sent events parser
-    tests/fake_server.rs          end-to-end tests against a local fake server
-  tuvi-cli/                       dev commands (cargo tuvi --help)
+  tuvi-cli/                       dev command (cargo tuvi --help)
 data/                             data for later features (see data/README.md)
 docs/                             domain notes and the design prototype
 DESIGN.md                         colors, fonts and layout rules
@@ -195,17 +123,6 @@ There is no CI. Run the tests before you open a PR.
 `tests/fixtures/charts.json`. Change this file only when you change a result on
 purpose, and say why in the PR.
 
-**Change a database model:** edit `crates/tuvi-web/src/features/`. Then, from
-`crates/tuvi-web/`:
-
-```bash
-cargo run -- toasty migration generate
-cargo run -- toasty migration apply
-```
-
-Commit the new files in `crates/tuvi-web/toasty/`. Run these commands from
-`crates/tuvi-web/`, because Toasty writes `toasty/` in the current folder.
-
 **Add a page:** add a file in `crates/tuvi-web/src/app/`. The file path is the
 URL path. Put data and rules in `crates/tuvi-web/src/features/`, not in the page.
 
@@ -221,7 +138,7 @@ reads its CSS and JS from `target/<profile>/assets/`. Without them, it does not 
 
 **Rules:**
 
-- `tuvi-core` has no IO, network, database or AI calls.
+- `tuvi-core` has no IO, network or database calls.
 - Domain names use Vietnamese words without accents: `cung`, `sao`, `dia_chi`.
 - Folder names match crate names: `crates/<crate-name>/`.
 - No `unwrap` outside tests. No `unsafe`.
@@ -229,15 +146,12 @@ reads its CSS and JS from `target/<profile>/assets/`. Without them, it does not 
 
 ## Not done yet
 
-- The Vận hạn screen: its tab is locked ("Sắp có")
-- A desktop top bar with the screen title
 - Bản mệnh deck: the card flip, the focus zoom and the dots of the phone
-  deck, the auras around the main card, a greeting by the time of day, and
-  the "Lưu ảnh" and "Chia sẻ" buttons (the old app only showed "coming soon")
+  deck, the auras around the main card, and the "Lưu ảnh" and "Chia sẻ"
+  buttons
+- Card rarity
 - Stars that move per period (lưu tinh, Tứ Hóa of a Đại hạn or a year),
   cách cục, câu phú
-- AI chat: tools, cách cục and the book Tử Vi Tân Biên (the chat sees only the chart)
-- Accounts: Google login, password reset, email check, rate limit on login
 
 ## Known issues
 
@@ -254,25 +168,15 @@ reads its CSS and JS from `target/<profile>/assets/`. Without them, it does not 
   for a man, counter-clockwise for a woman.
 - A cung lists its Tứ Hóa in the old engine's id order (Khoa, Kỵ, Lộc, Quyền),
   not in the usual order (Lộc, Quyền, Khoa, Kỵ).
-- The An sao preview shard (`POST /an-sao/menh`) needs no login. It only
-  builds a chart from the posted numbers, and it saves nothing.
-- Without JavaScript, the An sao wheels do not center the picked value in
-  every browser, and the clock center does not show the picked hour. The
-  form still posts, and the server checks every field.
-- Topcoat runtime expressions cannot parse a string to a number, read the
-  scroll position or a pointer angle, or use `localStorage`. `an_sao.js` does
-  these parts (see `src/features/an_sao.rs`).
+- A draw is a POST, so the browser does not prefetch it. The draw saves
+  nothing, so it needs no CSRF check.
 - The ghost portraits (`assets/god-ghosts/*.svg`) are 77–414 KB each. The
-  page loads one only when its star is in the preview, and the router sends
+  page loads one only when its star is on the card, and the router sends
   it compressed (for example 223 KB becomes 75 KB). The star coordinates
   follow these SVG portraits. The old app's smaller `*-ghost.webp` files are
   square crops that its last version did not use, so they are not ported.
-- Topcoat and Toasty are early-stage projects. Expect breaking changes when you
-  update them.
-
-- `/register` says when an email already has an account. This lets someone
-  test which emails are registered. `/login` does not show this, and a wrong
-  email takes as long as a wrong password.
+- Topcoat is an early-stage project. Expect breaking changes when you
+  update it.
 
 ## Docs
 

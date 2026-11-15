@@ -1,4 +1,4 @@
-//! The logo and the product name. It links to the An sao screen.
+//! The logo and the product name. It links to the draw screen.
 
 use topcoat::{
     Result,
@@ -29,7 +29,7 @@ pub async fn brand(cx: &Cx) -> Result<impl View> {
                 <small
                     class="block text-[9px] font-bold tracking-[0.2em] text-muted uppercase"
                 >
-                    "An sao & luận giải"
+                    "Rút lá bài Tử Vi"
                 </small>
             </span>
         </a>

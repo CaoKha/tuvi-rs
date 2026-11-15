@@ -1,5 +1,4 @@
 [alias]
-# TuviLM dev commands. See crates/tuvi-cli/src/main.rs.
+# Dev commands. See crates/tuvi-cli/src/main.rs.
 tuvi = "run -q -p tuvi-cli --"
 up = "run -q -p tuvi-cli -- up"
-down = "run -q -p tuvi-cli -- down"

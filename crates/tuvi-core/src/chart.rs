@@ -87,8 +87,8 @@ pub struct TuHoa {
     pub hoa: &'static str,
 }
 
-/// A computed chart. Not stored: the database keeps only [`BirthInput`] and
-/// rebuilds the chart on read (it takes microseconds).
+/// A computed chart. Not stored: apps keep only [`BirthInput`] and
+/// rebuild the chart on read (it takes microseconds).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Chart {
     pub input: BirthInput,

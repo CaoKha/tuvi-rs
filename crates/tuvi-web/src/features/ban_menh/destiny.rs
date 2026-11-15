@@ -1,5 +1,5 @@
 //! Lá Bài Bản Mệnh, the main card: the chính tinh of cung Mệnh, their
-//! archetype and mantra, and their constellations from the An sao preview.
+//! archetype and mantra, and their constellations.
 //! Vô chính diệu gets its own entry and the scattered sky.
 
 use topcoat::{
@@ -8,8 +8,10 @@ use topcoat::{
     view::{View, view},
 };
 
-use super::facts::Facts;
-use crate::features::an_sao::{chom_figure, chom_sao_of, sky};
+use super::{
+    chom_sao::{chom_figure, chom_sao_of, sky},
+    facts::Facts,
+};
 
 #[topcoat::view::component]
 pub(super) async fn destiny_card(cx: &Cx, facts: &Facts<'_>) -> Result<impl View> {

@@ -1,6 +1,9 @@
 //! The Bản mệnh screen: the header and the deck. On a phone the deck is a
 //! row of cards that scrolls sideways and snaps to each card. From `lg` the
 //! main card is on the left and the two other cards are on the right.
+//!
+//! The header names the birth moment of the card, solar and lunar, so the
+//! user sees which day the sky belongs to.
 
 use topcoat::{
     Result,
@@ -11,9 +14,15 @@ use topcoat::{
 use tuvi_core::Chart;
 
 use super::{advice::advice_card, destiny::destiny_card, facts::Facts, luck::luck_card};
+use crate::features::gacha::draw_button;
 
 #[topcoat::view::component]
-pub async fn ban_menh_screen(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View> {
+pub async fn ban_menh_screen(
+    cx: &Cx,
+    name: &str,
+    chart: &Chart,
+    la_so: String,
+) -> Result<impl View> {
     let Some(facts) = Facts::of(chart) else {
         return Err(not_found().into());
     };
@@ -23,7 +32,7 @@ pub async fn ban_menh_screen(cx: &Cx, name: &str, chart: &Chart) -> Result<impl 
                 <p
                     class="text-[10px] font-bold tracking-[0.26em] text-accent uppercase"
                 >
-                    "Chào bạn"
+                    (name)
                 </p>
                 <p
                     class="flex items-center gap-2 rounded-full border border-accent-glow bg-accent/12 px-3.5 py-1.5 text-[13px] font-semibold"
@@ -50,9 +59,12 @@ pub async fn ban_menh_screen(cx: &Cx, name: &str, chart: &Chart) -> Result<impl 
                     }
                 </p>
             </div>
-            <h1 class="mt-2.5 text-[26px] leading-[1.06] font-semibold">(name)</h1>
-            <p class="mt-1.75 text-[13.5px] text-muted lg:hidden">
-                "Lá Bài Bản Mệnh ở đầu, vuốt sang để lật hai lá bài phụ."
+            <h1 class="mt-2.5 text-[26px] leading-[1.06] font-semibold tabular-nums">
+                (solar_date(chart))
+            </h1>
+            <p class="mt-1.75 text-[13.5px] text-muted">(birth_moment(chart))</p>
+            <p class="mt-1 text-[13.5px] text-muted lg:hidden">
+                "Vuốt sang để lật hai lá bài phụ."
             </p>
         </header>
         <div
@@ -62,5 +74,61 @@ pub async fn ban_menh_screen(cx: &Cx, name: &str, chart: &Chart) -> Result<impl 
             luck_card(facts: &facts)
             advice_card(facts: &facts)
         </div>
+        <div class="mx-auto flex max-w-sm flex-col gap-3 px-4">
+            draw_button(label: "✦ Rút lá khác", class: "w-full")
+            <a
+                href=(la_so)
+                class="pill-ghost flex h-12 items-center justify-center rounded-full text-sm font-semibold"
+            >
+                "Xem đủ 12 cung"
+            </a>
+        </div>
     })
+}
+
+/// The solar birth date, for example "15/04/1996".
+fn solar_date(chart: &Chart) -> String {
+    let birth = chart.input;
+    format!("{:02}/{:02}/{}", birth.day, birth.month, birth.year)
+}
+
+/// The hour and the lunar date, for example
+/// "22:00 · giờ Hợi · âm lịch 28/2 năm Bính Tý".
+fn birth_moment(chart: &Chart) -> String {
+    format!(
+        "{:02}:00 · giờ {} · âm lịch {}/{} năm {} {}",
+        chart.input.hour,
+        chart.hour_chi,
+        chart.lunar_day,
+        chart.lunar_month,
+        chart.nam_can,
+        chart.nam_chi,
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use tuvi_core::{BirthInput, Gender, build_chart};
+
+    use super::*;
+
+    #[test]
+    fn header_shows_solar_and_lunar_dates() {
+        let chart = build_chart(BirthInput {
+            year: 1996,
+            month: 4,
+            day: 5,
+            hour: 7,
+            gender: Gender::Nam,
+        })
+        .unwrap();
+        assert_eq!(solar_date(&chart), "05/04/1996");
+        assert_eq!(
+            birth_moment(&chart),
+            format!(
+                "07:00 · giờ Thìn · âm lịch {}/{} năm Bính Tý",
+                chart.lunar_day, chart.lunar_month
+            )
+        );
+    }
 }

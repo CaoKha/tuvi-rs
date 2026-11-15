@@ -1,5 +1,5 @@
-//! The casting loader: orbit rings and the crane, shown by `an_sao.js`
-//! between the confirm and the chart page.
+//! The shuffle loader: orbit rings and the crane, shown by `gacha.js`
+//! between the tap on the draw button and the deck.
 
 use topcoat::{
     Result,
@@ -12,15 +12,15 @@ use topcoat::{
 /// black background.
 const CRANE_VIDEO: Asset = asset!("assets/golden_crane_loading_md.webm");
 
-/// The lines under "đang luận giải". CSS shows them one after another.
+/// The lines under "đang rút bài". CSS shows them one after another.
 const LINES: [&str; 3] = [
-    "Thiên Hạc đang đọc vị trí các vì tinh tú…",
-    "Đang xếp 12 cung mệnh của bạn…",
-    "Chòm sao bản mệnh đang dần hiện hình…",
+    "Thiên Hạc đang xáo bộ bài tinh tú…",
+    "Đang chọn một ngày giờ trên lịch…",
+    "Lá bài bản mệnh đang lật mở…",
 ];
 
 #[topcoat::view::component]
-pub(super) async fn casting_loader(cx: &Cx) -> Result<impl View> {
+pub(super) async fn shuffle_loader(cx: &Cx) -> Result<impl View> {
     Ok(view! {
         <div
             hidden=""
@@ -52,7 +52,7 @@ pub(super) async fn casting_loader(cx: &Cx) -> Result<impl View> {
             </div>
             <div class="text-center">
                 <p class="font-display text-[26px] font-medium">
-                    "đang luận giải"
+                    "đang rút bài"
                     <span class="load-dots" aria-hidden="true">
                         <span>"."</span>
                         <span>"."</span>

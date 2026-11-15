@@ -1,4 +1,4 @@
-//! Chòm sao: the constellation reward of the An sao preview.
+//! Chòm sao: the constellation on Lá Bài Bản Mệnh.
 //!
 //! Each chính tinh has a faint ghost portrait (a static SVG, loaded with
 //! `<img>` only when its star is in cung Mệnh) and a star pattern traced over
