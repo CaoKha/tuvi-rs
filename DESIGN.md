@@ -135,7 +135,8 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
     current hour is open, with an accent fill and a lit dot; past hours fade
     to 55%. "✦ Best" marks up to three hours; "Take care" (coral) marks
     hours with Hóa Kỵ.
-  - A "Method and sources" `<details>` under the panels.
+  - A "Method" `<details>` under the panels: how the day is computed,
+    ending with "This is guidance for reflection, not a prediction."
 - Under the deck: "✦ Draw another card" (`pill-primary`, back to the form)
   and "See all 12 palaces" (`pill-ghost`).
 - Each chính tinh of cung Mệnh shows its constellation (`.chom-*`): a faint

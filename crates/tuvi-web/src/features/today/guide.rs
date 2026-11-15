@@ -48,18 +48,13 @@ const GODS: [(&str, bool); 12] = [
     ("Câu Trận", false),
 ];
 
+/// The texts of the file. Its `sources` list documents where each entry
+/// comes from; the app does not show it.
 #[derive(Debug, Deserialize)]
 pub struct Guide {
-    pub sources: Vec<Source>,
     palaces: HashMap<String, Palace>,
     transformations: HashMap<String, Transformation>,
     hours: HashMap<String, Hour>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Source {
-    pub title: String,
-    pub url: String,
 }
 
 /// A cung role: its name and what a day or an hour on it is good for.
@@ -156,7 +151,6 @@ mod tests {
     #[test]
     fn the_file_covers_everything() {
         let guide = Guide::load().unwrap();
-        assert!(!guide.sources.is_empty());
         for role in ROLES {
             let palace = guide.palace(role).unwrap();
             assert!(

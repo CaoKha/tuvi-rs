@@ -237,17 +237,8 @@ pub async fn today_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
         </section>
 
         <details class="mt-3 px-1 text-[12px] text-muted">
-            <summary class="cursor-pointer">(t!(today_sources))</summary>
+            <summary class="cursor-pointer">(t!(today_method_title))</summary>
             <p class="mt-2">(t!(today_method))</p>
-            <ul class="mt-2 grid gap-1">
-                for source in &guide.sources {
-                    <li>
-                        <a href=(source.url.as_str()) class="underline hover:text-accent" rel="noopener" target="_blank">
-                            (source.title.as_str())
-                        </a>
-                    </li>
-                }
-            </ul>
         </details>
     })
 }

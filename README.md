@@ -57,8 +57,9 @@ The roadmap (`crates/tuvi-web/src/features/today/`) uses
   Ngọ days, two hours later for each next pair of day branches.
 
 The texts come from [`data/daily_guide.json`](data/daily_guide.json), in
-English and Vietnamese, with their sources. The app checks at start-up that
-the file covers every palace, Hóa and hour god.
+English and Vietnamese. The file lists the source of each entry; the page
+does not show these links. The app checks at start-up that the file covers
+every palace, Hóa and hour god.
 
 ### Languages
 

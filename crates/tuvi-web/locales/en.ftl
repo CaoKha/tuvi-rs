@@ -54,7 +54,7 @@ today_careful = Take care
 today_auspicious = auspicious
 today_inauspicious = inauspicious
 today_hour = { $can } { $chi } hour
-today_sources = Method and sources
+today_method_title = Method
 today_method = This month's palace (lưu nguyệt) starts at Đẩu Quân: from the palace of this lunar year's Branch, count back to the birth month, then forward to the birth hour. Today's palace (lưu nhật) starts there on day 1 and moves one palace per lunar day. Each two-hour period moves one palace from today's palace (lưu thời). The four transformations come from the day's Heavenly Stem, and the auspicious hours (giờ hoàng đạo) from the day's Branch. This is guidance for reflection, not a prediction.
 
 ## 12-palace chart page

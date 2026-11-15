@@ -54,7 +54,7 @@ today_careful = Cẩn trọng
 today_auspicious = hoàng đạo
 today_inauspicious = hắc đạo
 today_hour = Giờ { $can } { $chi }
-today_sources = Cách tính và nguồn
+today_method_title = Cách tính
 today_method = Cung của tháng (lưu nguyệt) bắt đầu từ Đẩu Quân: từ cung Thái Tuế của năm âm lịch, đếm nghịch đến tháng sinh, rồi đếm thuận đến giờ sinh. Cung của hôm nay (lưu nhật): mồng 1 ở cung tháng, mỗi ngày đi thuận một cung. Mỗi canh giờ đi tiếp một cung từ cung của hôm nay (lưu thời). Tứ Hóa lấy theo Thiên Can của ngày, giờ hoàng đạo theo Địa Chi của ngày. Đây là gợi ý để suy ngẫm, không phải lời tiên đoán.
 
 ## 12-palace chart page
