@@ -1,7 +1,8 @@
 // The birth form: the parts that Topcoat runtime expressions cannot do.
 //
 // - Wheels: when a scroll settles, check the radio in the middle band.
-// - Clock: drag left or right to wind the hand, tap the ring to jump.
+// - Clock: drag around the face and the hand follows the finger; tap an
+//   hour to jump.
 // - Submit: a toast for a missing hour or gender or a date that is not on
 //   the calendar, then the casting loader, then the real POST.
 //
@@ -12,8 +13,10 @@
 
 const ROW_PX = 46;
 const SETTLE_MS = 120;
-const DRAG_STEP_PX = 22;
 const DRAG_START_PX = 6;
+// Near the centre the finger angle jumps around: ignore it there.
+const CLOCK_DEAD_ZONE = 0.12;
+const TICK_VIBRATE_MS = 6;
 const MIN_CASTING_MS = 2600;
 const TOAST_MS = 2600;
 
@@ -64,59 +67,73 @@ function setUpClock(clock) {
   const current = () => hours.findIndex((hour) => hour.checked);
   const wrap = (position) => ((position % 12) + 12) % 12;
 
-  // Wind along the shortest arc and keep the total, so the hand never spins
-  // back the long way from 11 to 12.
+  // The hand angle in degrees. It keeps the total turns, so the hand moves
+  // the short way from 11 to 12 and never spins back.
   let angle = 0;
-  const turn = (position) => {
-    angle += ((((position * 30 - angle) % 360) + 540) % 360) - 180;
+  const setAngle = (degrees) => {
+    angle += ((((degrees - angle) % 360) + 540) % 360) - 180;
     clock.style.setProperty("--hand-angle", `${angle}deg`);
   };
-  if (current() >= 0) turn(current());
-  clock.addEventListener("change", (event) => {
-    const position = hours.indexOf(event.target);
-    if (position >= 0) turn(position);
-  });
+  if (current() >= 0) setAngle(current() * 30);
 
-  /** The hour under the pointer, or null in the readout. */
-  const positionAt = (event) => {
+  /** The pointer angle (0 at 12, clockwise) and its distance from the centre,
+   * as a fraction of the clock width. */
+  const pointer = (event) => {
     const rect = clock.getBoundingClientRect();
     const x = event.clientX - rect.left - rect.width / 2;
     const y = event.clientY - rect.top - rect.height / 2;
-    if (Math.hypot(x, y) < rect.width * 0.24) return null;
-    return wrap(Math.round((Math.atan2(x, -y) * 6) / Math.PI));
+    return {
+      degrees: (Math.atan2(x, -y) * 180) / Math.PI,
+      radius: Math.hypot(x, y) / rect.width,
+    };
   };
 
   let drag = null;
+  clock.addEventListener("change", (event) => {
+    const position = hours.indexOf(event.target);
+    // During a drag the hand follows the finger, not the hour.
+    if (position >= 0 && !drag?.moved) setAngle(position * 30);
+  });
+
   clock.addEventListener("pointerdown", (event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    drag = {
-      id: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-      start: Math.max(0, current()),
-      moved: false,
-    };
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, moved: false };
     clock.setPointerCapture(event.pointerId);
   });
   clock.addEventListener("pointermove", (event) => {
     if (!drag || event.pointerId !== drag.id) return;
-    const dx = event.clientX - drag.x;
-    if (!drag.moved && Math.hypot(dx, event.clientY - drag.y) <= DRAG_START_PX) return;
-    drag.moved = true;
-    clock.classList.add("dragging");
-    choose(hours[wrap(drag.start + Math.round(dx / DRAG_STEP_PX))]);
+    if (!drag.moved) {
+      if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) <= DRAG_START_PX) return;
+      drag.moved = true;
+      clock.classList.add("dragging");
+    }
+    const { degrees, radius } = pointer(event);
+    if (radius < CLOCK_DEAD_ZONE) return;
+    setAngle(degrees);
+    const position = wrap(Math.round(angle / 30));
+    if (position !== current()) {
+      choose(hours[position]);
+      navigator.vibrate?.(TICK_VIBRATE_MS);
+    }
   });
   const end = (event) => {
     if (!drag || event.pointerId !== drag.id) return;
-    if (!drag.moved && event.type === "pointerup") {
-      const position = positionAt(event);
-      if (position !== null) {
-        choose(hours[position]);
-        hours[position].focus({ preventScroll: true });
-      }
-    }
+    const { moved } = drag;
     drag = null;
     clock.classList.remove("dragging");
+    if (moved) {
+      // Settle the hand on the picked hour.
+      if (current() >= 0) setAngle(current() * 30);
+      return;
+    }
+    if (event.type !== "pointerup") return;
+    // A tap on the ring picks the hour under it. A tap in the readout does
+    // nothing.
+    const { degrees, radius } = pointer(event);
+    if (radius < 0.24) return;
+    const position = wrap(Math.round(degrees / 30));
+    choose(hours[position]);
+    hours[position].focus({ preventScroll: true });
   };
   clock.addEventListener("pointerup", end);
   clock.addEventListener("pointercancel", end);

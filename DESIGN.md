@@ -93,9 +93,10 @@ the casting loader) around a face-down card.
 - The birth form (`glass`): three scroll-snap date wheels (day, month, year
   1900–2099) over one accent band, then AM/PM (`.segment`), the birth clock
   (`.birth-clock`) and gender (`.segment`). The picked segment has the accent
-  gradient and `bg-0` text. The clock: 12 at the top; a tap picks an hour, a
-  drag winds the hand one hour per 22px, arrow keys step; the center shows
-  the hour, its canh giờ and range.
+  gradient and `bg-0` text. The clock: 12 at the top; a tap picks an hour; a
+  drag around the face turns the hand with the finger and picks the nearest
+  hour (a short vibration per hour where the phone supports it); arrow keys
+  step; the center shows the hour, its canh giờ and range.
 - The card (`.card-back`): the 9:16 twilight card with "THIÊN HẠC" and
   "TỬ VI". Before an hour is picked it is face down: a quiet sky and a ✦.
   Then the preview shows each chính tinh of cung Mệnh as its constellation
