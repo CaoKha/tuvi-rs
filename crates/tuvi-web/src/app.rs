@@ -137,8 +137,8 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                     >
                         brand()
                         <div class="flex items-center gap-2">
-                            theme_toggle(theme: theme)
                             language_menu(lang: lang)
+                            theme_toggle(theme: theme)
                         </div>
                     </header>
                     (slot)

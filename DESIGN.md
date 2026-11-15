@@ -83,7 +83,7 @@ the English text glosses them where it helps, e.g. "Bureau (Cục)".
 ## Night and day
 
 Night is the default: the twilight design above. A round `pill-ghost`
-switch left of the language button turns the page to day and back (a sun at
+switch right of the language button turns the page to day and back (a sun at
 night, a moon by day); a `theme` cookie keeps the pick, so the server
 renders the page in it. Day is a calm, dim dawn: dusky lavender at the top,
 mint and sky blue in the corners, a peach glow at the bottom, deep plum ink
