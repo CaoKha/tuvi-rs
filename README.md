@@ -128,7 +128,8 @@ some seconds.
 - `topcoat l10n check` (every message in `en` and `vi`)
 - builds the Docker image, starts it and opens the home and a card page
 - on `main`, when both pass: calls the Render deploy hook (skipped while the
-  secret is not set)
+  secret is not set). To redeploy without a change, open **Actions → CI →
+  Run workflow** on `main`.
 
 ## Folders
 

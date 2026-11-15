@@ -1,5 +1,6 @@
 # Checks every push and pull request. On main, after the checks pass, it
-# asks Render to deploy (when the RENDER_DEPLOY_HOOK_URL secret is set).
+# asks Render to deploy (when the RENDER_DEPLOY_HOOK_URL secret is set). A
+# manual run on main ("Run workflow" in the Actions tab) deploys too.
 name: CI
 
 on:
@@ -63,7 +64,7 @@ jobs:
   deploy:
     name: Deploy to Render
     needs: [check, image]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
       - name: Call the Render deploy hook
