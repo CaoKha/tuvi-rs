@@ -78,10 +78,10 @@ pub async fn deck_screen(cx: &Cx, chart: &Chart, chart_url: String) -> Result<im
         <div
             class="grid justify-items-center gap-5 px-4 py-8 lg:grid-cols-[364px_minmax(0,1fr)] lg:items-start lg:justify-items-stretch"
         >
-            <div class="lg:sticky lg:top-6">destiny_card(facts: &facts)</div>
+            <div class="w-full md:max-w-md lg:sticky lg:top-6 lg:max-w-none">destiny_card(facts: &facts)</div>
             <div class="w-full min-w-0">today_roadmap(chart: chart)</div>
         </div>
-        <div class="mx-auto flex max-w-sm flex-col gap-3 px-4">
+        <div class="mx-auto flex max-w-[calc(var(--container-md)+2rem)] flex-col gap-3 px-4">
             <a
                 href=(href!(crate::app::home).resolve(cx))
                 class="pill-primary flex h-[52px] items-center justify-center rounded-full text-[15px] font-semibold"

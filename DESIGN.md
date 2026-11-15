@@ -159,7 +159,9 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
   a badge with the chính tinh of cung Mệnh, and a chip with the lucky color
   (the element of Bản mệnh). With song tinh, the first name has `accent` and
   the second has `accent-2`.
-- Below `lg` the card and the roadmap stack. From `lg` the card is on the
+- Below `lg` the card and the roadmap stack. On a phone the card, the
+  panels and the buttons share the same 16px gutters; on a tablet the card
+  and the buttons stop at 448px, centred. From `lg` the card is on the
   left (364px, sticky) and the roadmap on the right.
 - Lá Bài Bản Mệnh (main card): 9:16, a twilight gradient, an accent border
   and glow. It shows the archetype chip, the constellations (`.chom-*`) and
