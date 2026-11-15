@@ -3,12 +3,6 @@
    The design reference is docs/design/prototype.html. DESIGN.md in the repo
    root lists the tokens and the rules. Keep this file in step with both.
 
-   Two groups of tokens:
-   - TuviLM tokens (bg-0, ink, muted, glass, accent, element-*): the design.
-   - Topcoat UI tokens (background, card, primary, border, ...): the vendored
-     components in src/components/ use these names. They point to the
-     TuviLM tokens, so the components follow the design without edits.
-
    Two themes. Night is the default: the twilight design. Day (`.light` on
    <html>) is a calm dawn sky; the cards follow it, the chart grid keeps
    the night (`.night`). */
@@ -17,8 +11,6 @@
 
 /* Scan the crate's Rust sources for the Tailwind classes they use. */
 @source "./src/**/*.rs";
-
-@custom-variant dark (&:is(.dark *));
 
 /* Utility-generating tokens: bg-ink, text-muted, rounded-card, font-display, ... */
 @theme {
@@ -47,23 +39,6 @@
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
   --color-accent-glow: var(--accent-glow);
-
-  /* Topcoat UI token names, mapped to the TuviLM tokens. */
-  --color-background: var(--color-page);
-  --color-foreground: var(--color-ink);
-  --color-card: var(--color-glass);
-  --color-card-foreground: var(--color-ink);
-  --color-popover: var(--color-bg-1);
-  --color-popover-foreground: var(--color-ink);
-  --color-muted-foreground: var(--color-muted);
-  --color-primary: var(--accent);
-  --color-primary-foreground: var(--color-bg-0);
-  --color-destructive: var(--color-fire);
-  --color-destructive-foreground: var(--color-bg-0);
-  --color-border: var(--color-glass-line);
-  --color-ring: var(--accent);
-  --shadow-xs: 0 0 #0000;
-  --shadow-sm: 0 0 #0000;
 }
 
 :root {
@@ -151,9 +126,9 @@
 }
 
 /* ===== Cast and Bản mệnh (src/features/cast/, src/features/deck/) =====
-   Plain classes for what the markup cannot say alone: the date wheels, the
-   AM/PM and gender segments, the birth clock, the sky, the constellations, the card back and the shuffle loader. Prototype:
-   .picker, .chom-* and the casting loader in docs/design/prototype.html. */
+   Plain classes for what the markup cannot say alone: the date wheels,
+   the birth clock, the option rows and chips, the sky, the
+   constellations, the card back and the casting loader. */
 @layer components {
   .dial-label {
     margin-bottom: 6px;
@@ -197,46 +172,93 @@
     scroll-initial-target: nearest;
   }
 
+  /* A random spin: free travel, no snap, until the reel lands. */
+  .wheel.spinning {
+    scroll-snap-type: none;
+  }
+
   .wheel > label:has(:focus-visible) {
     outline: 2px solid var(--accent-glow);
     outline-offset: -2px;
   }
 
-  .segment {
-    display: grid;
-    grid-auto-columns: 1fr;
-    grid-auto-flow: column;
-    gap: 8px;
+  /* The rows under the clock: AM/PM, the gender, the presets. A label on
+     the left, its chips on the right, a hairline between rows. */
+  .option-row {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--color-glass-line);
+    padding-block: 10px;
   }
 
-  .segment > label {
-    position: relative;
-    cursor: pointer;
+  .option-row > .dial-label {
+    flex-shrink: 0;
+    margin: 0;
+    text-align: left;
+  }
+
+  .chips {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* A small round chip: a radio (AM/PM, the gender) or a preset button. */
+  .chip {
+    display: inline-flex;
+    height: 32px;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 6px;
     border: 1px solid var(--color-glass-line);
     border-radius: 9999px;
     background: var(--color-glass);
-    padding: 9px 12px;
-    text-align: center;
-    font-size: 13px;
+    padding-inline: 12px;
+    cursor: pointer;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--color-muted);
-    transition: color 0.2s;
-  }
-
-  .segment > label:hover {
     color: var(--color-ink);
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .segment > label:has(:checked) {
+  .chip:hover {
+    border-color: var(--accent-glow);
+  }
+
+  .chip:focus-visible,
+  .chip:has(:focus-visible) {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: 2px;
+  }
+
+  /* A radio chip: muted until picked, then the accent gradient. */
+  .chip:has(input) {
+    color: var(--color-muted);
+  }
+
+  .chip:has(:checked),
+  .rolling > .chip.flash {
     border-color: transparent;
     background: linear-gradient(135deg, var(--accent-2), var(--accent));
     color: var(--color-bg-0);
   }
 
-  .segment > label:has(:focus-visible),
-  .clock-hour:has(:focus-visible) {
-    outline: 2px solid var(--accent-glow);
-    outline-offset: -2px;
+  /* While a random pick flicks the chips, the flash is the pick. */
+  .rolling > .chip {
+    transition: none;
+  }
+
+  .rolling > .chip:not(.flash) {
+    border-color: var(--color-glass-line);
+    background: var(--color-glass);
+    color: var(--color-muted);
   }
 
   .birth-clock {
@@ -244,7 +266,7 @@
     position: relative;
     width: min(240px, 72vw);
     aspect-ratio: 1;
-    margin: 10px auto 0;
+    margin-inline: auto;
     border-radius: 50%;
     touch-action: none;
     user-select: none;
@@ -340,9 +362,50 @@
     transform: scale(1.6);
   }
 
-  .birth-clock:has(:checked) .clock-hand {
+  .birth-clock:has(:checked) .clock-hand,
+  .birth-clock.spinning .clock-hand {
     opacity: 1;
   }
+
+  /* While the hand winds, no hour is lit; the new one lights when it
+     stops. */
+  .birth-clock.spinning .clock-hour:has(:checked) {
+    transform: translate(-50%, -50%);
+    background: none;
+    box-shadow: none;
+    color: var(--color-muted);
+  }
+
+  /* A random pick winds the hand round, fast, then eases onto the hour. */
+  .birth-clock.spinning .clock-hand {
+    transition:
+      transform var(--spin-ms, 2.4s) cubic-bezier(0.25, 0.6, 0.3, 1),
+      opacity 0.2s;
+  }
+
+  /* The random button: the dice tumble while the form rolls. */
+  .dice {
+    display: inline-flex;
+  }
+
+  .rolling .dice {
+    animation: dice-roll 1.6s cubic-bezier(0.3, 0.6, 0.3, 1);
+  }
+
+  /* The saved birth: the heart fills in. */
+  .heart {
+    display: inline-flex;
+  }
+
+  .favorite.saved .heart :is(path, g) {
+    fill: currentColor;
+  }
+
+  /* The card sways while the form rolls. */
+  .shuffling {
+    animation: card-shuffle 2.6s ease-in-out;
+  }
+
 
   /* The picked radio turns the hand, also without JavaScript. cast.js
      sets --hand-angle inline, so the hand winds the short way. */
@@ -385,8 +448,9 @@
   }
 
 
-  /* The draw screen from lg: the card width follows the screen height so
-     the table fits a laptop screen. */
+  /* The draw screen from lg: the card is as tall as the birth form.
+     cast.js sets --stage-card from the form's height; this is the
+     fallback without JavaScript. */
   .cast-stage {
     --stage-card: clamp(220px, calc((100svh - 380px) * 0.5625), 280px);
   }
@@ -492,6 +556,25 @@
 @keyframes need-pulse {
   35% {
     box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+}
+
+@keyframes dice-roll {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* A gentle sway, smaller each time. */
+@keyframes card-shuffle {
+  20% {
+    transform: translateY(-6px) rotate(-2.5deg);
+  }
+  45% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+  70% {
+    transform: translateY(-4px) rotate(-1deg);
   }
 }
 

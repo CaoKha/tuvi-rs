@@ -11,6 +11,7 @@ use topcoat::{
     Result,
     asset::{Asset, asset},
     context::Cx,
+    icon::{icon, iconify::iconify_icon},
     router::href,
     runtime::{expr, signal},
     view::{View, view},
@@ -19,6 +20,7 @@ use topcoat::{
 use super::{
     birth::{BirthForm, gender_value},
     clock::birth_clock,
+    daypart::daypart,
     loader::casting_loader,
     preview::menh_preview,
     segment::segment,
@@ -54,9 +56,8 @@ pub async fn cast_screen(
     let year = signal(cx, || {
         sent.map_or(YEAR_DEFAULT, |sent| sent.year.0).to_string()
     });
-    let buoi = signal(cx, || {
-        sent.map_or("AM", |sent| sent.buoi.value()).to_owned()
-    });
+    let buoi_checked = sent.map_or("AM", |sent| sent.buoi.value());
+    let buoi = signal(cx, || buoi_checked.to_owned());
     // Clock hour 1–12, or 0 before the first pick.
     let gio = signal(cx, || sent.and_then(|sent| sent.gio).map_or(0, usize::from));
     let pm = expr!(buoi.get() == "PM");
@@ -91,8 +92,9 @@ pub async fn cast_screen(
             </div>
 
             // From `lg` one glass table holds the birth form and the card,
-            // side by side in the middle. It hugs them: the two middle
-            // columns plus 2.5rem on each side.
+            // side by side in the middle, tops aligned. It hugs them: the two
+            // middle columns plus 2.5rem on each side. cast.js sizes the card
+            // so the card and the button end where the form ends.
             <div
                 class="hidden lg:glass lg:col-span-2 lg:col-start-2 lg:row-start-2 lg:-mx-10 lg:block lg:shadow-[0_30px_80px_-30px_color-mix(in_srgb,var(--accent)_35%,transparent)]"
                 aria-hidden="true"
@@ -102,9 +104,9 @@ pub async fn cast_screen(
             // (`contents`): the card under the title, the button last. From
             // `lg` they are the right half of the table.
             <div
-                class="contents lg:relative lg:col-start-3 lg:row-start-2 lg:flex lg:flex-col lg:justify-center lg:gap-4 lg:py-6"
+                class="contents lg:relative lg:col-start-3 lg:row-start-2 lg:flex lg:flex-col lg:justify-start lg:gap-4 lg:py-6"
             >
-                <div class="flex w-full justify-center">
+                <div class="flex w-full justify-center" data-card-stage="">
                     <div
                         class="card-back card-face relative flex aspect-[9/16] w-full max-w-sm flex-col items-center justify-between overflow-hidden rounded-[22px] border border-accent/40 bg-linear-168 from-bg-2 via-bg-1 to-bg-0 px-6 py-7 shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_26%,transparent)] lg:w-(--stage-card) lg:max-w-none"
                     >
@@ -130,7 +132,10 @@ pub async fn cast_screen(
                     </div>
                 </div>
 
-                <div class="order-last flex w-full max-w-sm flex-col gap-2.5 lg:order-none">
+                <div
+                    class="order-last flex w-full max-w-sm flex-col gap-2.5 lg:order-none lg:max-w-none"
+                    data-draw=""
+                >
                     if let Some(error) = &error {
                         <p role="alert" class="text-center text-sm text-fire">(error.as_str())</p>
                     }
@@ -148,9 +153,13 @@ pub async fn cast_screen(
             // on a phone; from `lg` it is the left half of the table, so its
             // own glass goes.
             <div
-                class="glass w-full max-w-sm px-3.5 py-3 lg:relative lg:col-start-2 lg:row-start-2 lg:max-w-none lg:self-center lg:border-transparent lg:bg-transparent lg:px-0 lg:py-6 lg:backdrop-blur-none"
+                class="glass flex w-full max-w-sm flex-col gap-6 px-3.5 py-4 lg:relative lg:col-start-2 lg:row-start-2 lg:max-w-none lg:self-start lg:border-transparent lg:bg-transparent lg:px-0 lg:py-6 lg:backdrop-blur-none"
+                data-birth-panel=""
             >
-                <div class="relative grid grid-cols-[1fr_1fr_1.15fr] gap-2.5">
+                // The wheel's last row fades out 18px above its box: pull the
+                // clock up by that, so it sits as far from the dates as from
+                // the rows under it.
+                <div class="relative -mb-[18px] grid grid-cols-[1fr_1fr_1.15fr] gap-2.5">
                     // The selection band behind the middle row of the wheels.
                     <div
                         class="pointer-events-none absolute inset-x-1.5 bottom-[55px] h-[46px] rounded-[14px] border border-accent-glow bg-linear-115 from-accent/16 to-accent-2/16"
@@ -176,35 +185,75 @@ pub async fn cast_screen(
                     )
                 </div>
 
-                <p class="dial-label mt-3">
-                    (t!(cast_hour_label))
-                    " "
-                    <span class="text-accent">(t!(cast_required))</span>
-                </p>
-                segment(
-                    name: "buoi",
-                    label: t!(cast_buoi_aria).resolve(cx).into_owned(),
-                    options: [("AM", "AM".to_owned()), ("PM", "PM".to_owned())],
-                    checked: Some(sent.map_or("AM", |sent| sent.buoi.value())),
-                    picked: Some(&buoi),
-                    class: "mx-auto w-[min(218px,66vw)]"
-                )
+                // Three sections, one even gap apart: the date, the clock, and
+                // a hairline list of rows, each a label with its chips: AM/PM,
+                // the gender, the presets.
                 birth_clock(checked: sent.and_then(|sent| sent.gio), gio: &gio, buoi: &buoi)
-                <p class="mt-2 text-center text-[11px] text-muted">(t!(cast_clock_hint))</p>
 
-                <div class="mt-3.5" data-gender="">
-                    <p class="dial-label">(t!(cast_gender_label))</p>
-                    segment(
-                        name: "gender",
-                        label: t!(cast_gender_label).resolve(cx).into_owned(),
-                        options: [
-                            ("Nam", t!(chart_male).resolve(cx).into_owned()),
-                            ("Nu", t!(chart_female).resolve(cx).into_owned()),
-                        ],
-                        // Male by default, so the hour is the only pick left.
-                        checked: Some(sent.and_then(|sent| sent.gender).map_or("Nam", gender_value)),
-                        picked: None
-                    )
+                <div>
+                    <div class="option-row">
+                        <p class="dial-label">(t!(cast_buoi_label))</p>
+                        <div class="chips" role="radiogroup" aria-label=(t!(cast_buoi_label).resolve(cx))>
+                            daypart(value: "AM", checked: buoi_checked == "AM", buoi: &buoi)
+                            daypart(value: "PM", checked: buoi_checked == "PM", buoi: &buoi)
+                        </div>
+                    </div>
+
+                    <div class="option-row">
+                        <p class="dial-label">(t!(cast_gender_label))</p>
+                        segment(
+                            name: "gender",
+                            label: t!(cast_gender_label).resolve(cx).into_owned(),
+                            options: [
+                                ("Nam", t!(chart_male).resolve(cx).into_owned()),
+                                ("Nu", t!(chart_female).resolve(cx).into_owned()),
+                            ],
+                            // Male by default, so the hour is the only pick left.
+                            checked: Some(sent.and_then(|sent| sent.gender).map_or("Nam", gender_value))
+                        )
+                    </div>
+
+                    // Presets: a random birth moment (YOLO), and one birth saved
+                    // on this device. cast.js shows the row; without JavaScript
+                    // it has nothing to do.
+                    <div class="option-row" data-tools="" hidden="">
+                        <p class="dial-label">(t!(cast_tools_label))</p>
+                        <div class="chips min-w-0">
+                            <button type="button" class="chip" data-random="">
+                                <span class="dice text-accent" aria-hidden="true">
+                                    icon(data: iconify_icon!("lucide:dices"))
+                                </span>
+                                (t!(cast_random))
+                            </button>
+                            <button
+                                type="button"
+                                class="chip favorite min-w-0 shrink"
+                                data-favorite=""
+                                data-save=(t!(cast_favorite_save).resolve(cx))
+                                data-load=(t!(cast_favorite_load).resolve(cx))
+                                data-saved=(t!(cast_toast_saved).resolve(cx))
+                                data-forgotten=(t!(cast_toast_forgotten).resolve(cx))
+                                data-no-hour=(t!(cast_toast_save_no_hour).resolve(cx))
+                            >
+                                <span class="heart text-accent" aria-hidden="true">
+                                    icon(data: iconify_icon!("lucide:heart"))
+                                </span>
+                                <span class="truncate" data-favorite-text="">
+                                    (t!(cast_favorite_save))
+                                </span>
+                            </button>
+                            <button
+                                type="button"
+                                class="chip w-8 justify-center px-0 text-muted"
+                                aria-label=(t!(cast_favorite_forget).resolve(cx))
+                                title=(t!(cast_favorite_forget).resolve(cx))
+                                data-forget=""
+                                hidden=""
+                            >
+                                icon(data: iconify_icon!("lucide:x"))
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -217,7 +266,6 @@ pub async fn cast_screen(
             data-toast=""
             data-invalid-date=(t!(draw_toast_invalid).resolve(cx))
             data-no-hour=(t!(cast_toast_no_hour).resolve(cx))
-            data-no-gender=(t!(cast_toast_no_gender).resolve(cx))
         ></div>
         <script type="module" src=(CAST_JS)></script>
     })

@@ -84,17 +84,21 @@ theme_to_day = Chuyển sang giao diện ngày
 theme_to_night = Chuyển sang giao diện đêm
 
 ## Birth form
-cast_hour_label = Giờ sinh
+cast_buoi_label = Buổi
 cast_gender_label = Giới tính
-cast_required = · bắt buộc
-cast_buoi_aria = Buổi trong ngày
 cast_hour_aria = Giờ sinh
 cast_clock_pick = Chọn giờ
 cast_clock_hour_prefix = Giờ{" "}
 cast_clock_hour_suffix = {""}
-cast_clock_hint = Xoay kim quanh mặt đồng hồ hoặc chạm vào số để chọn giờ
 cast_toast_no_hour = Chọn giờ sinh để an sao chính xác nhé ✦
-cast_toast_no_gender = Cho Thiên Hạc biết giới tính của bạn nhé ✦
+cast_tools_label = Cài sẵn
+cast_random = Hên xui
+cast_favorite_save = Yêu thích
+cast_favorite_load = Điền ngày sinh đã lưu:
+cast_favorite_forget = Xoá ngày sinh đã lưu
+cast_toast_saved = Đã lưu trên máy này ✦
+cast_toast_forgotten = Đã xoá ngày sinh đã lưu
+cast_toast_save_no_hour = Chọn giờ sinh trước khi lưu nhé ✦
 cast_error_no_hour = Chọn giờ sinh trên đồng hồ.
 cast_error_no_gender = Chọn giới tính.
 cast_error_invalid_date = Ngày sinh không có trên lịch.

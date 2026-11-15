@@ -42,8 +42,8 @@ The accent is the element of the chính tinh in cung Mệnh:
 - No star (vô chính diệu) or no chart: the neutral lavender `#bca6f5`.
 
 The card pages set `--accent` on their `<main>`
-(`crates/tuvi-web/src/features/charts/accent.rs`). The draw screen has no
-chart, so it keeps the neutral accent.
+(`crates/tuvi-web/src/features/charts/accent.rs`). On the draw screen the
+preview sets it once the hour is picked.
 
 ## Type
 
@@ -67,11 +67,11 @@ Both fonts load with the Vietnamese subset. Small labels are uppercase, bold,
 ## Header
 
 Every page has one header: the logo and the name, linked to the draw screen
-(`crates/tuvi-web/src/features/shell/`), and on the right the language switch
-(`pill-ghost`): the lucide `languages` icon and the page language, "En" or "Vi".
-A tap opens a `popover` dropdown (`.language-menu`) with "En · English" and
-"Vi · Tiếng Việt"; the current one is checked.
-There is no tab bar and no login.
+(`crates/tuvi-web/src/features/shell/`). On the right: the language switch
+(`pill-ghost`, the lucide `languages` icon and "En" or "Vi"), then the night
+and day switch. The language switch opens a `popover` dropdown
+(`.language-menu`) with "En · English" and "Vi · Tiếng Việt"; the current one
+is checked.
 
 ## Language
 
@@ -82,46 +82,67 @@ the English text glosses them where it helps, e.g. "Bureau (Cục)".
 
 ## Night and day
 
-Night is the default: the twilight design above. A round `pill-ghost`
-switch right of the language button turns the page to day and back (a sun at
-night, a moon by day); a `theme` cookie keeps the pick, so the server
-renders the page in it. Day is a calm, dim dawn: dusky lavender at the top,
-mint and sky blue in the corners, a peach glow at the bottom, deep plum ink
-(`#261640`), soft frosted glass, and deeper accents (neutral `#7457d6` to
-orchid `#b45aa8`; darker element colors) so they read on a light page. The
-crane logo tones down a touch, with a faint shade instead of a glow. The cards turn to
-a dawn of their own (lavender to peach), with white star hearts ringed in
-the accent. The 12-cung grid keeps the night palette (`.night`). The casting loader
-takes the dawn sky; its crane is inverted and multiplied, a bronze crane. Where the
+Night is the default: the twilight design above. The switch in the header
+turns the page to day and back (a sun at night, a moon by day). A `theme`
+cookie keeps the pick, so the server renders the page in it. Where the
 browser can, the switch cross-fades.
+
+Day is a calm, dim dawn: dusky lavender at the top, mint and sky blue in the
+corners, a peach glow at the bottom, deep plum ink (`#261640`), soft frosted
+glass, and deeper accents (neutral `#7457d6` to orchid `#b45aa8`; darker
+element colors).
+
+- The crane logo tones down a touch, with a faint shade instead of a glow.
+- The cards turn to a dawn of their own (lavender to peach), with white star
+  hearts ringed in the accent.
+- The casting loader takes the dawn sky; its crane is inverted and
+  multiplied, so it shows in bronze.
+- The 12-cung grid keeps the night palette (`.night`).
 
 ## Draw screen
 
-The home page (`crates/tuvi-web/src/features/cast/`). It reuses the
-prototype's An sao parts (`.picker`, `.birth-clock`, `.segment`, `.reward`,
-the casting loader) around a face-down card.
+The home page (`crates/tuvi-web/src/features/cast/`).
 
 - Order on a phone and a tablet: title, the card, the birth form, the main
-  button. The card is as wide as the form card. From 1024px one glass table under a centred title holds the birth
-  form on the left and the card with the button on the right, both in the
-  middle, 5rem apart; the table hugs them with 2.5rem on each side.
-  The card width follows the screen height (220–280px), so the table fits a
-  laptop screen.
+  button. The card is as wide as the form.
+- From 1024px: one glass table under a centred title. The birth form is on
+  the left, the card with the button on the right, 5rem apart, tops
+  aligned; the table hugs them with 2.5rem on each side. The card and the
+  button end where the birth form ends, so the last row lines up with the
+  button (`cast.js` sets `--stage-card`; without it, the card width follows
+  the screen height, 220–280px).
 - The birth form (`glass`): three scroll-snap date wheels (day, month, year
-  1900–2099) over one accent band, then AM/PM (`.segment`), the birth clock
-  (`.birth-clock`) and gender (`.segment`, Male by default). The picked
-  segment has the accent gradient and `bg-0` text. The clock: 12 at the top; a tap picks an hour; a
-  drag around the face turns the hand with the finger and picks the nearest
-  hour (a short vibration per hour where the phone supports it); arrow keys
-  step; the center shows the hour, its canh giờ and range.
-- The card (`.card-back`): the 9:16 twilight card with "THIÊN HẠC" and
-  "TỬ VI". Before an hour is picked it is face down: a quiet sky and a ✦.
-  Then the preview shows each chính tinh of cung Mệnh as its constellation
-  (`.chom-*`) and the page accent takes the chart's color; vô chính diệu
-  keeps the sky. It floats on a 6 s cycle.
+  1900–2099) over one accent band, then the birth clock (`.birth-clock`),
+  then a list of rows (`.option-row`): a hairline above each, the
+  `.dial-label` on the left, small round `.chip`s (32px) on the right.
+  - Time of day (Vi "Buổi"): ☀ AM and ☾ PM (lucide `sun`, `moon`).
+  - Gender: Male and Female, Male by default.
+  - Presets (see below).
+  The picked chip has the accent gradient. The clock has no label and no
+  hint.
+- The clock: 12 at the top. A tap picks an hour; a drag around the face
+  turns the hand with the finger and picks the nearest hour (a short
+  vibration per hour where the phone supports it); arrow keys step. The
+  center shows the hour, its canh giờ and range.
+- Presets (Vi "Cài sẵn"), the last row. `cast.js` shows it, so without
+  JavaScript it is hidden.
+  - YOLO (Vi "Hên xui", the lucide `dices` icon) rolls a real date (year
+    1930 to this year), an hour and a gender.
+  - Favorite (Vi "Yêu thích", lucide `heart`) saves one birth on this device
+    (`localStorage`). It needs the hour. Once saved, the heart fills and
+    shows the date; a tap fills the form in again, and a small × next to it
+    forgets it.
+  - Both fill the form the same way, about 2.5 s with no zoom: the wheels
+    spin like slot reels and stop one after another, AM/PM and gender flick
+    back and forth, the clock hand winds a full turn (no hour is lit until it stops), and the card sways. The card wakes once all have landed.
+- The card (`.card-back`): 9:16, with "THIÊN HẠC" and "TỬ VI". Before an
+  hour is picked it shows a quiet sky and a ✦. Then each chính tinh of cung
+  Mệnh shows as its constellation (`.chom-*`), filling the card (twin stars
+  stack), and the page accent takes the chart's color; vô chính diệu keeps
+  the sky. It floats on a 6 s cycle.
 - "✦ Draw a card" posts the form. `cast.js` first shows the casting loader
-  for 2.6 s. A missing hour or gender, or a date that is not on the
-  calendar, shows a toast instead (the clock pulses for a missing hour).
+  for 2.6 s. A missing hour or a date that is not on the calendar shows a
+  toast instead (the clock pulses for a missing hour).
 - Every control is a native radio, so the form works without JavaScript.
 
 ## Bản mệnh screen
@@ -160,8 +181,8 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
 - Each chính tinh of cung Mệnh shows its constellation (`.chom-*`): a faint
   ghost portrait (24% opacity, radial mask) under a star pattern in the
   accent. A wave draws the lines every 4.2 s, and each star pulses on a
-  4.5 s cycle. Song tinh show two smaller figures side by side. Vô chính
-  diệu shows the scattered sky. Under reduced motion, the lines and stars
+  4.5 s cycle. On this card, song tinh show two smaller figures side by
+  side. Vô chính diệu shows the scattered sky. Under reduced motion, the lines and stars
   stay still and lit.
 
 ## Chart

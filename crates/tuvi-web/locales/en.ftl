@@ -84,17 +84,21 @@ theme_to_day = Switch to day
 theme_to_night = Switch to night
 
 ## Birth form
-cast_hour_label = Birth hour
+cast_buoi_label = Time of day
 cast_gender_label = Gender
-cast_required = · required
-cast_buoi_aria = Half of the day
 cast_hour_aria = Birth hour
 cast_clock_pick = Pick an hour
 cast_clock_hour_prefix = {""}
 cast_clock_hour_suffix = {" "}hour
-cast_clock_hint = Turn the hand around the clock, or tap a number, to set the hour
 cast_toast_no_hour = Set your birth hour on the clock ✦
-cast_toast_no_gender = Pick a gender ✦
+cast_tools_label = Presets
+cast_random = YOLO
+cast_favorite_save = Favorite
+cast_favorite_load = Fill in my saved birth:
+cast_favorite_forget = Forget my saved birth
+cast_toast_saved = Saved on this device ✦
+cast_toast_forgotten = Your saved birth is forgotten
+cast_toast_save_no_hour = Set the hour before you save ✦
 cast_error_no_hour = Set the birth hour on the clock.
 cast_error_no_gender = Pick a gender.
 cast_error_invalid_date = That date is not on the calendar.
