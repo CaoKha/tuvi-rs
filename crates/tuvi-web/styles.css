@@ -319,19 +319,20 @@
     mask: radial-gradient(circle, transparent 0 88%, #000 88% 94%, transparent 94%);
   }
 
+  /* The hand: a fine needle that fades in from the centre, with a small
+     pointer that ends at the edge of the lit hour. */
   .clock-hand {
     position: absolute;
     z-index: 2;
-    left: calc(50% - 1px);
+    left: calc(50% - 0.75px);
     bottom: 50%;
-    width: 2px;
-    height: 31%;
-    border-radius: 2px;
+    width: 1.5px;
+    height: 28%;
+    border-radius: 1px;
     transform-origin: 50% 100%;
     transform: rotate(var(--hand-angle));
-    background: linear-gradient(to top, var(--accent), var(--accent-2));
-    box-shadow: 0 0 9px var(--accent-glow);
-    opacity: 0.32;
+    background: linear-gradient(to top, transparent 6%, color-mix(in srgb, var(--accent) 70%, transparent) 45%, var(--accent-2));
+    opacity: 0.4;
     transition:
       transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1),
       opacity 0.2s;
@@ -340,26 +341,24 @@
   .clock-hand::before {
     content: "";
     position: absolute;
-    top: -4px;
-    left: -3px;
+    top: -7px;
+    left: -3.25px;
     width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    height: 9px;
     background: var(--accent-2);
-    box-shadow: 0 0 10px var(--accent-glow);
+    clip-path: polygon(50% 0, 100% 100%, 50% 78%, 0 100%);
+    filter: drop-shadow(0 0 4px var(--accent-glow));
+    transform-origin: 50% 100%;
+    transition: transform 0.2s;
   }
 
   .birth-clock.dragging .clock-hand {
     transition: none;
   }
 
-  /* The tip grows under the finger while it drags the hand. */
-  .clock-hand::before {
-    transition: transform 0.2s;
-  }
-
+  /* The pointer grows under the finger while it drags the hand. */
   .birth-clock.dragging .clock-hand::before {
-    transform: scale(1.6);
+    transform: scale(1.4);
   }
 
   .birth-clock:has(:checked) .clock-hand,
@@ -383,6 +382,50 @@
       opacity 0.2s;
   }
 
+  /* A tooltip over a preset chip, from its data-tip, centred on it: on
+     hover where the device hovers, and on keyboard focus. */
+  [data-tip] {
+    position: relative;
+  }
+
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    z-index: 10;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    width: max-content;
+    max-width: 220px;
+    border: 1px solid var(--color-glass-line);
+    border-radius: 10px;
+    background: var(--color-bg-1);
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: normal;
+    color: var(--color-ink);
+    white-space: normal;
+    opacity: 0;
+    translate: -50% 4px;
+    pointer-events: none;
+    transition:
+      opacity 0.2s,
+      translate 0.2s;
+  }
+
+  @media (hover: hover) {
+    [data-tip]:hover::after {
+      opacity: 1;
+      translate: -50% 0;
+    }
+  }
+
+  [data-tip]:focus-visible::after {
+    opacity: 1;
+    translate: -50% 0;
+  }
+
   /* The random button: the dice tumble while the form rolls. */
   .dice {
     display: inline-flex;
@@ -399,6 +442,22 @@
 
   .favorite.saved .heart :is(path, g) {
     fill: currentColor;
+  }
+
+  /* A new portrait on the card cross-fades with the old one: cast.js lays
+     a still copy of the old one on top and fades it out. */
+  .preview-in {
+    animation: preview-in 0.6s ease both;
+  }
+
+  .preview-ghost {
+    position: absolute;
+    pointer-events: none;
+    animation: preview-out 0.6s ease both;
+  }
+
+  .preview-ghost .chom-figure {
+    animation: none;
   }
 
   /* The card sways while the form rolls. */
@@ -556,6 +615,18 @@
 @keyframes need-pulse {
   35% {
     box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+}
+
+@keyframes preview-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes preview-out {
+  to {
+    opacity: 0;
   }
 }
 

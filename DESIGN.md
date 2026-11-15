@@ -123,10 +123,13 @@ The home page (`crates/tuvi-web/src/features/cast/`).
 - The clock: 12 at the top. A tap picks an hour; a drag around the face
   turns the hand with the finger and picks the nearest hour (a short
   vibration per hour where the phone supports it); arrow keys step. The
-  center shows the hour, its canh giờ and range.
+  center shows the hour, its canh giờ and range. The hand is a fine needle
+  that fades in from the center, with a small pointer that ends at the edge
+  of the lit hour.
 - Presets (Vi "Cài sẵn"), the last row. `cast.js` shows it, so without
-  JavaScript it is hidden.
-  - YOLO (Vi "Hên xui", the lucide `dices` icon) rolls a real date (year
+  JavaScript it is hidden. Each chip has a tooltip (`data-tip`), centered
+  above it, on hover and on keyboard focus.
+  - YOLO (the same in Vi, the lucide `dices` icon) rolls a real date (year
     1930 to this year), an hour and a gender.
   - Favorite (Vi "Yêu thích", lucide `heart`) saves one birth on this device
     (`localStorage`). It needs the hour. Once saved, the heart fills and
@@ -139,7 +142,8 @@ The home page (`crates/tuvi-web/src/features/cast/`).
   hour is picked it shows a quiet sky and a ✦. Then each chính tinh of cung
   Mệnh shows as its constellation (`.chom-*`), filling the card (twin stars
   stack), and the page accent takes the chart's color; vô chính diệu keeps
-  the sky. It floats on a 6 s cycle.
+  the sky. A new portrait cross-fades with the old one (0.6 s). It floats on
+  a 6 s cycle.
 - "✦ Draw a card" posts the form. `cast.js` first shows the casting loader
   for 2.6 s. A missing hour or a date that is not on the calendar shows a
   toast instead (the clock pulses for a missing hour).

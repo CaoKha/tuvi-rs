@@ -6,6 +6,7 @@
 // - Presets: YOLO spins the wheels, flicks AM/PM and gender, winds the clock
 //   to a random birth moment; the heart saves one birth on this device and
 //   fills it in again the same way.
+// - Preview: a new portrait cross-fades with the old one.
 // - Card: from 1024px the card and the draw button end where the birth
 //   form ends.
 // - Submit: a toast for a missing hour or a date that is not on
@@ -99,6 +100,54 @@ function setUp(form) {
   const tools = form.querySelector("[data-tools]");
   if (tools && hand) setUpPresets(form, tools, wheels, hand);
   setUpCardFit(form);
+  setUpPreviewFade(form);
+}
+
+/** The accent of the page now, so a copy of the card keeps its colour once
+ * the next portrait sets a new one. */
+const ACCENT_VARS = ["--accent", "--accent-2", "--accent-glow"];
+
+/** Cross-fades the card preview. A pick takes a still copy of the portrait
+ * on show; when the shard swaps in the next one, the copy lies on top and
+ * fades out while the new one fades in. */
+function setUpPreviewFade(form) {
+  const preview = document.querySelector(".card-back [role=status]");
+  if (!preview) return;
+  const card = preview.parentElement;
+  let copy = null;
+
+  form.addEventListener(
+    "change",
+    () => {
+      if (copy || still()) return;
+      copy = preview.cloneNode(true);
+      copy.removeAttribute("role");
+      copy.removeAttribute("aria-live");
+      copy.setAttribute("aria-hidden", "true");
+      copy.querySelectorAll("style").forEach((style) => style.remove());
+      const root = getComputedStyle(document.documentElement);
+      for (const name of ACCENT_VARS) copy.style.setProperty(name, root.getPropertyValue(name));
+    },
+    true,
+  );
+
+  new MutationObserver(() => {
+    if (!copy) return;
+    const ghost = copy;
+    copy = null;
+    Object.assign(ghost.style, {
+      top: `${preview.offsetTop}px`,
+      left: `${preview.offsetLeft}px`,
+      width: `${preview.offsetWidth}px`,
+      height: `${preview.offsetHeight}px`,
+    });
+    ghost.classList.add("preview-ghost");
+    ghost.addEventListener("animationend", (event) => {
+      if (event.animationName === "preview-out") ghost.remove();
+    });
+    card.append(ghost);
+    play(preview, "preview-in", "preview-in");
+  }).observe(preview, { childList: true, subtree: true, characterData: true });
 }
 
 /** From 1024px the card and the draw button end where the birth form ends:
@@ -417,11 +466,11 @@ function setUpPresets(form, tools, wheels, clock) {
       favoriteText.textContent = `${day}/${month}/${year}`;
       const label = `${favorite.dataset.load} ${day}/${month}/${year} · ${gio} ${buoi}`;
       favorite.setAttribute("aria-label", label);
-      favorite.title = label;
+      favorite.dataset.tip = label;
     } else {
       favoriteText.textContent = favorite.dataset.save;
       favorite.removeAttribute("aria-label");
-      favorite.removeAttribute("title");
+      favorite.dataset.tip = favorite.dataset.saveTip;
     }
   };
   show();

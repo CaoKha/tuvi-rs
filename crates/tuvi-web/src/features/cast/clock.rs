@@ -99,7 +99,7 @@ pub(super) async fn birth_clock(
                 </label>
             }
             <span
-                class="pointer-events-none absolute top-1/2 left-1/2 z-5 size-3 -translate-1/2 rounded-full border-3 border-bg-1 bg-accent shadow-[0_0_13px_var(--accent-glow)]"
+                class="pointer-events-none absolute top-1/2 left-1/2 z-5 size-2 -translate-1/2 rounded-full bg-accent-2 ring-3 ring-accent/20"
                 aria-hidden="true"
             ></span>
             <span

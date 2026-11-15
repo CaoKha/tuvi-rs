@@ -219,7 +219,12 @@ pub async fn cast_screen(
                     <div class="option-row" data-tools="" hidden="">
                         <p class="dial-label">(t!(cast_tools_label))</p>
                         <div class="chips min-w-0">
-                            <button type="button" class="chip" data-random="">
+                            <button
+                                type="button"
+                                class="chip"
+                                data-random=""
+                                data-tip=(t!(cast_random_tip).resolve(cx))
+                            >
                                 <span class="dice text-accent" aria-hidden="true">
                                     icon(data: iconify_icon!("lucide:dices"))
                                 </span>
@@ -229,6 +234,8 @@ pub async fn cast_screen(
                                 type="button"
                                 class="chip favorite min-w-0 shrink"
                                 data-favorite=""
+                                data-tip=(t!(cast_favorite_tip).resolve(cx))
+                                data-save-tip=(t!(cast_favorite_tip).resolve(cx))
                                 data-save=(t!(cast_favorite_save).resolve(cx))
                                 data-load=(t!(cast_favorite_load).resolve(cx))
                                 data-saved=(t!(cast_toast_saved).resolve(cx))
@@ -246,7 +253,7 @@ pub async fn cast_screen(
                                 type="button"
                                 class="chip w-8 justify-center px-0 text-muted"
                                 aria-label=(t!(cast_favorite_forget).resolve(cx))
-                                title=(t!(cast_favorite_forget).resolve(cx))
+                                data-tip=(t!(cast_favorite_forget).resolve(cx))
                                 data-forget=""
                                 hidden=""
                             >
