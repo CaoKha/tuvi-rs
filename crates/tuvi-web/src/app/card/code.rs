@@ -1,4 +1,4 @@
-//! `/la-bai/{code}`: the Bản mệnh deck of one card. A new draw lands here.
+//! `/card/{code}`: the Bản mệnh deck of one card. A new draw lands here.
 
 use topcoat::{
     Result,
@@ -8,15 +8,11 @@ use topcoat::{
 };
 use tuvi_core::{Chart, build_chart};
 
-use crate::features::{
-    ban_menh::ban_menh_screen,
-    charts::accent_style,
-    gacha::{CardCode, card_name},
-};
+use crate::features::{charts::accent_style, deck::deck_screen, gacha::CardCode};
 
 module_param!(pub code: CardCode else not_found);
 
-pub mod la_so;
+pub mod chart;
 
 /// The chart of the card in the URL. A code that is not on the calendar,
 /// or outside 1800–2199, is a 404.
@@ -29,13 +25,11 @@ pub(crate) fn card_chart(cx: &Cx) -> Result<(CardCode, Chart)> {
 #[page]
 pub async fn show(cx: &Cx) -> Result<impl View> {
     let (card, chart) = card_chart(cx)?;
-    let name = card_name(&chart);
     Ok(view! {
         <main class="mx-auto max-w-5xl pb-16" style=(accent_style(&chart))>
-            ban_menh_screen(
-                name: name.as_str(),
+            deck_screen(
                 chart: &chart,
-                la_so: href!(la_so::show, code: card).resolve(cx)
+                chart_url: href!(chart::show, code: card).resolve(cx)
             )
         </main>
     })

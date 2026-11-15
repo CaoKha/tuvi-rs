@@ -3,7 +3,7 @@
 //!
 //! Each one covers 2 neighbouring cung.
 
-use crate::can_chi::{DiaChi, ThienCan};
+use crate::stems_branches::{DiaChi, ThienCan};
 
 /// Triệt, by year Thiên Can: Giáp/Kỷ → Thân Dậu, Ất/Canh → Ngọ Mùi,
 /// Bính/Tân → Thìn Tị, Đinh/Nhâm → Dần Mão, Mậu/Quý → Tý Sửu.

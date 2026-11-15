@@ -1,0 +1,964 @@
+{
+  "sources": [
+    {
+      "id": "s1",
+      "title": "Tử Vi Đẩu Số: Luận 12 cung - Vương Đình Chi",
+      "url": "http://tuvitinhquyet.blogspot.com/2012/11/luan-12-cung-vuong-inh-chi.html"
+    },
+    {
+      "id": "s2",
+      "title": "Nguyên tắc luận đoán 12 Cung - Lý số Việt Nam",
+      "url": "https://lyso.vn/xem-tu-vi/nguyen-tac-luan-doan-12-cung-t103604/"
+    },
+    {
+      "id": "s3",
+      "title": "Cung Tật Ách Trong Tử Vi Đẩu Số - Thái Âm",
+      "url": "https://thaiam.vn/tu-vi-wiki/cung-khi/cung-tat-ach.html"
+    },
+    {
+      "id": "s4",
+      "title": "Cung Huynh Đệ Trong Tử Vi Đẩu Số - Thái Âm",
+      "url": "https://thaiam.vn/tu-vi-wiki/cung-khi/cung-huynh-de.html"
+    },
+    {
+      "id": "s5",
+      "title": "Cung Nô Bộc là gì? Ý Nghĩa Cung Nô Bộc trong Tử Vi - Tử Vi Việt Nam",
+      "url": "https://tuvivietnam.vn/cung-no-boc-la-gi-y-nghia-cung-no-boc-trong-tu-vi-tuvivietnam/"
+    },
+    {
+      "id": "s6",
+      "title": "Sao Hoá Lộc là gì? Luận giải sao Hóa Lộc trong Tử Vi - Thăng Long Đạo Quán",
+      "url": "https://thanglongdaoquan.vn/sao-hoa-loc/"
+    },
+    {
+      "id": "s7",
+      "title": "Sao Hóa Quyền xuất hiện tại 12 Cung Tử Vi có ý nghĩa? - Thăng Long Đạo Quán",
+      "url": "https://thanglongdaoquan.vn/sao-hoa-quyen/"
+    },
+    {
+      "id": "s8",
+      "title": "Sao Hóa Khoa là gì? Luận giải sao Hóa Khoa tại Tử vi - Thăng Long Đạo Quán",
+      "url": "https://thanglongdaoquan.vn/sao-hoa-khoa/"
+    },
+    {
+      "id": "s9",
+      "title": "Luận giải ý nghĩa sao Hóa Kỵ ở 12 cung trong Lá số tử vi - Thăng Long Đạo Quán",
+      "url": "https://thanglongdaoquan.vn/sao-hoa-ky/"
+    },
+    {
+      "id": "s10",
+      "title": "Ý tượng căn bản của Hóa Kị - Tử Vi Việt Nam",
+      "url": "https://tuvivietnam.vn/y-tuong-can-ban-cua-hoa-ki/"
+    },
+    {
+      "id": "s11",
+      "title": "Sao Lưu Hóa Lộc - Tra Cứu Tử Vi",
+      "url": "https://tracuutuvi.com/sao-luu-hoa-loc.html"
+    },
+    {
+      "id": "s12",
+      "title": "Sao Lưu Hóa Quyền - Tra Cứu Tử Vi",
+      "url": "https://tracuutuvi.com/sao-luu-hoa-quyen.html"
+    },
+    {
+      "id": "s13",
+      "title": "Sao Lưu Hóa Khoa - Tra Cứu Tử Vi",
+      "url": "https://tracuutuvi.com/sao-luu-hoa-khoa.html"
+    },
+    {
+      "id": "s14",
+      "title": "Sao Lưu Hóa Kỵ - Tra Cứu Tử Vi",
+      "url": "https://tracuutuvi.com/sao-luu-hoa-ky.html"
+    },
+    {
+      "id": "s15",
+      "title": "Sao Hóa Lộc – Tài Lộc, Phúc Đức, Duyên Phận Trong Tử Vi - Tử Vi Sơn Khiêm",
+      "url": "https://tuvisonkhiem.vn/thu-vien/sao/hoa-loc/"
+    },
+    {
+      "id": "s16",
+      "title": "Tứ Hóa Là Gì? Hóa Lộc, Hóa Quyền, Hóa Khoa, Hóa Kỵ Trong Tử Vi Đẩu Số - HOROS",
+      "url": "https://horos.vn/blog/post/tu-hoa-la-gi-hoa-loc-hoa-quyen-hoa-khoa-hoa-ky-trong-tu-vi-dau-so"
+    },
+    {
+      "id": "s17",
+      "title": "Tứ Hóa trong Tử Vi - Giải Mã Tử Vi",
+      "url": "https://giaimatuvi.com/tu-hoa-trong-tu-vi-hoa-loc-quyen-khoa-ky"
+    },
+    {
+      "id": "s18",
+      "title": "Lưu Nhật, Lưu Thời Là Gì? Xem Vận Ngày, Giờ Trong Tử Vi - Tử Vi Sơn Khiêm",
+      "url": "https://tuvisonkhiem.vn/thu-vien/thuat-ngu/luu-nhat-luu-thoi-la-gi/"
+    },
+    {
+      "id": "s19",
+      "title": "Lưu Nguyệt Lưu Nhật: Vận Tháng Vận Ngày - Thầy Ưng Khiêm",
+      "url": "https://thayungkhiem.vn/luu-nguyet-luu-nhat"
+    },
+    {
+      "id": "s20",
+      "title": "Luận đoán nhật hạn trên lá số tử vi - Học viện lý số",
+      "url": "https://hocvienlyso.org/luan-doan-nhat-han-tren-la-so-tu-vi.html"
+    },
+    {
+      "id": "s21",
+      "title": "Cách xem đại hạn, tiểu hạn, nguyệt hạn, mệnh hạn toàn tập trong tử vi - Huyền Học Việt Nam",
+      "url": "https://huyenhocvietnam.vn/nd/14198/Cach-xem-dai-han.html"
+    },
+    {
+      "id": "s22",
+      "title": "Giờ cát Thanh Long Quyết - Thư Quán Vũ Phác",
+      "url": "https://vuphac.com/gio-cat-thanh-long-quyet/"
+    },
+    {
+      "id": "s23",
+      "title": "Giờ hoàng đạo là gì? Bảng giờ tốt theo ngày và cách tính - LICH",
+      "url": "https://lich.today/tin-tuc/gio-hoang-dao-la-gi"
+    },
+    {
+      "id": "s24",
+      "title": "Giờ hoàng đạo là gì? Cách tính và bảng tra cứu giờ tốt nhất - Đồ Cúng Tâm Linh",
+      "url": "https://docungtamlinh.com.vn/gio-hoang-dao/"
+    },
+    {
+      "id": "s25",
+      "title": "Ngày Hoàng Đạo giờ Hoàng Đạo là gì trong môn Xem ngày tốt xấu? - Lịch Ngày Tốt",
+      "url": "https://lichngaytot.com/tu-vi/ngay-hoang-dao-gio-hoang-dao-la-gi-232-191536.html"
+    },
+    {
+      "id": "s26",
+      "title": "Ngày hoàng đạo, ngày hắc đạo, giờ hoàng đạo, giờ hắc đạo là gì? - Xem Tử Vi",
+      "url": "https://xemtuvi.mobi/xem-phong-thuy/phong-thuy-hoc-co-ban/ngay-hoang-dao-ngay-hac-dao-gio-hoang-dao-gio-hac-dao-la-gi.html"
+    },
+    {
+      "id": "s27",
+      "title": "Chọn Ngày Giờ - Hoàng Đạo Hắc Đạo - Bài 21 - Phong Thủy Tường Minh",
+      "url": "https://www.phongthuytuongminh.com/vi/chon-ngay-gio-hoang-dao-hac-dao-bai-21.html"
+    },
+    {
+      "id": "s28",
+      "title": "Cách chọn ngày tốt theo Hoàng Đạo và Hắc Đạo trong Lịch Vạn Sự - Học quán Sơn Chu",
+      "url": "https://sonchu.vn/2019/12/12/chon-ngay-tot-theo-hoang-dao-hac-dao/"
+    },
+    {
+      "id": "s29",
+      "title": "Ngày hoàng đạo, hắc đạo - Sắp Tết",
+      "url": "https://www.saptet.com/hoang-dao/"
+    },
+    {
+      "id": "s30",
+      "title": "Ý nghĩa Ngày Thiên Hình hắc đạo đối với các việc - Xem Vận Mệnh",
+      "url": "https://xemvanmenh.net/ngay-thien-hinh-hac-dao-la-gi-tot-hay-xau-A1293.html"
+    },
+    {
+      "id": "s31",
+      "title": "Ngày Chu Tước hắc đạo là ngày gì? - Tử Vi Khoa Học",
+      "url": "https://tuvikhoahoc.vn/ngay-chu-tuoc-hac-dao-A49573081.html"
+    },
+    {
+      "id": "s32",
+      "title": "Ngày Thanh Long Hoàng Đạo là gì? Tốt hay xấu như thế nào? - Xem Vận Mệnh",
+      "url": "https://xemvanmenh.net/ngay-thanh-long-hoang-dao-la-gi-tot-hay-xau-A1288.html"
+    },
+    {
+      "id": "s33",
+      "title": "Sao Hóa Lộc: Chủ về sự giàu sang, tiền bạc, khéo léo - Tra Cứu Tử Vi",
+      "url": "https://tracuutuvi.com/sao-hoa-loc.html"
+    },
+    {
+      "id": "s34",
+      "title": "Sao Đẩu Quân – Tử Vi Sơn Khiêm",
+      "url": "https://tuvisonkhiem.vn/thu-vien/sao/dau-quan/"
+    }
+  ],
+  "palaces": {
+    "Mệnh": {
+      "name": {
+        "en": "Self",
+        "vi": "Mệnh"
+      },
+      "theme": {
+        "en": "Your own day: mood, choices and how you act",
+        "vi": "Ngày của chính bạn: tinh thần, cách chọn lựa và hành động"
+      },
+      "do": {
+        "en": "Set one clear goal for today, do the most important task first, and take care with how you look and speak.",
+        "vi": "Đặt một mục tiêu rõ cho hôm nay, làm việc quan trọng nhất trước, chăm chút diện mạo và lời nói."
+      },
+      "avoid": {
+        "en": "Don't take on too much, decide on a passing mood, or measure yourself against others.",
+        "vi": "Tránh ôm đồm, quyết định theo cảm xúc nhất thời hay so sánh mình với người khác."
+      },
+      "sources": [
+        "s1",
+        "s2"
+      ]
+    },
+    "Phụ Mẫu": {
+      "name": {
+        "en": "Parents",
+        "vi": "Phụ Mẫu"
+      },
+      "theme": {
+        "en": "Parents, bosses, mentors and paperwork",
+        "vi": "Cha mẹ, cấp trên, người đi trước và giấy tờ"
+      },
+      "do": {
+        "en": "Call your parents, check in with your boss or ask their advice, and go over forms and papers you need to file.",
+        "vi": "Gọi hỏi thăm cha mẹ, xin ý kiến hay báo cáo cấp trên, rà soát hồ sơ, giấy tờ cần nộp."
+      },
+      "avoid": {
+        "en": "Don't argue head-on with elders or your boss, and don't sign anything you haven't read carefully.",
+        "vi": "Tránh cãi tay đôi với người lớn hay sếp, ký giấy tờ khi chưa đọc kỹ."
+      },
+      "sources": [
+        "s1",
+        "s2"
+      ]
+    },
+    "Phúc Đức": {
+      "name": {
+        "en": "Wellbeing",
+        "vi": "Phúc Đức"
+      },
+      "theme": {
+        "en": "Inner life, quiet joys and the wider family",
+        "vi": "Đời sống tinh thần, niềm vui bên trong và họ hàng"
+      },
+      "do": {
+        "en": "Take some quiet time, reach out to relatives, do a small kindness, and let yourself rest without hurry.",
+        "vi": "Dành thời gian tĩnh tâm, thăm hỏi họ hàng, làm một việc tốt nhỏ, cho mình nghỉ ngơi thong thả."
+      },
+      "avoid": {
+        "en": "Don't let worry drag on, shop to fix your mood, or speak harshly about family matters.",
+        "vi": "Tránh để lo âu kéo dài, tiêu xài để giải tỏa tâm trạng, nặng lời trong chuyện gia tộc."
+      },
+      "sources": [
+        "s1"
+      ]
+    },
+    "Điền Trạch": {
+      "name": {
+        "en": "Property",
+        "vi": "Điền Trạch"
+      },
+      "theme": {
+        "en": "Home, property and the mood at home",
+        "vi": "Nhà cửa, tài sản cố định và không khí gia đình"
+      },
+      "do": {
+        "en": "Tidy or fix up your space, look into housing or property matters, reorganize, and share dinner with family.",
+        "vi": "Dọn dẹp, sửa sang chỗ ở, xem xét chuyện nhà đất, sắp xếp lại đồ đạc, ăn tối cùng người nhà."
+      },
+      "avoid": {
+        "en": "Don't rush a property deal, let chores pile up, or raise your voice at home.",
+        "vi": "Tránh quyết vội việc mua bán nhà đất, để việc nhà dồn ứ hay to tiếng trong gia đình."
+      },
+      "sources": [
+        "s1"
+      ]
+    },
+    "Quan Lộc": {
+      "name": {
+        "en": "Career",
+        "vi": "Quan Lộc"
+      },
+      "theme": {
+        "en": "Work, career and professional standing",
+        "vi": "Công việc, sự nghiệp và vị thế nghề nghiệp"
+      },
+      "do": {
+        "en": "Put your energy into the main job, close out loose ends, pitch your ideas, and build a work skill.",
+        "vi": "Dồn sức cho việc chính, chốt đầu việc còn dang dở, trình bày ý tưởng, học thêm kỹ năng nghề."
+      },
+      "avoid": {
+        "en": "Don't put off important work, take on more than you can carry, or clash with people at work.",
+        "vi": "Tránh trì hoãn việc quan trọng, nhận thêm việc quá sức hay va chạm nơi công sở."
+      },
+      "sources": [
+        "s1",
+        "s2"
+      ]
+    },
+    "Nô Bộc": {
+      "name": {
+        "en": "Friends",
+        "vi": "Nô Bộc"
+      },
+      "theme": {
+        "en": "Friends, colleagues, partners, clients and staff",
+        "vi": "Bạn bè, đồng nghiệp, cộng sự, khách hàng và cấp dưới"
+      },
+      "do": {
+        "en": "Reconnect with an old friend, thank someone who helped you, give partners clear tasks, and look after clients.",
+        "vi": "Kết nối lại bạn cũ, cảm ơn người đã giúp, giao việc rõ ràng cho cộng sự, chăm sóc khách hàng."
+      },
+      "avoid": {
+        "en": "Don't lend money too easily, listen to gossip, or fully trust someone you don't yet know well.",
+        "vi": "Tránh cho vay mượn dễ dãi, nghe chuyện thị phi hay tin trọn vẹn người chưa hiểu rõ."
+      },
+      "sources": [
+        "s1",
+        "s5"
+      ]
+    },
+    "Thiên Di": {
+      "name": {
+        "en": "Travel",
+        "vi": "Thiên Di"
+      },
+      "theme": {
+        "en": "Going out, travel, new places and how others see you",
+        "vi": "Ra ngoài, đi lại, môi trường mới và hình ảnh xã hội"
+      },
+      "do": {
+        "en": "Meet people out of the house, take a work trip, widen your circle, try somewhere new; prepare before you go.",
+        "vi": "Hẹn gặp bên ngoài, đi công tác, mở rộng quan hệ, thử một nơi mới; chuẩn bị kỹ trước khi đi."
+      },
+      "avoid": {
+        "en": "Don't rush behind the wheel, leave things behind, or overstate things in public.",
+        "vi": "Tránh vội vàng khi lái xe, để quên đồ, nói quá lời nơi đông người."
+      },
+      "sources": [
+        "s1"
+      ]
+    },
+    "Tật Ách": {
+      "name": {
+        "en": "Health",
+        "vi": "Tật Ách"
+      },
+      "theme": {
+        "en": "Health, body and small mishaps",
+        "vi": "Sức khỏe, thân thể và những rủi ro nhỏ"
+      },
+      "do": {
+        "en": "Sleep enough, eat light, move at a gentle pace, keep any doctor's appointment, and slow down a notch.",
+        "vi": "Ngủ đủ, ăn uống nhẹ nhàng, vận động vừa sức, đi khám nếu đã hẹn; làm mọi việc chậm lại một nhịp."
+      },
+      "avoid": {
+        "en": "Don't overwork, stay up late, or take physical risks; if something feels off, ask a doctor.",
+        "vi": "Tránh làm quá sức, thức khuya, việc mạo hiểm thân thể; thấy dấu hiệu bất thường thì hỏi bác sĩ."
+      },
+      "sources": [
+        "s1",
+        "s3"
+      ]
+    },
+    "Tài Bạch": {
+      "name": {
+        "en": "Wealth",
+        "vi": "Tài Bạch"
+      },
+      "theme": {
+        "en": "Money: income, spending and keeping it",
+        "vi": "Tiền bạc: nguồn thu, chi tiêu và cách giữ tiền"
+      },
+      "do": {
+        "en": "Log what comes in and goes out, follow up on money owed, close well-checked deals, and plan some savings.",
+        "vi": "Ghi lại thu chi, nhắc khoản cần thu, chốt giao dịch đã tính kỹ, lên kế hoạch tiết kiệm."
+      },
+      "avoid": {
+        "en": "Avoid impulse buys, investing on rumors, or guaranteeing money for someone else.",
+        "vi": "Tránh mua sắm bốc đồng, đầu tư theo tin đồn hay đứng ra bảo lãnh tiền cho người khác."
+      },
+      "sources": [
+        "s1"
+      ]
+    },
+    "Tử Tức": {
+      "name": {
+        "en": "Children",
+        "vi": "Tử Tức"
+      },
+      "theme": {
+        "en": "Children, younger people and those you mentor",
+        "vi": "Con cái, người nhỏ tuổi và những người bạn dìu dắt"
+      },
+      "do": {
+        "en": "Spend time with your kids or someone you mentor; listen, praise at the right moment, and do something fun together.",
+        "vi": "Dành thời gian cho con hay người trẻ bạn kèm cặp, lắng nghe, khen đúng lúc, cùng làm một việc vui."
+      },
+      "avoid": {
+        "en": "Don't be heavy-handed, scold, or promise children things you may not deliver.",
+        "vi": "Tránh áp đặt, la mắng hay hứa hẹn với con trẻ điều mình chưa chắc làm được."
+      },
+      "sources": [
+        "s1"
+      ]
+    },
+    "Phu Thê": {
+      "name": {
+        "en": "Spouse",
+        "vi": "Phu Thê"
+      },
+      "theme": {
+        "en": "Spouse, partner and romantic ties",
+        "vi": "Vợ chồng, người yêu và các mối quan hệ đôi lứa"
+      },
+      "do": {
+        "en": "Make time alone with your partner, say thank you, and plan something together; if single, be open to meeting people.",
+        "vi": "Dành khoảng riêng cho người thương, nói lời cảm ơn, bàn kế hoạch chung; người độc thân nên mở lòng."
+      },
+      "avoid": {
+        "en": "Don't dig up old issues, keep score, or let work eat all your time together.",
+        "vi": "Tránh nhắc chuyện cũ, so đo hơn thua hay để công việc chiếm hết thời gian dành cho nhau."
+      },
+      "sources": [
+        "s1"
+      ]
+    },
+    "Huynh Đệ": {
+      "name": {
+        "en": "Siblings",
+        "vi": "Huynh Đệ"
+      },
+      "theme": {
+        "en": "Siblings, close friends and peers",
+        "vi": "Anh chị em, bạn thân và người ngang vai"
+      },
+      "do": {
+        "en": "Check in with your siblings, grab coffee with a close friend, and team up with peers on shared work.",
+        "vi": "Hỏi thăm anh chị em, rủ bạn thân cà phê, hợp sức với đồng nghiệp ngang cấp trong việc chung."
+      },
+      "avoid": {
+        "en": "Avoid fuzzy money arrangements with family and competing with people at your own level.",
+        "vi": "Tránh dây dưa tiền bạc không rõ ràng với người thân, tranh hơn thua với người ngang hàng."
+      },
+      "sources": [
+        "s1",
+        "s4"
+      ]
+    }
+  },
+  "transformations": {
+    "Hóa Lộc": {
+      "name": {
+        "en": "Prosperity",
+        "vi": "Hóa Lộc"
+      },
+      "meaning": {
+        "en": "Prosperity is a favorable flow: chances, money, helpful people and good cheer. The palace it lands in today is where things come easily, so speak up, but keep something in reserve.",
+        "vi": "Lộc là dòng chảy thuận: cơ hội, tiền bạc, quý nhân và niềm vui. Cung có Lộc hôm nay là chỗ dễ được việc, nên chủ động mở lời, nhưng vẫn giữ phần để dành."
+      },
+      "palaces": {
+        "Mệnh": {
+          "en": "People warm to you and back your ideas; a good day to make a request or close something you want.",
+          "vi": "Bạn dễ được thiện cảm, ý tưởng có người hưởng ứng; hợp mở lời đề nghị hay chốt một việc mong muốn."
+        },
+        "Phụ Mẫu": {
+          "en": "Parents and bosses are inclined to help; good for asking advice or getting papers approved.",
+          "vi": "Cấp trên, cha mẹ dễ nâng đỡ; hợp xin ý kiến, xin duyệt hồ sơ, giấy tờ."
+        },
+        "Phúc Đức": {
+          "en": "You feel at ease and family may lend a hand; good for quiet time, kind acts and small pleasures.",
+          "vi": "Tâm trạng thư thái, có người thân hỗ trợ; hợp tĩnh tâm, làm việc thiện, tận hưởng niềm vui nhỏ."
+        },
+        "Điền Trạch": {
+          "en": "Home matters go smoothly: good for repairs, buying things for the house, or talking property.",
+          "vi": "Thuận chuyện nhà cửa: hợp sửa sang, sắm đồ trong nhà, bàn việc nhà đất."
+        },
+        "Quan Lộc": {
+          "en": "Work flows and may bring recognition or a bonus; push ahead on your main task.",
+          "vi": "Việc làm trôi chảy, dễ được ghi nhận hay có thêm khoản thưởng; hợp đẩy mạnh việc chính."
+        },
+        "Nô Bộc": {
+          "en": "Friends, colleagues and clients bring openings; good for meeting people and growing your network.",
+          "vi": "Bạn bè, đồng nghiệp, khách hàng mang lại cơ hội; hợp gặp gỡ, mở rộng quan hệ."
+        },
+        "Thiên Di": {
+          "en": "Luck is out there, along with helpful people; good for trips, meetings and deals away from home.",
+          "vi": "Ra ngoài gặp may, dễ gặp quý nhân; hợp đi lại, hẹn gặp, giao dịch bên ngoài."
+        },
+        "Tật Ách": {
+          "en": "Your body bounces back and help arrives when you're tired; still keep a steady rest routine.",
+          "vi": "Cơ thể dễ hồi phục, có người giúp lúc mệt; vẫn nên giữ nhịp nghỉ ngơi đều đặn."
+        },
+        "Tài Bạch": {
+          "en": "Money comes in more easily than usual; collect what's owed, close checked deals, and save some.",
+          "vi": "Tiền vào thuận hơn thường lệ; hợp thu nợ, chốt giao dịch đã tính kỹ, nhưng nhớ để dành."
+        },
+        "Tử Tức": {
+          "en": "Joy from children and younger people; spend time with your kids and praise the young ones.",
+          "vi": "Niềm vui từ con cái, người nhỏ tuổi; hợp dành thời gian cho con, khen ngợi người trẻ."
+        },
+        "Phu Thê": {
+          "en": "Warm feelings, and your partner is your ally; good for a date or planning together.",
+          "vi": "Tình cảm ấm áp, người thương là quý nhân; hợp hẹn hò, bàn kế hoạch chung."
+        },
+        "Huynh Đệ": {
+          "en": "Siblings and close friends are ready to help; work together, but keep money matters clear.",
+          "vi": "Anh em, bạn thân sẵn lòng hỗ trợ; hợp cùng làm, nhưng tiền bạc vẫn nên rõ ràng."
+        }
+      },
+      "sources": [
+        "s6",
+        "s11",
+        "s15",
+        "s16",
+        "s17",
+        "s33"
+      ]
+    },
+    "Hóa Quyền": {
+      "name": {
+        "en": "Power",
+        "vi": "Hóa Quyền"
+      },
+      "meaning": {
+        "en": "Power is initiative, responsibility and a stronger voice. The palace it lands in today is where you can take charge, but the load is heavier too; a light touch makes it last.",
+        "vi": "Quyền là sức chủ động, trách nhiệm và tiếng nói. Cung có Quyền hôm nay là nơi bạn dễ nắm thế, nhưng việc cũng nặng hơn; dùng quyền mềm mỏng sẽ bền."
+      },
+      "palaces": {
+        "Mệnh": {
+          "en": "You feel confident and can lead; good for big decisions, but listen so you don't come off as bossy.",
+          "vi": "Bạn tự tin, dễ dẫn dắt; hợp quyết việc lớn, nhưng nhớ lắng nghe để khỏi thành độc đoán."
+        },
+        "Phụ Mẫu": {
+          "en": "Elders or bosses may expect a lot or push you; state your case clearly and own your part.",
+          "vi": "Người trên có thể kỳ vọng, thúc giục bạn; hợp trình bày rõ ràng và nhận trách nhiệm."
+        },
+        "Phúc Đức": {
+          "en": "Your mind is steady and you know what you want; good for resetting priorities and self-discipline.",
+          "vi": "Tinh thần vững, biết mình muốn gì; hợp sắp lại thứ tự ưu tiên, giữ kỷ luật bản thân."
+        },
+        "Điền Trạch": {
+          "en": "You run the house today; fine for deciding on repairs or big purchases, but talk it over first.",
+          "vi": "Bạn nắm việc nhà; hợp quyết chuyện sửa nhà, mua sắm lớn, nhưng nên bàn với người cùng ở."
+        },
+        "Quan Lộc": {
+          "en": "More authority comes with more work; take on a new role or coordinate, but don't carry it all.",
+          "vi": "Thêm quyền đi kèm thêm việc; hợp nhận vai trò mới, đứng ra điều phối, đừng ôm hết."
+        },
+        "Nô Bộc": {
+          "en": "Tug-of-war with friends or colleagues is possible; define roles clearly and skip power struggles.",
+          "vi": "Dễ có giằng co với bạn bè, đồng nghiệp; phân vai rõ ràng, tránh tranh quyền."
+        },
+        "Thiên Di": {
+          "en": "Out in the world you're respected and heard; good for negotiating or representing a group.",
+          "vi": "Ra ngoài được nể trọng, tiếng nói có trọng lượng; hợp đàm phán, đại diện nhóm."
+        },
+        "Tật Ách": {
+          "en": "Stress and bumps come easily when rushing; work within your limits and move carefully.",
+          "vi": "Dễ căng thẳng, va quẹt khi vội; làm việc vừa sức, đi lại cẩn thận."
+        },
+        "Tài Bạch": {
+          "en": "You're in control of money; set targets, negotiate prices, and claim what's fairly yours.",
+          "vi": "Chủ động được chuyện tiền; hợp đặt mục tiêu thu chi, thương lượng giá, đòi quyền lợi chính đáng."
+        },
+        "Tử Tức": {
+          "en": "Children and young people have their own views; give them responsibility instead of orders.",
+          "vi": "Con cái, người trẻ có chính kiến riêng; hợp trao thêm trách nhiệm thay vì áp đặt."
+        },
+        "Phu Thê": {
+          "en": "Your partner may get ahead or want to decide for you; talking as equals works best.",
+          "vi": "Người thương có việc thăng tiến hoặc muốn quyết thay bạn; bàn bạc ngang hàng là hay nhất."
+        },
+        "Huynh Đệ": {
+          "en": "Siblings or close friends may rise in standing; lean on their support, don't compete.",
+          "vi": "Anh em, bạn thân có tin vui về vị thế; hợp nhờ họ hỗ trợ, tránh tranh phần hơn."
+        }
+      },
+      "sources": [
+        "s7",
+        "s12",
+        "s16",
+        "s17"
+      ]
+    },
+    "Hóa Khoa": {
+      "name": {
+        "en": "Fame",
+        "vi": "Hóa Khoa"
+      },
+      "meaning": {
+        "en": "Fame is reputation, learning and protection. The palace it lands in today is where you get noticed and small troubles untangle; good for study, presenting and asking for help.",
+        "vi": "Khoa là danh tiếng, học hỏi và sự che chở. Cung có Khoa hôm nay là nơi dễ được ghi nhận, rắc rối nhỏ dễ được gỡ; hợp học, trình bày, nhờ người giúp."
+      },
+      "palaces": {
+        "Mệnh": {
+          "en": "You get noticed and hard things find a way through; good for study, presenting, introducing yourself.",
+          "vi": "Dễ được ghi nhận, việc khó có lối ra; hợp học, trình bày, giới thiệu bản thân."
+        },
+        "Phụ Mẫu": {
+          "en": "Paperwork, exams and asking elders go smoothly; parents and teachers are glad to help.",
+          "vi": "Thuận giấy tờ, thi cử, xin ý kiến người trên; cha mẹ, thầy cô sẵn lòng giúp."
+        },
+        "Phúc Đức": {
+          "en": "A lighter heart, as if something watches over you; good for reading, calm and visiting elders.",
+          "vi": "Lòng nhẹ nhõm, như có phúc che chở; hợp đọc sách, tĩnh tâm, thăm người lớn tuổi."
+        },
+        "Điền Trạch": {
+          "en": "Home or property paperwork snags clear up easily; finish any pending procedures.",
+          "vi": "Rắc rối nhà cửa, giấy tờ nhà đất dễ được gỡ; hợp hoàn tất thủ tục còn tồn."
+        },
+        "Quan Lộc": {
+          "en": "Your professional standing rises; good for presenting, exams, certificates and sharing expertise.",
+          "vi": "Uy tín nghề nghiệp lên; hợp trình bày, thi, xin chứng chỉ, chia sẻ chuyên môn."
+        },
+        "Nô Bộc": {
+          "en": "Friends and colleagues help when needed; good for guiding others or asking for feedback.",
+          "vi": "Bạn bè, đồng nghiệp giúp lúc cần; hợp hướng dẫn người khác hoặc nhờ người góp ý."
+        },
+        "Thiên Di": {
+          "en": "Support finds you when out and about; good for talks, workshops and learning somewhere new.",
+          "vi": "Ra ngoài có người hỗ trợ, an tâm hơn; hợp hội thảo, học hỏi ở nơi mới."
+        },
+        "Tật Ách": {
+          "en": "Mild fatigue passes and good advice is easy to find; learn how to care for your health.",
+          "vi": "Mệt nhẹ dễ qua, dễ gặp người tư vấn đúng; hợp tìm hiểu cách chăm sóc sức khỏe."
+        },
+        "Tài Bạch": {
+          "en": "Money comes through skill and reputation; good for consulting, teaching, tidying your books.",
+          "vi": "Tiền đến từ chuyên môn, uy tín; hợp tư vấn, bán kiến thức, sắp xếp lại sổ sách."
+        },
+        "Tử Tức": {
+          "en": "Children and students do well and behave; tutor them and celebrate their wins.",
+          "vi": "Con cái, học trò ngoan, học tốt; hợp kèm học, khen thành tích của người trẻ."
+        },
+        "Phu Thê": {
+          "en": "Fewer clashes, easier understanding; your partner may get good news about work or reputation.",
+          "vi": "Ít va chạm, dễ hiểu nhau; người thương có tin vui về công việc hay danh tiếng."
+        },
+        "Huynh Đệ": {
+          "en": "Siblings and close friends help sincerely; good for learning together and swapping tips.",
+          "vi": "Anh em, bạn thân giúp nhau thật lòng; hợp cùng học, trao đổi kinh nghiệm."
+        }
+      },
+      "sources": [
+        "s8",
+        "s13",
+        "s16",
+        "s17"
+      ]
+    },
+    "Hóa Kỵ": {
+      "name": {
+        "en": "Obstacle",
+        "vi": "Hóa Kỵ"
+      },
+      "meaning": {
+        "en": "Obstacle marks a sticking point: worry, misunderstanding, glitches, small losses. In the palace it lands in today, slow down, double-check and speak gently; it's a reminder, not a doom sign.",
+        "vi": "Kỵ là điểm vướng: lo nghĩ, hiểu lầm, trục trặc, hao hụt. Cung có Kỵ hôm nay cần chậm lại, kiểm tra kỹ và nói năng mềm mỏng; đây là lời nhắc, không phải điềm xấu tuyệt đối."
+      },
+      "palaces": {
+        "Mệnh": {
+          "en": "Worry comes easily and words get misread; say less but mean it, and don't decide big things when upset.",
+          "vi": "Dễ lo nghĩ, lời nói dễ bị hiểu sai; nói ít mà chắc, đừng quyết việc lớn khi đang bực."
+        },
+        "Phụ Mẫu": {
+          "en": "Friction with superiors and paperwork errors are likely; double-check and keep a soft tone.",
+          "vi": "Dễ bất đồng với người trên, giấy tờ dễ sai sót; kiểm tra kỹ, giữ thái độ mềm mỏng."
+        },
+        "Phúc Đức": {
+          "en": "Your mood feels heavy and family matters nag; rest, and don't carry your worries alone.",
+          "vi": "Tâm trạng nặng, chuyện họ hàng dễ phiền; cho mình nghỉ, đừng ôm tâm sự một mình."
+        },
+        "Điền Trạch": {
+          "en": "Glitches at home or friction with neighbors; hold off on property deals and fix what's broken.",
+          "vi": "Nhà cửa dễ trục trặc, dễ va chạm hàng xóm; tạm hoãn mua bán nhà đất, sửa chỗ hỏng."
+        },
+        "Quan Lộc": {
+          "en": "Work may stall or face scrutiny; go step by step and keep a record of what you did.",
+          "vi": "Việc dễ chậm, dễ bị soi xét; làm chắc từng bước, lưu lại bằng chứng công việc."
+        },
+        "Nô Bộc": {
+          "en": "Misunderstandings with friends or colleagues; don't lend money or talk behind backs.",
+          "vi": "Dễ hiểu lầm với bạn bè, đồng nghiệp; tránh cho vay, tránh nói chuyện sau lưng."
+        },
+        "Thiên Di": {
+          "en": "Gossip or delays when out; leave early and keep a modest tone.",
+          "vi": "Ra ngoài dễ gặp lời ra tiếng vào hay trễ hẹn; đi sớm, giữ lời nói khiêm tốn."
+        },
+        "Tật Ách": {
+          "en": "You tire easily; take care with food and getting around, especially near water; see a doctor if unwell.",
+          "vi": "Cơ thể dễ mệt; cẩn thận ăn uống, đi lại, nhất là gần nước; khó chịu kéo dài thì đi khám."
+        },
+        "Tài Bạch": {
+          "en": "Money is slow to come and quick to go; delay big spending and don't invest on a hunch.",
+          "vi": "Tiền khó vào, dễ hao; hoãn khoản chi lớn, không đầu tư theo cảm tính."
+        },
+        "Tử Tức": {
+          "en": "Children and young people may dig in; listen patiently rather than scold.",
+          "vi": "Con cái, người trẻ dễ bướng; kiên nhẫn lắng nghe hơn là la rầy."
+        },
+        "Phu Thê": {
+          "en": "Small things can spark arguments; speak slowly, listen more, and leave the past alone.",
+          "vi": "Dễ cãi nhau vì chuyện nhỏ; nói chậm, nghe nhiều, tránh nhắc chuyện cũ."
+        },
+        "Huynh Đệ": {
+          "en": "Siblings may disagree, especially over money; keep finances separate and give a little.",
+          "vi": "Anh em dễ bất đồng, nhất là chuyện tiền; tách bạch tài chính, nhường nhau một bước."
+        }
+      },
+      "sources": [
+        "s9",
+        "s10",
+        "s14",
+        "s16",
+        "s17"
+      ]
+    }
+  },
+  "hours": {
+    "Thanh Long": {
+      "name": {
+        "en": "Green Dragon",
+        "vi": "Thanh Long"
+      },
+      "auspicious": true,
+      "do": {
+        "en": "A good hour to start things: signing, important meetings, opening for business, filing papers, wedding talks.",
+        "vi": "Giờ tốt để khởi sự: ký kết, gặp gỡ quan trọng, mở hàng, nộp hồ sơ, bàn chuyện cưới hỏi."
+      },
+      "avoid": {
+        "en": "Not for lawsuits, punishments, or tearing things down; don't spend a good hour on chores.",
+        "vi": "Không hợp tranh tụng, xử phạt hay dọn bỏ, phá dỡ; đừng phí giờ đẹp vào việc vặt."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s25",
+        "s28",
+        "s29",
+        "s32"
+      ]
+    },
+    "Minh Đường": {
+      "name": {
+        "en": "Bright Hall",
+        "vi": "Minh Đường"
+      },
+      "auspicious": true,
+      "do": {
+        "en": "Good for meeting bosses or helpful people, job interviews, openings, enrolling, and starting something new.",
+        "vi": "Hợp gặp cấp trên, quý nhân, đi phỏng vấn, khai trương, nhập học, bắt đầu việc mới."
+      },
+      "avoid": {
+        "en": "Don't miss a meeting with someone important or show up unprepared.",
+        "vi": "Tránh lỡ hẹn với người quan trọng hay đến gặp khi chưa chuẩn bị kỹ."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s25",
+        "s28",
+        "s29"
+      ]
+    },
+    "Thiên Hình": {
+      "name": {
+        "en": "Heavenly Punishment",
+        "vi": "Thiên Hình"
+      },
+      "auspicious": false,
+      "do": {
+        "en": "Fine for tidying up, throwing out old things, fixing mistakes, or reviewing rules; go about routine work with care.",
+        "vi": "Hợp dọn dẹp, bỏ đồ cũ, sửa lỗi, rà soát nội quy; việc thường ngày cứ làm nhưng cẩn thận."
+      },
+      "avoid": {
+        "en": "Avoid lawsuits, arguments, signing contracts, openings, weddings and breaking ground.",
+        "vi": "Tránh kiện tụng, tranh cãi, ký hợp đồng, khai trương, cưới hỏi, động thổ."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s28",
+        "s29",
+        "s30"
+      ]
+    },
+    "Chu Tước": {
+      "name": {
+        "en": "Vermilion Bird",
+        "vi": "Chu Tước"
+      },
+      "auspicious": false,
+      "do": {
+        "en": "Fine for official business, routine paperwork and cleaning up; keep your words calm.",
+        "vi": "Hợp việc công vụ, giấy tờ thường lệ, dọn dẹp; giữ lời nói ôn hòa."
+      },
+      "avoid": {
+        "en": "Avoid debates, gossip, lawsuits, openings, chasing money and signing deals.",
+        "vi": "Tránh tranh luận, thị phi, kiện tụng, khai trương, cầu tài, ký kết."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s28",
+        "s29",
+        "s31"
+      ]
+    },
+    "Kim Quỹ": {
+      "name": {
+        "en": "Golden Coffer",
+        "vi": "Kim Quỹ"
+      },
+      "auspicious": true,
+      "do": {
+        "en": "Good for marriage matters, formal visits, negotiating, signing agreements, meetings, and money matters.",
+        "vi": "Hợp chuyện hôn nhân, dạm ngõ, thương lượng, ký thỏa thuận, họp bàn, cầu tài, mở hàng."
+      },
+      "avoid": {
+        "en": "Not for confrontation, applying pressure, or starting a dispute.",
+        "vi": "Không hợp việc gây đối đầu, dùng sức ép hay khơi mào tranh chấp."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s24",
+        "s25",
+        "s28",
+        "s29"
+      ]
+    },
+    "Bảo Quang": {
+      "name": {
+        "en": "Precious Light",
+        "vi": "Bảo Quang"
+      },
+      "auspicious": true,
+      "do": {
+        "en": "Good for openings, breaking ground, taking up a post, setting out on a trip, and anything aimed at prosperity.",
+        "vi": "Hợp khai trương, động thổ, nhận chức, xuất hành, những việc mong sự thịnh vượng."
+      },
+      "avoid": {
+        "en": "Don't waste this good hour on quarrels or things that lead to loss.",
+        "vi": "Tránh dùng giờ đẹp này cho cãi vã hay việc dễ gây hao tổn."
+      },
+      "sources": [
+        "s23",
+        "s25",
+        "s28",
+        "s29"
+      ]
+    },
+    "Bạch Hổ": {
+      "name": {
+        "en": "White Tiger",
+        "vi": "Bạch Hổ"
+      },
+      "auspicious": false,
+      "do": {
+        "en": "Fine for things that need force, like a workout or a hard clean-up; otherwise keep a slow pace.",
+        "vi": "Hợp việc cần dứt khoát như tập luyện, dọn dẹp mạnh tay; còn lại nên giữ nhịp chậm."
+      },
+      "avoid": {
+        "en": "Avoid big launches, weddings, long trips, funerals, and anything physically risky.",
+        "vi": "Tránh khởi sự lớn, cưới hỏi, đi xa, việc tang lễ và việc có rủi ro thân thể."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s28",
+        "s29"
+      ]
+    },
+    "Ngọc Đường": {
+      "name": {
+        "en": "Jade Hall",
+        "vi": "Ngọc Đường"
+      },
+      "auspicious": true,
+      "do": {
+        "en": "Good for study, writing, exams, meeting important people, openings, and taking up a post.",
+        "vi": "Hợp học hành, viết lách, thi cử, gặp người quan trọng, khai trương, nhận chức."
+      },
+      "avoid": {
+        "en": "Tradition says not to dig the ground or rework the kitchen in this hour.",
+        "vi": "Theo quan niệm xưa, không hợp đào đất hay sửa bếp núc vào giờ này."
+      },
+      "sources": [
+        "s25",
+        "s26",
+        "s28",
+        "s29"
+      ]
+    },
+    "Thiên Lao": {
+      "name": {
+        "en": "Heavenly Prison",
+        "vi": "Thiên Lao"
+      },
+      "auspicious": false,
+      "do": {
+        "en": "Fine for honoring ancestors, remembering the departed, and quiet chores at home.",
+        "vi": "Hợp cúng giỗ, tưởng nhớ người đã khuất, làm việc nhà lặng lẽ."
+      },
+      "avoid": {
+        "en": "Avoid arguments, lawsuits, breaking ground, moving in, long trips and weddings.",
+        "vi": "Tránh tranh cãi, kiện tụng, động thổ, nhập trạch, đi xa, cưới hỏi."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s28",
+        "s29"
+      ]
+    },
+    "Huyền Vũ": {
+      "name": {
+        "en": "Black Tortoise",
+        "vi": "Huyền Vũ"
+      },
+      "auspicious": false,
+      "do": {
+        "en": "Fine for quiet work, double-checking accounts, and putting valuables away safely.",
+        "vi": "Hợp làm việc âm thầm, kiểm tra lại sổ sách, cất giữ đồ đạc cẩn thận."
+      },
+      "avoid": {
+        "en": "Avoid lawsuits, gambling, signing contracts, openings and taking up a new post.",
+        "vi": "Tránh kiện tụng, cờ bạc, ký hợp đồng, khai trương, nhận chức."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s28",
+        "s29"
+      ]
+    },
+    "Tư Mệnh": {
+      "name": {
+        "en": "Director of Fate",
+        "vi": "Tư Mệnh"
+      },
+      "auspicious": true,
+      "do": {
+        "en": "Good for openings, signing, breaking ground, weddings and money matters; best while it's still daylight.",
+        "vi": "Hợp khai trương, ký kết, động thổ, cưới hỏi, cầu tài; tốt nhất khi trời còn sáng."
+      },
+      "avoid": {
+        "en": "Tradition holds this god is strong by day (Dần to Thân) and weak at night; do big things in daytime.",
+        "vi": "Theo quan niệm xưa, thần này mạnh ban ngày (Dần đến Thân), kém về đêm; việc lớn nên làm ban ngày."
+      },
+      "sources": [
+        "s24",
+        "s25",
+        "s28",
+        "s29"
+      ]
+    },
+    "Câu Trận": {
+      "name": {
+        "en": "Hook Array",
+        "vi": "Câu Trận"
+      },
+      "auspicious": false,
+      "do": {
+        "en": "Good for staying put, finishing old tasks, resting, and planning for the days ahead.",
+        "vi": "Hợp ở yên, làm nốt việc cũ, nghỉ ngơi, sắp xếp kế hoạch cho ngày sau."
+      },
+      "avoid": {
+        "en": "Avoid new starts, moving house, building or repairs, weddings, setting out, and funerals.",
+        "vi": "Tránh khởi sự mới, chuyển nhà, xây sửa, cưới hỏi, xuất hành, việc tang lễ."
+      },
+      "sources": [
+        "s22",
+        "s23",
+        "s28",
+        "s29"
+      ]
+    }
+  }
+}

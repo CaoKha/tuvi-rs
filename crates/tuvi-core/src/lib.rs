@@ -5,27 +5,33 @@
 //!
 //! Modules, in the order the chart is built:
 //! - `calendar`: solar date to lunar date, birth hour branch
-//! - `can_chi`: Thiên Can and Địa Chi
-//! - `cung`: the 12 cung roles, Mệnh and Thân
-//! - `cuc`: Cục
-//! - `chinh_tinh`: the 14 main stars
-//! - `phu_tinh`: the other natal stars, Tràng Sinh ring included
-//! - `tu_hoa`: Tứ Hóa of the birth year
-//! - `tuan_triet`: Tuần and Triệt
-//! - `ban_menh`: Bản mệnh of the birth year
-//! - `van_han`: Đại hạn and Tiểu hạn of each cung
+//! - `stems_branches`: Thiên Can and Địa Chi
+//! - `palace`: the 12 cung roles, Mệnh and Thân
+//! - `bureau`: Cục
+//! - `main_stars`: the 14 main stars
+//! - `minor_stars`: the other natal stars, Tràng Sinh ring included
+//! - `transformations`: Tứ Hóa of the birth year
+//! - `voids`: Tuần and Triệt
+//! - `natal_element`: Bản mệnh of the birth year
+//! - `luck_periods`: Đại hạn and Tiểu hạn of each cung
+//! - `daily_flow`: one day and its 12 canh giờ over a chart (lưu nhật, lưu thời)
 //! - `chart`: the public types and `build_chart`
+//! - `year`: `SolarYear` and `LunarYear`
 
-mod ban_menh;
+mod bureau;
 mod calendar;
-mod can_chi;
 mod chart;
-mod chinh_tinh;
-mod cuc;
-mod cung;
-mod phu_tinh;
-mod tu_hoa;
-mod tuan_triet;
-mod van_han;
+mod daily_flow;
+mod luck_periods;
+mod main_stars;
+mod minor_stars;
+mod natal_element;
+mod palace;
+mod stems_branches;
+mod transformations;
+mod voids;
+mod year;
 
 pub use chart::{BirthInput, Chart, ChartError, Cung, Gender, TuHoa, build_chart};
+pub use daily_flow::{DayFlow, DayHoa, Gio, day_flow};
+pub use year::{LunarYear, SolarYear};

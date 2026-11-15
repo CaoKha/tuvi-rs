@@ -67,19 +67,33 @@ Both fonts load with the Vietnamese subset. Small labels are uppercase, bold,
 ## Header
 
 Every page has one header: the logo and the name, linked to the draw screen
-(`crates/tuvi-web/src/features/shell/`). There is no tab bar and no login.
+(`crates/tuvi-web/src/features/shell/`), and on the right the language switch
+(`pill-ghost`, labelled in the other language: "Tiếng Việt" or "English").
+There is no tab bar and no login.
+
+## Language
+
+English is the main language, Vietnamese the second. Every interface text is
+a Fluent message (`crates/tuvi-web/locales/`). Tử Vi terms (star names,
+Địa Chi, Can Chi, Tràng Sinh stages) stay in Vietnamese in both languages;
+the English text glosses them where it helps, e.g. "Bureau (Cục)".
 
 ## Draw screen
 
 The home page (`crates/tuvi-web/src/features/gacha/`). It is not in the
 prototype: it reuses the prototype's An sao title, card and loader styles.
 
-- Order on a phone: title, the face-down card, the main button. From 768px:
-  the title and the button on the left, the card on the right.
+- Order on a phone: title, the face-down card, the date wheels, the main
+  button. From 768px: the title, the wheels and the button on the left, the
+  card on the right.
+- The date wheels (`.wheel`, from the prototype's `.picker`): day, month and
+  year 1900–2099 in a `glass` card, three scroll-snap wheels over one accent
+  band. Each row is a native radio; the picked row has the accent gradient.
+  A date that is not on the calendar shows a toast and does not post.
 - The face-down card (`.card-back`): the 9:16 twilight card of Lá Bài Bản
   Mệnh, with "THIÊN HẠC" and "TỬ VI", two quiet skies and a ✦. It floats on
   a 6 s cycle.
-- The main button "✦ Rút lá bài" posts the draw. `gacha.js` first shows the
+- The main button "✦ Draw a card" posts the date. `gacha.js` first shows the
   shuffle loader for 2.6 s: orbit rings, the crane video
   (`mix-blend-mode: screen`) and three rotating lines. Under reduced motion,
   the crane stays on its first frame.
@@ -87,26 +101,36 @@ prototype: it reuses the prototype's An sao title, card and loader styles.
 
 ## Bản mệnh screen
 
-A new draw lands here (`crates/tuvi-web/src/features/ban_menh/`). The
-prototype calls it `#s-home`.
+A new draw lands here (`crates/tuvi-web/src/features/deck/`). The prototype
+calls it `#s-home`; the roadmap is new and not in the prototype.
 
-- The header: the card name ("Nữ mạng Bính Tý"), the solar date as the
-  title, a line with the hour, giờ and the lunar date, and a badge with the
-  chính tinh of cung Mệnh. With song tinh, the first name has `accent` and
+- The header: the card name ("Female · Bính Tý year" / "Nữ mạng Bính Tý"),
+  the solar date as the title, a line with the hour, giờ and the lunar date,
+  a badge with the chính tinh of cung Mệnh, and a chip with the lucky color
+  (the element of Bản mệnh). With song tinh, the first name has `accent` and
   the second has `accent-2`.
-- Below `lg` the three cards are a row that scrolls sideways and snaps to
-  each card. The next card peeks in at the edge. From `lg` the main card is
-  on the left (364px) and the two other cards are on the right.
+- Below `lg` the card and the roadmap stack. From `lg` the card is on the
+  left (364px, sticky) and the roadmap on the right.
 - Lá Bài Bản Mệnh (main card): 9:16, a twilight gradient, an accent border
   and glow. It shows the archetype chip, the constellations (`.chom-*`) and
   the mantra in italic Fraunces. Vô chính diệu shows
   the scattered sky.
-- Lá bài phụ (Vận May, Lời Khuyên): `glass` with a border and a corner glow
-  in the card's own hue (`--t-hue`). Vận May takes the lucky color, the
-  element of Bản mệnh. Lời Khuyên takes `accent-2`. The page accent does not
-  change.
-- Under the deck: "✦ Rút lá khác" (`pill-primary`, a new draw) and
-  "Xem đủ 12 cung" (`pill-ghost`, the chart).
+- Today's roadmap (`crates/tuvi-web/src/features/today/`), two `glass`
+  panels:
+  - The day: date, lunar date and day Can Chi; "Today's palace" in a light
+    accent box with the theme, ✓ Do (accent) and ✕ Avoid (coral); then the
+    four Hóa of the day, each with a dot in its color (Lộc `element-moc`,
+    Quyền `element-hoa`, Khoa `element-thuy`, Kỵ `coral`).
+  - The timeline: 12 canh giờ on a vertical line. Each hour is a
+    `<details>`: the summary shows the time, the hour's Can Chi, badges, the
+    hour god (accent when hoàng đạo), the palace, the Hóa chips and the
+    advice; the body shows the hour god's advice and the palace theme. The
+    current hour is open, with an accent fill and a lit dot; past hours fade
+    to 55%. "✦ Best" marks up to three hours; "Take care" (coral) marks
+    hours with Hóa Kỵ.
+  - A "Method and sources" `<details>` under the panels.
+- Under the deck: "✦ Draw another card for this date" (`pill-primary`) and
+  "See all 12 palaces" (`pill-ghost`).
 - Each chính tinh of cung Mệnh shows its constellation (`.chom-*`): a faint
   ghost portrait (24% opacity, radial mask) under a star pattern in the
   accent. A wave draws the lines every 4.2 s, and each star pulses on a

@@ -2,6 +2,8 @@
 //! `components/definitions/ban_menh.py`). Names come from
 //! `components/data/ban_menh.json`.
 
+use crate::year::LunarYear;
+
 /// The 30 Bản mệnh of the 60-year cycle. Each one covers 2 years, and the
 /// first one starts in 1948 (Mậu Tý).
 const CYCLE: [&str; 30] = [
@@ -38,8 +40,8 @@ const CYCLE: [&str; 30] = [
 ];
 
 /// Bản mệnh name of a lunar year, e.g. 1990 → "Lộ Bàng Thổ".
-pub const fn name(lunar_year: i32) -> &'static str {
-    CYCLE[(lunar_year - 1948).rem_euclid(60) as usize / 2]
+pub const fn name(lunar_year: LunarYear) -> &'static str {
+    CYCLE[(lunar_year.0 - 1948).rem_euclid(60) as usize / 2]
 }
 
 #[cfg(test)]
@@ -48,8 +50,8 @@ mod tests {
 
     #[test]
     fn examples() {
-        assert_eq!(name(1990), "Lộ Bàng Thổ");
-        assert_eq!(name(1984), "Hải Trung Kim");
-        assert_eq!(name(1947), "Ốc Thượng Thổ");
+        assert_eq!(name(LunarYear(1990)), "Lộ Bàng Thổ");
+        assert_eq!(name(LunarYear(1984)), "Hải Trung Kim");
+        assert_eq!(name(LunarYear(1947)), "Ốc Thượng Thổ");
     }
 }

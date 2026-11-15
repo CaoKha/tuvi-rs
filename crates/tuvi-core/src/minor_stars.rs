@@ -5,11 +5,11 @@
 //! `positions/absolute.py` and the transforms in `positions/relative.py`.
 //! Names come from `components/data/sao.json`.
 
-use crate::can_chi::{DiaChi, ThienCan};
-use crate::cuc::Cuc;
+use crate::bureau::Cuc;
+use crate::stems_branches::{DiaChi, ThienCan};
 
 use self::PhuTinh as P;
-use crate::can_chi::DiaChi as D;
+use crate::stems_branches::DiaChi as D;
 
 /// Phụ tinh, declared in component-id order. The old engine sorted the stars
 /// of a cung by id, so iterating `ALL` gives the same order.
@@ -316,7 +316,7 @@ pub struct Input {
     pub menh: DiaChi,
     pub than: DiaChi,
     pub cuc: Cuc,
-    /// +1 clockwise, -1 counter-clockwise (see `cung::van_direction`).
+    /// +1 clockwise, -1 counter-clockwise (see `palace::van_direction`).
     pub van: i32,
 }
 

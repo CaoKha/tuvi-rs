@@ -29,7 +29,7 @@ pub async fn brand(cx: &Cx) -> Result<impl View> {
                 <small
                     class="block text-[9px] font-bold tracking-[0.2em] text-muted uppercase"
                 >
-                    "Rút lá bài Tử Vi"
+                    (crate::t!(brand_tagline))
                 </small>
             </span>
         </a>

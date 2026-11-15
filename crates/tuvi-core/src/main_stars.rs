@@ -3,7 +3,7 @@
 //!
 //! Names come from `components/data/sao.json`.
 
-use crate::can_chi::DiaChi;
+use crate::stems_branches::DiaChi;
 
 /// Chính tinh, declared in component-id order. The old engine sorted the stars of a
 /// cung by id, so iterating `ALL` gives the same order.

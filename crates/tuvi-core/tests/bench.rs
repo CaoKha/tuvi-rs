@@ -6,7 +6,7 @@
 
 use std::hint::black_box;
 use std::time::Instant;
-use tuvi_core::{BirthInput, Gender, build_chart};
+use tuvi_core::{BirthInput, Gender, SolarYear, build_chart};
 
 const ITERATIONS: u32 = 100_000;
 
@@ -15,7 +15,7 @@ const ITERATIONS: u32 = 100_000;
 fn build_chart_time() {
     let inputs: Vec<BirthInput> = (0..ITERATIONS)
         .map(|i| BirthInput {
-            year: 1900 + (i % 200) as i32,
+            year: SolarYear(1900 + (i % 200) as i32),
             month: (i % 12) as u8 + 1,
             day: (i % 28) as u8 + 1,
             hour: (i % 24) as u8,

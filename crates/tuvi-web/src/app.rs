@@ -3,19 +3,28 @@ use topcoat::{
     Result,
     asset::{Asset, AssetBundle, RouterBuilderAssetExt, asset, asset_config},
     context::Cx,
+    cookie::CookieLayer,
     font::{Font, RouterBuilderFontExt, fontsource::fontsource_font},
-    router::{RouterBuilder, Slot, content::Json, layout, module_router, page, route},
+    router::{
+        Body, Next, RouterBuilder, Slot, content::Json, href, layer, layout, module_router, page,
+        request::uri, response::Response, route,
+    },
     runtime::RuntimeLayer,
     tailwind,
     view::{View, view},
 };
 
-use crate::features::{
-    gacha::gacha_screen,
-    shell::{LOGO, brand},
+use crate::{
+    features::{
+        gacha::gacha_screen,
+        shell::{LOGO, brand},
+    },
+    i18n::{Lang, request_locale},
+    t,
 };
 
-pub mod la_bai;
+pub mod card;
+pub mod lang;
 
 /// Display font for titles and star names.
 const DISPLAY_FONT: Font = fontsource_font!(
@@ -49,6 +58,8 @@ pub fn router() -> RouterBuilder {
         .font(BODY_FONT)
         .assets(AssetBundle::load().unwrap())
         .route(web_manifest)
+        // Reads and writes the language cookie.
+        .layer(CookieLayer::new())
         // Lets the browser runtime rerun pages; register it after other layers.
         .layer(RuntimeLayer::new())
 }
@@ -61,7 +72,7 @@ async fn web_manifest(cx: &Cx) -> Result<Json<serde_json::Value>> {
     Ok(Json(json!({
         "name": "Thiên Hạc",
         "short_name": "Thiên Hạc",
-        "description": "Thiên Hạc: rút lá bài Tử Vi",
+        "description": "Thiên Hạc: draw a Tử Vi card and plan your day",
         "start_url": "/",
         "display": "standalone",
         // A manifest cannot read CSS variables: these are the `page` and
@@ -76,11 +87,19 @@ async fn web_manifest(cx: &Cx) -> Result<Json<serde_json::Value>> {
     })))
 }
 
+/// Puts the request's locale in the context, before any page renders.
+#[layer]
+async fn locale_layer(cx: &Cx, body: Body, next: Next<'_>) -> Result<Response> {
+    let locale = request_locale(cx);
+    next.run(&cx.with(locale), body).await
+}
+
 #[layout]
 async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
+    let lang = Lang::of(cx);
     Ok(view! {
         <!DOCTYPE html>
-        <html lang="vi" class="dark">
+        <html lang=(lang.code()) class="dark">
             <head>
                 <meta charset="utf-8">
                 <meta
@@ -88,10 +107,10 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                     content="width=device-width, initial-scale=1, viewport-fit=cover"
                 >
                 <meta name="theme-color" content="#1a1033">
-                <title>"Thiên Hạc · Rút lá bài Tử Vi"</title>
+                <title>"Thiên Hạc · " (t!(meta_title))</title>
                 <meta
                     name="description"
-                    content="Rút một lá bài Tử Vi: mỗi lá là một ngày giờ có thật, an sao đúng như lá số."
+                    content=(t!(meta_description).resolve(cx))
                 >
                 <link rel="icon" href=(FAVICON) sizes="any">
                 <link rel="icon" type="image/png" sizes="16x16" href=(FAVICON_16)>
@@ -112,11 +131,36 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                         class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 pt-6 pb-5"
                     >
                         brand()
+                        language_switch(lang: lang)
                     </header>
                     (slot)
                 </div>
             </body>
         </html>
+    })
+}
+
+/// The language switch: one button that turns the page into the other
+/// language and comes back to it.
+#[topcoat::view::component]
+async fn language_switch(cx: &Cx, lang: Lang) -> Result<impl View> {
+    let other = lang.other();
+    let back = uri(cx)
+        .path_and_query()
+        .map_or("/", |path| path.as_str())
+        .to_owned();
+    Ok(view! {
+        <form method="post" action=(href!(lang::switch).resolve(cx))>
+            <input type="hidden" name="lang" value=(other.code())>
+            <input type="hidden" name="back" value=(back)>
+            <button
+                type="submit"
+                lang=(other.code())
+                class="pill-ghost cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-semibold"
+            >
+                (other.pick("English", "Tiếng Việt"))
+            </button>
+        </form>
     })
 }
 
@@ -139,6 +183,6 @@ async fn cosmos(cx: &Cx) -> Result<impl View> {
 #[page]
 pub async fn home(cx: &Cx) -> Result<impl View> {
     Ok(view! {
-        <main class="mx-auto max-w-5xl px-4 pb-16">gacha_screen()</main>
+        <main class="mx-auto max-w-5xl px-4 pb-16">gacha_screen(date: None, error: None)</main>
     })
 }

@@ -146,10 +146,57 @@
 }
 
 /* ===== Gacha and Bản mệnh (src/features/gacha/, src/features/ban_menh/) =====
-   Plain classes for what the markup cannot say alone: the sky, the
-   constellations, the card back and the shuffle loader. Prototype: .chom-*
-   and the casting loader in docs/design/prototype.html. */
+   Plain classes for what the markup cannot say alone: the date wheels, the
+   sky, the constellations, the card back and the shuffle loader. Prototype:
+   .picker, .chom-* and the casting loader in docs/design/prototype.html. */
 @layer components {
+  .dial-label {
+    margin-bottom: 6px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* A scroll-snap wheel: 46px rows; the picked row has the accent text. */
+  .wheel {
+    height: 156px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior: contain;
+    mask-image: linear-gradient(180deg, transparent, #000 26%, #000 74%, transparent);
+  }
+
+  .wheel > label {
+    position: relative;
+    display: flex;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--color-muted);
+    transition: transform 0.2s;
+  }
+
+  .wheel > label:has(:checked) {
+    transform: scale(1.06);
+    background: linear-gradient(115deg, var(--accent), var(--accent-2));
+    background-clip: text;
+    color: transparent;
+    /* Centers the pick without JavaScript, where the browser supports it. */
+    scroll-initial-target: nearest;
+  }
+
+  .wheel > label:has(:focus-visible) {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: -2px;
+  }
+
   /* The face-down card on the draw screen: it floats a little. */
   .card-back {
     animation: card-float 6s ease-in-out infinite;

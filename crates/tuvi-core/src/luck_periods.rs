@@ -6,7 +6,7 @@
 //! each cung. The stars that move per period (`assembly/period.py`) are not
 //! ported.
 
-use crate::can_chi::DiaChi;
+use crate::stems_branches::DiaChi;
 
 /// Start age (tuổi mụ) of the 10-year Đại hạn in each cung, indexed by
 /// `DiaChi`. The first Đại hạn starts at the Cục number in Mệnh. The next ones

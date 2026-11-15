@@ -5,9 +5,10 @@ edition.workspace = true
 
 [dependencies]
 rand = "0.9"
+serde.workspace = true
 serde_json.workspace = true
 tokio = { version = "1.51.1", features = ["macros", "rt-multi-thread"] }
-topcoat = { version = "0.12.1", default-features = false, features = ["asset", "compression", "discover", "font-fontsource", "icon-iconify", "router", "runtime", "serve", "tailwind", "ui", "view"] }
+topcoat = { version = "0.12.1", default-features = false, features = ["asset", "compression", "cookie", "discover", "font-fontsource", "icon-iconify", "l10n", "l10n-fluent", "router", "runtime", "serve", "tailwind", "ui", "view"] }
 
 tuvi-core.workspace = true
 

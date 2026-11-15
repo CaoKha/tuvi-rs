@@ -3,7 +3,8 @@
 //! No allocation: the lunar year data is a packed `static` table.
 
 use crate::ChartError;
-use crate::can_chi::DiaChi;
+use crate::stems_branches::DiaChi;
+use crate::year::{LunarYear, SolarYear};
 mod lunar_table;
 
 use lunar_table::LUNAR_YEARS;
@@ -15,7 +16,7 @@ pub(crate) use lunar_table::{FIRST_YEAR, LAST_YEAR};
 pub struct LunarDate {
     pub day: u8,
     pub month: u8,
-    pub year: i32,
+    pub year: LunarYear,
     pub is_leap_month: bool,
 }
 
@@ -74,7 +75,8 @@ pub const fn days_in_month(year: i32, month: u8) -> u8 {
 }
 
 /// Convert a valid Gregorian date to the lunar date.
-pub fn solar_to_lunar(year: i32, month: u8, day: u8) -> Result<LunarDate, ChartError> {
+pub fn solar_to_lunar(year: SolarYear, month: u8, day: u8) -> Result<LunarDate, ChartError> {
+    let SolarYear(year) = year;
     let Some(mut info) = YearInfo::get(year) else {
         return Err(ChartError::YearOutOfRange);
     };
@@ -118,7 +120,7 @@ fn find_lunar_date(jd: i32, lunar_year: i32, tet: i32, info: YearInfo) -> LunarD
     LunarDate {
         day,
         month,
-        year: lunar_year,
+        year: LunarYear(lunar_year),
         is_leap_month,
     }
 }
@@ -133,9 +135,10 @@ pub struct LunarBirth {
 impl LunarBirth {
     /// 23h belongs to the Tý hour of the
     /// next day. The date must already be valid.
-    pub fn from_solar(year: i32, month: u8, day: u8, hour: u8) -> Result<Self, ChartError> {
+    pub fn from_solar(year: SolarYear, month: u8, day: u8, hour: u8) -> Result<Self, ChartError> {
         let (year, month, day, hour_chi) = if hour == 23 {
-            let (y, m, d) = next_day(year, month, day);
+            let (y, m, d) = next_day(year.0, month, day);
+            let y = SolarYear(y);
             (y, m, d, DiaChi::Ty)
         } else {
             (
@@ -174,13 +177,13 @@ mod tests {
 
     #[test]
     fn tet_2024() {
-        let lunar = solar_to_lunar(2024, 2, 10);
+        let lunar = solar_to_lunar(SolarYear(2024), 2, 10);
         assert_eq!(
             lunar,
             Ok(LunarDate {
                 day: 1,
                 month: 1,
-                year: 2024,
+                year: LunarYear(2024),
                 is_leap_month: false
             })
         );
@@ -188,17 +191,17 @@ mod tests {
 
     #[test]
     fn hour_23_moves_to_next_day() {
-        let Ok(birth) = LunarBirth::from_solar(2023, 12, 31, 23) else {
+        let Ok(birth) = LunarBirth::from_solar(SolarYear(2023), 12, 31, 23) else {
             panic!("in range");
         };
         assert_eq!(birth.hour, DiaChi::Ty);
-        assert_eq!(solar_to_lunar(2024, 1, 1), Ok(birth.date));
+        assert_eq!(solar_to_lunar(SolarYear(2024), 1, 1), Ok(birth.date));
     }
 
     #[test]
     fn leap_month_2023() {
         // 2023 has a leap 2nd month starting 2023-03-22.
-        let Ok(lunar) = solar_to_lunar(2023, 3, 22) else {
+        let Ok(lunar) = solar_to_lunar(SolarYear(2023), 3, 22) else {
             panic!("in range");
         };
         assert_eq!((lunar.day, lunar.month, lunar.is_leap_month), (1, 2, true));

@@ -4,7 +4,7 @@
 
 use std::{fmt, str::FromStr};
 
-use tuvi_core::{BirthInput, Gender};
+use tuvi_core::{BirthInput, Gender, SolarYear};
 
 /// A birth moment, written as `yyyy-mm-dd-hh-nam` or `yyyy-mm-dd-hh-nu`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -20,7 +20,7 @@ impl fmt::Display for CardCode {
         write!(
             f,
             "{:04}-{:02}-{:02}-{:02}-{gender}",
-            birth.year, birth.month, birth.day, birth.hour
+            birth.year.0, birth.month, birth.day, birth.hour
         )
     }
 }
@@ -49,7 +49,7 @@ impl FromStr for CardCode {
                 .filter(|part| part.len() == len && part.bytes().all(|byte| byte.is_ascii_digit()))
                 .ok_or(BadCode)
         };
-        let year = number(4)?.parse().map_err(|_| BadCode)?;
+        let year = SolarYear(number(4)?.parse().map_err(|_| BadCode)?);
         let month = number(2)?.parse().map_err(|_| BadCode)?;
         let day = number(2)?.parse().map_err(|_| BadCode)?;
         let hour = number(2)?.parse().map_err(|_| BadCode)?;
@@ -76,7 +76,7 @@ mod tests {
     use super::*;
 
     const LAN: BirthInput = BirthInput {
-        year: 1996,
+        year: SolarYear(1996),
         month: 4,
         day: 15,
         hour: 7,

@@ -1,6 +1,6 @@
-//! The Bản mệnh screen: the header and the deck. On a phone the deck is a
-//! row of cards that scrolls sideways and snaps to each card. From `lg` the
-//! main card is on the left and the two other cards are on the right.
+//! The Bản mệnh screen: the header, Lá Bài Bản Mệnh and today's roadmap.
+//! On a phone they stack. From `lg` the card is on the left (364px) and the
+//! roadmap on the right.
 //!
 //! The header names the birth moment of the card, solar and lunar, so the
 //! user sees which day the sky belongs to.
@@ -13,26 +13,29 @@ use topcoat::{
 };
 use tuvi_core::Chart;
 
-use super::{advice::advice_card, destiny::destiny_card, facts::Facts, luck::luck_card};
-use crate::features::gacha::draw_button;
+use super::{destiny::destiny_card, facts::Facts};
+use crate::{
+    features::{
+        gacha::{BirthDate, card_name, redraw_button},
+        today::today_roadmap,
+    },
+    i18n::Lang,
+    t,
+};
 
 #[topcoat::view::component]
-pub async fn ban_menh_screen(
-    cx: &Cx,
-    name: &str,
-    chart: &Chart,
-    la_so: String,
-) -> Result<impl View> {
+pub async fn deck_screen(cx: &Cx, chart: &Chart, chart_url: String) -> Result<impl View> {
     let Some(facts) = Facts::of(chart) else {
         return Err(not_found().into());
     };
+    let lang = Lang::of(cx);
+    let lunar = format!("{}/{}", chart.lunar_day, chart.lunar_month);
+    let hour = format!("{:02}:00", chart.input.hour);
     Ok(view! {
         <header class="px-4">
             <div class="flex items-center justify-between gap-3.5">
-                <p
-                    class="text-[10px] font-bold tracking-[0.26em] text-accent uppercase"
-                >
-                    (name)
+                <p class="text-[10px] font-bold tracking-[0.26em] text-accent uppercase">
+                    (card_name(chart, lang))
                 </p>
                 <p
                     class="flex items-center gap-2 rounded-full border border-accent-glow bg-accent/12 px-3.5 py-1.5 text-[13px] font-semibold"
@@ -47,13 +50,7 @@ pub async fn ban_menh_screen(
                         if index > 0 {
                             <span class="text-muted">"·"</span>
                         }
-                        <span
-                            class=(if index == 0 {
-                                "text-accent"
-                            } else {
-                                "text-accent-2"
-                            })
-                        >
+                        <span class=(if index == 0 { "text-accent" } else { "text-accent-2" })>
                             (*sao)
                         </span>
                     }
@@ -62,25 +59,38 @@ pub async fn ban_menh_screen(
             <h1 class="mt-2.5 text-[26px] leading-[1.06] font-semibold tabular-nums">
                 (solar_date(chart))
             </h1>
-            <p class="mt-1.75 text-[13.5px] text-muted">(birth_moment(chart))</p>
-            <p class="mt-1 text-[13.5px] text-muted lg:hidden">
-                "Vuốt sang để lật hai lá bài phụ."
+            <p class="mt-1.75 text-[13.5px] text-muted">
+                (t!(
+                    deck_birth_moment,
+                    hour: hour.as_str(),
+                    chi: chart.hour_chi,
+                    lunar: lunar.as_str(),
+                    year_can: chart.nam_can,
+                    year_chi: chart.nam_chi
+                ))
+            </p>
+            <p
+                class="mt-2.5 inline-flex items-center gap-2 rounded-full border border-glass-line bg-glass px-3 py-1 text-[12px]"
+                style=(format!("--luck: var(--element-{})", facts.ban_menh_hanh.css()))
+            >
+                <span class="size-2.5 rounded-full bg-(--luck) shadow-[0_0_8px_var(--luck)]"></span>
+                (t!(deck_lucky_color))
+                <b class="font-semibold">(facts.ban_menh_hanh.luck_color(lang))</b>
             </p>
         </header>
         <div
-            class="flex snap-x snap-mandatory items-center gap-3.5 overflow-x-auto px-[max(16px,calc(50%-165px))] py-10 lg:grid lg:grid-cols-[364px_minmax(0,1fr)] lg:items-stretch lg:gap-5 lg:px-4"
+            class="grid justify-items-center gap-5 px-4 py-8 lg:grid-cols-[364px_minmax(0,1fr)] lg:items-start lg:justify-items-stretch"
         >
-            destiny_card(facts: &facts)
-            luck_card(facts: &facts)
-            advice_card(facts: &facts)
+            <div class="lg:sticky lg:top-6">destiny_card(facts: &facts)</div>
+            <div class="w-full min-w-0">today_roadmap(chart: chart)</div>
         </div>
         <div class="mx-auto flex max-w-sm flex-col gap-3 px-4">
-            draw_button(label: "✦ Rút lá khác", class: "w-full")
+            redraw_button(date: BirthDate::of(chart.input))
             <a
-                href=(la_so)
+                href=(chart_url)
                 class="pill-ghost flex h-12 items-center justify-center rounded-full text-sm font-semibold"
             >
-                "Xem đủ 12 cung"
+                (t!(deck_full_chart))
             </a>
         </div>
     })
@@ -92,30 +102,16 @@ fn solar_date(chart: &Chart) -> String {
     format!("{:02}/{:02}/{}", birth.day, birth.month, birth.year)
 }
 
-/// The hour and the lunar date, for example
-/// "22:00 · giờ Hợi · âm lịch 28/2 năm Bính Tý".
-fn birth_moment(chart: &Chart) -> String {
-    format!(
-        "{:02}:00 · giờ {} · âm lịch {}/{} năm {} {}",
-        chart.input.hour,
-        chart.hour_chi,
-        chart.lunar_day,
-        chart.lunar_month,
-        chart.nam_can,
-        chart.nam_chi,
-    )
-}
-
 #[cfg(test)]
 mod tests {
-    use tuvi_core::{BirthInput, Gender, build_chart};
+    use tuvi_core::{BirthInput, Gender, SolarYear, build_chart};
 
     use super::*;
 
     #[test]
-    fn header_shows_solar_and_lunar_dates() {
+    fn header_shows_the_solar_date() {
         let chart = build_chart(BirthInput {
-            year: 1996,
+            year: SolarYear(1996),
             month: 4,
             day: 5,
             hour: 7,
@@ -123,12 +119,5 @@ mod tests {
         })
         .unwrap();
         assert_eq!(solar_date(&chart), "05/04/1996");
-        assert_eq!(
-            birth_moment(&chart),
-            format!(
-                "07:00 · giờ Thìn · âm lịch {}/{} năm Bính Tý",
-                chart.lunar_day, chart.lunar_month
-            )
-        );
     }
 }

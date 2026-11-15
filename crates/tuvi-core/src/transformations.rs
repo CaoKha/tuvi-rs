@@ -2,9 +2,9 @@
 //!
 //! Names come from `components/data/tuhoa.json`.
 
-use crate::can_chi::ThienCan;
-use crate::chinh_tinh::Sao;
-use crate::phu_tinh::PhuTinh;
+use crate::main_stars::Sao;
+use crate::minor_stars::PhuTinh;
+use crate::stems_branches::ThienCan;
 
 /// The 4 Hóa, declared in component-id order (`hoa_khoa`, `hoa_ky`,
 /// `hoa_loc`, `hoa_quyen`). The old engine sorted the stars of a cung by id,

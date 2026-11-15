@@ -13,6 +13,7 @@ use topcoat::{
 use tuvi_core::{Chart, Cung, Gender, TuHoa};
 
 use super::accent::element;
+use crate::t;
 
 /// Grid cell for each cung, indexed by Địa Chi (0 = Tý … 11 = Hợi). The chart is
 /// a 4×4 grid read clockwise from Tị (top left); the middle 2×2 is the center
@@ -148,12 +149,12 @@ pub async fn chart_grid(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View>
     Ok(view! {
         <section class="px-1 pb-4">
             <p class="text-[10px] font-bold tracking-[0.26em] text-accent uppercase">
-                "Lá số gốc"
+                (t!(chart_kicker))
             </p>
             <h1 class="mt-1 text-3xl leading-tight font-semibold">(name)</h1>
             <dl class="mt-4 grid grid-cols-4 border-y border-glass-line text-center">
                 fact(
-                    label: "Âm lịch",
+                    label: t!(chart_lunar).resolve(cx).into_owned(),
                     value: format!(
                         "{}/{}/{}",
                         chart.lunar_day,
@@ -162,11 +163,14 @@ pub async fn chart_grid(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View>
                     )
                 )
                 fact(
-                    label: "Năm",
+                    label: t!(chart_year).resolve(cx).into_owned(),
                     value: format!("{} {}", chart.nam_can, chart.nam_chi)
                 )
-                fact(label: "Cục", value: chart.cuc.to_owned())
-                fact(label: "Bản mệnh", value: chart.ban_menh.to_owned())
+                fact(label: t!(chart_bureau).resolve(cx).into_owned(), value: chart.cuc.to_owned())
+                fact(
+                    label: t!(chart_natal_element).resolve(cx).into_owned(),
+                    value: chart.ban_menh.to_owned()
+                )
             </dl>
         </section>
         <div
@@ -178,7 +182,7 @@ pub async fn chart_grid(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View>
             center_panel(name: name, chart: chart)
         </div>
         <p class="mt-3 text-center text-[10px] text-muted">
-            "Chạm vào một cung để xem tất cả các sao."
+            (t!(chart_hint))
         </p>
         for view in &cungs {
             cung_popup(view: view)
@@ -188,10 +192,10 @@ pub async fn chart_grid(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View>
 
 /// One fact in the summary row.
 #[topcoat::view::component]
-async fn fact(cx: &Cx, label: &'static str, value: String) -> Result<impl View> {
+async fn fact(cx: &Cx, label: String, value: String) -> Result<impl View> {
     Ok(view! {
         <div class="min-w-0 px-1.5 py-3 [&+&]:border-l [&+&]:border-glass-line">
-            <dt class="text-[8px] text-muted uppercase sm:text-[10px]">(label)</dt>
+            <dt class="text-[8px] text-muted uppercase sm:text-[10px]">(label.as_str())</dt>
             <dd class="mt-1 text-[11px] font-semibold break-words sm:text-sm">
                 (value)
             </dd>
@@ -207,7 +211,7 @@ async fn cung_cell(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
         <button
             type="button"
             popovertarget=(view.popup_id())
-            aria-label=(format!("Cung {} tại {}", cung.role, cung.dia_chi))
+            aria-label=(t!(chart_palace_at, palace: cung.role, chi: cung.dia_chi).resolve(cx))
             class=(class!(
                 "relative flex min-w-0 cursor-pointer flex-col overflow-hidden px-1.5 pt-2 pb-5 text-left shadow-[inset_-1px_-1px_0_var(--color-glass-line)] transition-colors focus-visible:outline-1 focus-visible:outline-accent sm:px-2.5 sm:pt-2.5",
                 CUNG_CELL[view.index],
@@ -239,7 +243,7 @@ async fn cung_cell(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
                 }
                 if cung.chinh_tinh.is_empty() {
                     <span class="text-[9px] font-medium text-muted italic sm:text-xs">
-                        "Vô chính diệu"
+                        (t!(chart_no_main_star))
                     </span>
                 }
             </span>
@@ -270,8 +274,8 @@ async fn cung_cell(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
 async fn center_panel(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View> {
     let input = chart.input;
     let gender = match input.gender {
-        Gender::Nam => "Nam",
-        Gender::Nu => "Nữ",
+        Gender::Nam => t!(chart_male).resolve(cx),
+        Gender::Nu => t!(chart_female).resolve(cx),
     };
     let than = chart
         .cungs
@@ -294,18 +298,16 @@ async fn center_panel(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View> {
                 "/"
                 (input.month)
                 "/"
-                (input.year)
+                (input.year.0)
                 " · "
                 (input.hour)
                 "h"
                 <br>
-                "Giờ "
-                (chart.hour_chi)
+                (t!(chart_hour, chi: chart.hour_chi))
                 " · "
                 (gender)
                 <br>
-                "Thân cư "
-                (than)
+                (t!(chart_than_in, palace: than))
             </p>
         </section>
     })
@@ -316,18 +318,19 @@ async fn center_panel(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View> {
 async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
     let cung = view.cung;
     let id = view.popup_id();
+    let dai_han = view.dai_han();
     Ok(view! {
         <div
             id=(id.as_str())
             popover="auto"
-            aria-label=(format!("Cung {}", cung.role))
+            aria-label=(t!(chart_palace, palace: cung.role).resolve(cx))
             class="m-auto max-h-[85dvh] w-[min(370px,calc(100%-32px))] overflow-y-auto rounded-lg border border-accent-glow bg-[linear-gradient(155deg,rgba(59,32,99,0.97),rgba(26,16,51,0.98))] p-5 text-ink shadow-[0_24px_70px_rgba(8,4,20,0.72),0_0_30px_color-mix(in_srgb,var(--accent)_12%,transparent)] backdrop:bg-[rgba(10,5,24,0.72)] backdrop:backdrop-blur-[7px]"
         >
             <button
                 type="button"
                 popovertarget=(id.as_str())
                 popovertargetaction="hide"
-                aria-label="Đóng"
+                aria-label=(t!(chart_close).resolve(cx))
                 class="pill-ghost absolute top-3 right-3 grid size-8 cursor-pointer place-items-center rounded-full text-lg leading-none"
             >
                 "×"
@@ -342,8 +345,7 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
                         (view.am_duong())
                     </p>
                     <h3 class="mt-1 text-[26px] leading-tight font-semibold">
-                        "Cung "
-                        (cung.role)
+                        (t!(chart_palace, palace: cung.role))
                     </h3>
                     if !view.flags.is_empty() {
                         <p class="mt-2 text-[9px] font-bold text-coral uppercase">
@@ -355,16 +357,14 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
                     <b class="block text-xs font-semibold text-ink">
                         (view.trang_sinh.unwrap_or(""))
                     </b>
-                    "Đại hạn "
-                    (view.dai_han())
+                    (t!(chart_decade_luck, ages: dai_han.as_str()))
                     <br>
-                    "Tiểu hạn năm "
-                    (cung.tieu_han)
+                    (t!(chart_year_luck, chi: cung.tieu_han))
                 </p>
             </header>
             <section class="border-t border-glass-line py-3.5">
                 <h4 class="mb-2.5 font-sans text-[9px] font-bold text-muted uppercase">
-                    "Chính tinh"
+                    (t!(chart_main_stars))
                 </h4>
                 <ul class="flex flex-wrap gap-x-3.5 gap-y-2">
                     for sao in &cung.chinh_tinh {
@@ -372,7 +372,7 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
                     }
                     if cung.chinh_tinh.is_empty() {
                         <li class="font-display text-sm text-muted italic">
-                            "Vô chính diệu"
+                            (t!(chart_no_main_star))
                         </li>
                     }
                 </ul>
@@ -381,7 +381,7 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
                         class="mt-3 flex flex-wrap gap-2 text-[10px] font-semibold text-accent"
                     >
                         <b class="w-full text-[8px] text-muted uppercase">
-                            "Tứ Hóa"
+                            (t!(chart_transformations))
                         </b>
                         for tu_hoa in &view.tu_hoa {
                             <span>
@@ -396,7 +396,7 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
             </section>
             <section class="border-t border-glass-line py-3.5">
                 <h4 class="mb-2.5 font-sans text-[9px] font-bold text-muted uppercase">
-                    "Phụ tinh"
+                    (t!(chart_minor_stars))
                 </h4>
                 <ul class="flex flex-wrap gap-x-3.5 gap-y-2">
                     for sao in &view.phu_tinh {

@@ -1,6 +1,7 @@
 //! The shuffle loader: orbit rings and the crane, shown by `gacha.js`
 //! between the tap on the draw button and the deck.
 
+use crate::t;
 use topcoat::{
     Result,
     asset::{Asset, asset},
@@ -11,13 +12,6 @@ use topcoat::{
 /// The crane. It has no alpha channel: `mix-blend-mode: screen` drops its
 /// black background.
 const CRANE_VIDEO: Asset = asset!("assets/golden_crane_loading_md.webm");
-
-/// The lines under "đang rút bài". CSS shows them one after another.
-const LINES: [&str; 3] = [
-    "Thiên Hạc đang xáo bộ bài tinh tú…",
-    "Đang chọn một ngày giờ trên lịch…",
-    "Lá bài bản mệnh đang lật mở…",
-];
 
 #[topcoat::view::component]
 pub(super) async fn shuffle_loader(cx: &Cx) -> Result<impl View> {
@@ -52,7 +46,7 @@ pub(super) async fn shuffle_loader(cx: &Cx) -> Result<impl View> {
             </div>
             <div class="text-center">
                 <p class="font-display text-[26px] font-medium">
-                    "đang rút bài"
+                    (t!(loader_title))
                     <span class="load-dots" aria-hidden="true">
                         <span>"."</span>
                         <span>"."</span>
@@ -60,13 +54,16 @@ pub(super) async fn shuffle_loader(cx: &Cx) -> Result<impl View> {
                     </span>
                 </p>
                 <div class="load-lines mt-2.5 grid">
-                    for line in LINES {
-                        <p
-                            class="col-start-1 row-start-1 text-sm font-light text-muted"
-                        >
-                            (line)
-                        </p>
-                    }
+                    // CSS shows the three lines one after another.
+                    <p class="col-start-1 row-start-1 text-sm font-light text-muted">
+                        (t!(loader_line_1))
+                    </p>
+                    <p class="col-start-1 row-start-1 text-sm font-light text-muted">
+                        (t!(loader_line_2))
+                    </p>
+                    <p class="col-start-1 row-start-1 text-sm font-light text-muted">
+                        (t!(loader_line_3))
+                    </p>
                 </div>
             </div>
         </div>

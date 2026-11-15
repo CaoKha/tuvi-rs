@@ -2,16 +2,17 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::ban_menh;
+use crate::bureau::Cuc;
 use crate::calendar::{self, LunarBirth};
-use crate::can_chi::{DiaChi, ThienCan};
-use crate::chinh_tinh::{self, Sao};
-use crate::cuc::Cuc;
-use crate::cung::{self, CungRole};
-use crate::phu_tinh::{self, PhuTinh};
-use crate::tu_hoa::{self, Hoa};
-use crate::tuan_triet;
-use crate::van_han;
+use crate::luck_periods;
+use crate::main_stars::{self, Sao};
+use crate::minor_stars::{self, PhuTinh};
+use crate::natal_element;
+use crate::palace::{self, CungRole};
+use crate::stems_branches::{DiaChi, ThienCan};
+use crate::transformations::{self, Hoa};
+use crate::voids;
+use crate::year::{LunarYear, SolarYear};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Gender {
@@ -22,7 +23,7 @@ pub enum Gender {
 /// Solar (Gregorian) birth moment, local Vietnam time.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BirthInput {
-    pub year: i32,
+    pub year: SolarYear,
     pub month: u8,
     pub day: u8,
     /// 0..=23
@@ -94,7 +95,7 @@ pub struct Chart {
     pub input: BirthInput,
     pub lunar_day: u8,
     pub lunar_month: u8,
-    pub lunar_year: i32,
+    pub lunar_year: LunarYear,
     /// Hour branch, e.g. "Tý".
     pub hour_chi: &'static str,
     /// Year Can Chi, e.g. "Giáp Tý".
@@ -122,26 +123,26 @@ pub fn build_chart(input: BirthInput) -> Result<Chart, ChartError> {
         hour,
         ..
     } = input;
-    if hour > 23 || day == 0 || day > calendar::days_in_month(year, month) {
+    if hour > 23 || day == 0 || day > calendar::days_in_month(year.0, month) {
         return Err(ChartError::InvalidDate);
     }
-    if !(calendar::FIRST_YEAR..=calendar::LAST_YEAR).contains(&year) {
+    if !(calendar::FIRST_YEAR..=calendar::LAST_YEAR).contains(&year.0) {
         return Err(ChartError::YearOutOfRange);
     }
 
     let birth = LunarBirth::from_solar(year, month, day, hour)?;
     let lunar = birth.date;
-    let nam_can = ThienCan::from_index(lunar.year + 6);
-    let nam_chi = DiaChi::from_index(lunar.year + 8);
+    let nam_can = ThienCan::from_index(lunar.year.0 + 6);
+    let nam_chi = DiaChi::from_index(lunar.year.0 + 8);
 
-    let menh = cung::menh_position(lunar.month, birth.hour);
-    let than = cung::than_position(menh, birth.hour);
+    let menh = palace::menh_position(lunar.month, birth.hour);
+    let than = palace::than_position(menh, birth.hour);
     let cuc = Cuc::from_menh(nam_can, menh);
-    let tu_vi = chinh_tinh::tu_vi_position(lunar.day, cuc.number());
-    let sao_positions = chinh_tinh::chinh_tinh_positions(tu_vi);
+    let tu_vi = main_stars::tu_vi_position(lunar.day, cuc.number());
+    let sao_positions = main_stars::chinh_tinh_positions(tu_vi);
 
-    let van = cung::van_direction(input.gender, nam_chi);
-    let phu_tinh_positions = phu_tinh::positions(&phu_tinh::Input {
+    let van = palace::van_direction(input.gender, nam_chi);
+    let phu_tinh_positions = minor_stars::positions(&minor_stars::Input {
         nam_can,
         nam_chi,
         lunar_month: lunar.month,
@@ -152,10 +153,10 @@ pub fn build_chart(input: BirthInput) -> Result<Chart, ChartError> {
         cuc,
         van,
     });
-    let tuan = tuan_triet::tuan(nam_can, nam_chi);
-    let triet = tuan_triet::triet(nam_can);
-    let dai_han_start = van_han::dai_han_start(cuc.number(), menh, van);
-    let tieu_han = van_han::tieu_han(nam_chi, van);
+    let tuan = voids::tuan(nam_can, nam_chi);
+    let triet = voids::triet(nam_can);
+    let dai_han_start = luck_periods::dai_han_start(cuc.number(), menh, van);
+    let tieu_han = luck_periods::tieu_han(nam_chi, van);
 
     // Bucket the stars by cung in one pass each. `ALL` is in the old engine's
     // id order, so each bucket is already sorted.
@@ -169,9 +170,9 @@ pub fn build_chart(input: BirthInput) -> Result<Chart, ChartError> {
     }
     let mut tu_hoa: [Vec<TuHoa>; 12] = Default::default();
     for hoa in Hoa::ALL {
-        let (sao, position) = match tu_hoa::target(nam_can, hoa) {
-            tu_hoa::Target::Chinh(sao) => (sao.name(), sao_positions[sao as usize]),
-            tu_hoa::Target::Phu(sao) => (sao.name(), phu_tinh_positions[sao as usize]),
+        let (sao, position) = match transformations::target(nam_can, hoa) {
+            transformations::Target::Chinh(sao) => (sao.name(), sao_positions[sao as usize]),
+            transformations::Target::Phu(sao) => (sao.name(), phu_tinh_positions[sao as usize]),
         };
         tu_hoa[position.index()].push(TuHoa {
             sao,
@@ -183,7 +184,7 @@ pub fn build_chart(input: BirthInput) -> Result<Chart, ChartError> {
         let dia_chi = DiaChi::ALL[i];
         Cung {
             dia_chi: dia_chi.name(),
-            thien_can: cung::cung_thien_can(nam_can, dia_chi).name(),
+            thien_can: palace::cung_thien_can(nam_can, dia_chi).name(),
             role: CungRole::at(dia_chi, menh).name(),
             is_than: dia_chi == than,
             chinh_tinh: std::mem::take(&mut chinh_tinh[i]),
@@ -206,7 +207,7 @@ pub fn build_chart(input: BirthInput) -> Result<Chart, ChartError> {
         nam_can: nam_can.name(),
         nam_chi: nam_chi.name(),
         cuc: cuc.name(),
-        ban_menh: ban_menh::name(lunar.year),
+        ban_menh: natal_element::name(lunar.year),
         cungs,
     })
 }
@@ -226,7 +227,7 @@ mod tests {
 
     fn input(year: i32, month: u8, day: u8, hour: u8) -> BirthInput {
         BirthInput {
-            year,
+            year: SolarYear(year),
             month,
             day,
             hour,
