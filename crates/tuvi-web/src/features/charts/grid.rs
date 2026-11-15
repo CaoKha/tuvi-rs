@@ -174,7 +174,7 @@ pub async fn chart_grid(cx: &Cx, name: &str, chart: &Chart) -> Result<impl View>
             </dl>
         </section>
         <div
-            class="grid grid-cols-4 grid-rows-[repeat(4,minmax(112px,auto))] overflow-hidden rounded-lg border border-glass-line bg-[rgba(14,8,32,0.34)] shadow-[0_18px_42px_rgba(8,4,20,0.28)] sm:grid-rows-[repeat(4,minmax(150px,auto))]"
+            class="night grid grid-cols-4 grid-rows-[repeat(4,minmax(112px,auto))] overflow-hidden rounded-lg border border-glass-line bg-[rgba(14,8,32,0.34)] shadow-[0_18px_42px_rgba(8,4,20,0.28)] sm:grid-rows-[repeat(4,minmax(150px,auto))]"
         >
             for view in &cungs {
                 cung_cell(view: view)
@@ -324,7 +324,7 @@ async fn cung_popup(cx: &Cx, view: &CungView<'_>) -> Result<impl View> {
             id=(id.as_str())
             popover="auto"
             aria-label=(t!(chart_palace, palace: cung.role).resolve(cx))
-            class="m-auto max-h-[85dvh] w-[min(370px,calc(100%-32px))] overflow-y-auto rounded-lg border border-accent-glow bg-[linear-gradient(155deg,rgba(59,32,99,0.97),rgba(26,16,51,0.98))] p-5 text-ink shadow-[0_24px_70px_rgba(8,4,20,0.72),0_0_30px_color-mix(in_srgb,var(--accent)_12%,transparent)] backdrop:bg-[rgba(10,5,24,0.72)] backdrop:backdrop-blur-[7px]"
+            class="night m-auto max-h-[85dvh] w-[min(370px,calc(100%-32px))] overflow-y-auto rounded-lg border border-accent-glow bg-[linear-gradient(155deg,rgba(59,32,99,0.97),rgba(26,16,51,0.98))] p-5 text-ink shadow-[0_24px_70px_rgba(8,4,20,0.72),0_0_30px_color-mix(in_srgb,var(--accent)_12%,transparent)] backdrop:bg-[rgba(10,5,24,0.72)] backdrop:backdrop-blur-[7px]"
         >
             <button
                 type="button"

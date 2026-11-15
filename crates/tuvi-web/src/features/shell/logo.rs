@@ -20,7 +20,7 @@ pub async fn brand(cx: &Cx) -> Result<impl View> {
                 alt=""
                 width="48"
                 height="48"
-                class="size-9 drop-shadow-[0_0_10px_var(--accent-glow)]"
+                class="brand-logo size-9 drop-shadow-[0_0_10px_var(--accent-glow)]"
             >
             <span>
                 <b class="block font-display text-xl leading-tight font-semibold">

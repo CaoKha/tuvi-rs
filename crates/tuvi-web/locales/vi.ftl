@@ -10,7 +10,7 @@ brand_tagline = Rút lá bài Tử Vi
 draw_kicker = Gieo quẻ · rút lá bài
 draw_title_1 = Khoảnh khắc bạn sinh ra,
 draw_title_2 = lá bài của bạn
-draw_intro = Xoay các vòng để chọn ngày sinh, chỉnh giờ trên đồng hồ và chọn giới tính. Chòm sao mệnh của bạn sẽ hiện lên trên lá bài.
+draw_intro = Xoay các vòng để chọn ngày sinh và chỉnh giờ trên đồng hồ. Chòm sao mệnh của bạn sẽ hiện lên trên lá bài.
 draw_day = Ngày
 draw_month = Tháng
 draw_year = Năm
@@ -80,6 +80,8 @@ chart_minor_stars = Phụ tinh
 
 ## Language menu
 lang_menu_aria = Ngôn ngữ
+theme_to_day = Chuyển sang giao diện ngày
+theme_to_night = Chuyển sang giao diện đêm
 
 ## Birth form
 cast_hour_label = Giờ sinh

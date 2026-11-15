@@ -9,7 +9,9 @@
      components in src/components/ use these names. They point to the
      TuviLM tokens, so the components follow the design without edits.
 
-   The app is always dark: the twilight shell never changes. */
+   Two themes. Night is the default: the twilight design. Day (`.light` on
+   <html>) is a calm dawn sky; the cards follow it, the chart grid keeps
+   the night (`.night`). */
 
 @import "tailwindcss";
 
@@ -97,6 +99,9 @@
   --accent: var(--accent-neutral);
   --accent-2: var(--accent-neutral-light);
   --accent-glow: var(--accent-neutral-glow);
+
+  /* The heart of a constellation star: the ink at night, white by day. */
+  --star-light: var(--color-ink);
 }
 
 /* The frosted surface of every card and bar. */
@@ -379,6 +384,13 @@
     color: var(--color-bg-0);
   }
 
+
+  /* The draw screen from lg: the card width follows the screen height so
+     the table fits a laptop screen. */
+  .cast-stage {
+    --stage-card: clamp(220px, calc((100svh - 380px) * 0.5625), 280px);
+  }
+
   /* The face-down card on the draw screen: it floats a little. */
   .card-back {
     animation: card-float 6s ease-in-out infinite;
@@ -432,7 +444,7 @@
 
   .chom-core {
     --star-rest: 0.16;
-    fill: var(--color-ink);
+    fill: var(--star-light);
     stroke: var(--accent-2);
     stroke-width: 0.16;
   }
@@ -609,4 +621,126 @@
   .language-menu:popover-open {
     animation: reward-in 0.18s ease both;
   }
+}
+
+/* ===== Day theme (`.light` on <html>, see src/features/shell/theme.rs) =====
+   A calm, dim dawn: dusky lavender at the top, mint and sky blue at the
+   corners, a peach glow at the bottom. Deep plum ink, soft frosted glass,
+   and deeper accents so they read on a light page. Outside the layers, so these win
+   over the utilities. */
+:root.light {
+  color-scheme: light;
+
+  --color-bg-0: #f3eef9;
+  --color-bg-1: #e2d8ee;
+  --color-bg-2: #d6c9ea;
+  --color-page: #ddd2ea;
+
+  --color-ink: #261640;
+  --color-muted: #5b4f7a;
+  --color-coral: #e8714c;
+  --color-fire: #d93a4b;
+
+  --color-glass: rgba(255, 255, 255, 0.3);
+  --color-glass-line: rgba(70, 45, 120, 0.18);
+
+  --element-kim: #9a8762;
+  --element-moc: #2b9568;
+  --element-thuy: #3976cc;
+  --element-hoa: #dc4a40;
+  --element-tho: #a36636;
+
+  --element-kim-light: color-mix(in srgb, var(--element-kim) 70%, #c45d9e);
+  --element-moc-light: color-mix(in srgb, var(--element-moc) 72%, #3a8fd0);
+  --element-thuy-light: color-mix(in srgb, var(--element-thuy) 70%, #8a5fd6);
+  --element-hoa-light: color-mix(in srgb, var(--element-hoa) 72%, #e0478f);
+  --element-tho-light: color-mix(in srgb, var(--element-tho) 72%, #d0703a);
+
+  --element-kim-glow: color-mix(in srgb, var(--element-kim) 32%, transparent);
+  --element-moc-glow: color-mix(in srgb, var(--element-moc) 32%, transparent);
+  --element-thuy-glow: color-mix(in srgb, var(--element-thuy) 32%, transparent);
+  --element-hoa-glow: color-mix(in srgb, var(--element-hoa) 32%, transparent);
+  --element-tho-glow: color-mix(in srgb, var(--element-tho) 32%, transparent);
+
+  --accent-neutral: #7457d6;
+  --accent-neutral-light: #b45aa8;
+  --accent-neutral-glow: rgba(116, 87, 214, 0.28);
+
+  --star-light: #ffffff;
+}
+
+/* A card by day: a dawn sky of its own, lavender to peach. The stars are
+   white hearts ringed in the accent, brighter at rest than at night. */
+.light .card-face {
+  background-image: linear-gradient(168deg, #cdbcee 0%, #dccff0 46%, #ead2cb 100%);
+  box-shadow:
+    0 18px 50px -18px color-mix(in srgb, var(--accent) 45%, transparent),
+    0 0 36px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.light .chom-core {
+  --star-rest: 0.6;
+  stroke: var(--accent);
+  stroke-width: 0.32;
+}
+
+.light .chom-halo {
+  --star-rest: 0.14;
+}
+
+.light .chom-line {
+  stroke: var(--accent);
+  opacity: 0.7;
+}
+
+.light .cosmos {
+  background:
+    radial-gradient(70% 50% at 50% 112%, rgba(232, 150, 120, 0.38), transparent 62%),
+    radial-gradient(45% 40% at 8% 22%, rgba(110, 185, 165, 0.34), transparent 70%),
+    radial-gradient(50% 45% at 92% 10%, rgba(120, 150, 220, 0.38), transparent 70%),
+    linear-gradient(180deg, #d4c7ea 0%, #ddd1ec 48%, #e8d5d2 100%);
+}
+
+/* The nebulae soften into the day. */
+.light .cosmos > div {
+  opacity: 0.28;
+}
+
+/* The pale gold crane tones down a touch by day, with a faint shade
+   instead of a glow. */
+.light .brand-logo {
+  filter: brightness(0.9) saturate(1.1) drop-shadow(0 1px 2px rgba(38, 22, 64, 0.22));
+}
+
+.light .pill-ghost {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.light .pill-primary {
+  color: #fff;
+}
+
+/* The night inside the day: the chart grid keeps the twilight. */
+.light .night {
+  color-scheme: dark;
+  --color-bg-0: #1a1033;
+  --color-bg-1: #2e1a4a;
+  --color-bg-2: #3b2063;
+  --color-page: #120a24;
+  --color-ink: #f3effa;
+  --color-muted: #b9aed1;
+  --color-glass: rgba(255, 255, 255, 0.06);
+  --color-glass-line: rgba(243, 239, 250, 0.14);
+  color: var(--color-ink);
+}
+
+/* The switch shows where it goes: the sun at night, the moon by day. */
+.dark .theme-moon,
+.light .theme-sun {
+  display: none;
+}
+
+.theme-sun,
+.theme-moon {
+  display: inline-flex;
 }

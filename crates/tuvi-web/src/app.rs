@@ -18,7 +18,7 @@ use topcoat::{
 use crate::{
     features::{
         cast::{cast_screen, menh_preview},
-        shell::{LOGO, brand},
+        shell::{LOGO, Theme, brand, theme_toggle},
     },
     i18n::{Lang, request_locale},
     t,
@@ -26,6 +26,7 @@ use crate::{
 
 pub mod card;
 pub mod lang;
+pub mod theme;
 
 /// Display font for titles and star names.
 const DISPLAY_FONT: Font = fontsource_font!(
@@ -100,16 +101,17 @@ async fn locale_layer(cx: &Cx, body: Body, next: Next<'_>) -> Result<Response> {
 #[layout]
 async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
     let lang = Lang::of(cx);
+    let theme = Theme::of(cx);
     Ok(view! {
         <!DOCTYPE html>
-        <html lang=(lang.code()) class="dark">
+        <html lang=(lang.code()) class=(theme.code())>
             <head>
                 <meta charset="utf-8">
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1, viewport-fit=cover"
                 >
-                <meta name="theme-color" content="#1a1033">
+                <meta name="theme-color" content=(theme.bar_color())>
                 <title>"Thiên Hạc · " (t!(meta_title))</title>
                 <meta
                     name="description"
@@ -134,7 +136,10 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                         class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 pt-6 pb-5"
                     >
                         brand()
-                        language_menu(lang: lang)
+                        <div class="flex items-center gap-2">
+                            theme_toggle(theme: theme)
+                            language_menu(lang: lang)
+                        </div>
                     </header>
                     (slot)
                 </div>

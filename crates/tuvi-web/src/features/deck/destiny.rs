@@ -25,7 +25,7 @@ pub(super) async fn destiny_card(cx: &Cx, facts: &Facts<'_>) -> Result<impl View
     let song_tinh = facts.chinh_tinh.len() == 2;
     Ok(view! {
         <article
-            class="relative flex aspect-[9/16] w-[min(330px,84vw)] shrink-0 snap-center flex-col overflow-hidden rounded-[22px] border border-accent/40 bg-linear-168 from-bg-2 via-bg-1 to-bg-0 px-6 pt-6.5 pb-6 shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_26%,transparent)] lg:row-span-2 lg:w-full"
+            class="card-face relative flex aspect-[9/16] w-[min(330px,84vw)] shrink-0 snap-center flex-col overflow-hidden rounded-[22px] border border-accent/40 bg-linear-168 from-bg-2 via-bg-1 to-bg-0 px-6 pt-6.5 pb-6 shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_26%,transparent)] lg:row-span-2 lg:w-full"
         >
             <h2 class="font-display text-[19px] font-semibold tracking-[0.06em]">
                 (t!(destiny_title))

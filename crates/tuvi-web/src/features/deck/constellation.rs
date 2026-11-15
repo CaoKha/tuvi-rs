@@ -119,22 +119,26 @@ fn pulse_phases(chom: &ChomSao) -> Vec<f64> {
 }
 
 /// One figure: the ghost portrait under its star pattern. `song_tinh`
-/// makes it smaller, to fit two side by side.
+/// makes it smaller, to fit two side by side. `fill` sizes it to the width
+/// of its parent instead, for a card with room to spare; there twin stars
+/// stack, each 62% wide.
 #[topcoat::view::component]
 pub async fn chom_figure(
     cx: &Cx,
     chom: &'static ChomSao,
     song_tinh: bool,
     delay_ms: usize,
+    #[default] fill: bool,
 ) -> Result<impl View> {
     let halo = format!("halo-{}", chom.key);
     let phases = pulse_phases(chom);
     Ok(view! {
         <div
-            class=(if song_tinh {
-                "chom-figure w-[min(150px,44vw)] md:w-[min(170px,44vw)]"
-            } else {
-                "chom-figure w-[170px] md:w-[min(250px,78vw)]"
+            class=(match (fill, song_tinh) {
+                (true, true) => "chom-figure -my-1 w-[62%]",
+                (true, false) => "chom-figure w-full",
+                (false, true) => "chom-figure w-[min(150px,44vw)] md:w-[min(170px,44vw)]",
+                (false, false) => "chom-figure w-[170px] md:w-[min(250px,78vw)]",
             })
             style=(format!("animation-delay: {delay_ms}ms"))
         >
@@ -158,7 +162,7 @@ pub async fn chom_figure(
                     <radialGradient id=(halo.as_str())>
                         <stop
                             offset="0%"
-                            class="[stop-color:var(--color-ink)] [stop-opacity:0.92]"
+                            class="[stop-color:var(--star-light)] [stop-opacity:0.92]"
                         ></stop>
                         <stop
                             offset="38%"
@@ -205,8 +209,10 @@ pub async fn chom_figure(
 }
 
 /// The sky without a figure: scattered dots, dim until a parent has `lit`.
+/// `bright` draws bigger dots, for a large card.
 #[topcoat::view::component]
-pub async fn sky(cx: &Cx, class: &'static str) -> Result<impl View> {
+pub async fn sky(cx: &Cx, class: &'static str, #[default] bright: bool) -> Result<impl View> {
+    let radius = if bright { "3.4" } else { "2.4" };
     Ok(view! {
         <svg
             aria-hidden="true"
@@ -214,7 +220,7 @@ pub async fn sky(cx: &Cx, class: &'static str) -> Result<impl View> {
             class=(class!("overflow-visible", class))
         >
             for (x, y) in SCATTER {
-                <circle class="constel-node" cx=(x) cy=(y) r="2.4"></circle>
+                <circle class="constel-node" cx=(x) cy=(y) r=(radius)></circle>
             }
         </svg>
     })

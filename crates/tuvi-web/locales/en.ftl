@@ -10,7 +10,7 @@ brand_tagline = Tử Vi cards
 draw_kicker = Tử Vi · draw a card
 draw_title_1 = Your birth moment,
 draw_title_2 = your card
-draw_intro = Spin the wheels to pick your birth date, set the hour on the clock and pick a gender. Your constellation lights up on the card as you go.
+draw_intro = Spin the wheels to your birth date and set the hour on the clock. Your constellation lights up on the card as you go.
 draw_day = Day
 draw_month = Month
 draw_year = Year
@@ -80,6 +80,8 @@ chart_minor_stars = Minor stars
 
 ## Language menu
 lang_menu_aria = Language
+theme_to_day = Switch to day
+theme_to_night = Switch to night
 
 ## Birth form
 cast_hour_label = Birth hour

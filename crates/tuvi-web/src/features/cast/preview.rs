@@ -122,20 +122,27 @@ pub async fn menh_preview(
                 </style>
             }
             if figures.is_empty() {
-                sky(class: "h-auto w-full")
+                sky(class: "h-auto w-full", bright: true)
                 if !lit {
                     <p
-                        class="text-[40px] leading-none text-accent drop-shadow-[0_0_18px_var(--accent-glow)]"
+                        class="text-[56px] leading-none text-accent drop-shadow-[0_0_18px_var(--accent-glow)]"
                         aria-hidden="true"
                     >
                         "✦"
                     </p>
                 }
-                sky(class: "h-auto w-full rotate-180")
+                sky(class: "h-auto w-full rotate-180", bright: true)
             } else {
-                <div class="flex w-full justify-center gap-0.5">
+                // Twin stars stack: the card is tall, and side by side they would
+                // be half as wide.
+                <div class=(class!("flex w-full items-center justify-center gap-0.5", "flex-col" if song_tinh))>
                     for (index, chom) in figures.into_iter().enumerate() {
-                        chom_figure(chom: chom, song_tinh: song_tinh, delay_ms: index * 90)
+                        chom_figure(
+                            chom: chom,
+                            song_tinh: song_tinh,
+                            delay_ms: index * 90,
+                            fill: true
+                        )
                     }
                 </div>
             }

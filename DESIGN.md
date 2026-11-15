@@ -80,20 +80,36 @@ a Fluent message (`crates/tuvi-web/locales/`). Tử Vi terms (star names,
 Địa Chi, Can Chi, Tràng Sinh stages) stay in Vietnamese in both languages;
 the English text glosses them where it helps, e.g. "Bureau (Cục)".
 
+## Night and day
+
+Night is the default: the twilight design above. A round `pill-ghost`
+switch left of the language button turns the page to day and back (a sun at
+night, a moon by day); a `theme` cookie keeps the pick, so the server
+renders the page in it. Day is a calm, dim dawn: dusky lavender at the top,
+mint and sky blue in the corners, a peach glow at the bottom, deep plum ink
+(`#261640`), soft frosted glass, and deeper accents (neutral `#7457d6` to
+orchid `#b45aa8`; darker element colors) so they read on a light page. The
+crane logo tones down a touch, with a faint shade instead of a glow. The cards turn to
+a dawn of their own (lavender to peach), with white star hearts ringed in
+the accent. The 12-cung grid keeps the night palette (`.night`). Where the
+browser can, the switch cross-fades.
+
 ## Draw screen
 
 The home page (`crates/tuvi-web/src/features/cast/`). It reuses the
 prototype's An sao parts (`.picker`, `.birth-clock`, `.segment`, `.reward`,
 the casting loader) around a face-down card.
 
-- Order on a phone: title, the card, the birth form, the main button. From
-  768px: the title, the form and the button on the left; the card on the
-  right, with the same top and bottom as the form card (its width follows
-  from 9:16).
+- Order on a phone and a tablet: title, the card, the birth form, the main
+  button. The card is as wide as the form card. From 1024px one glass table under a centred title holds the birth
+  form on the left and the card with the button on the right, both in the
+  middle, 5rem apart; the table hugs them with 2.5rem on each side.
+  The card width follows the screen height (220–280px), so the table fits a
+  laptop screen.
 - The birth form (`glass`): three scroll-snap date wheels (day, month, year
   1900–2099) over one accent band, then AM/PM (`.segment`), the birth clock
-  (`.birth-clock`) and gender (`.segment`). The picked segment has the accent
-  gradient and `bg-0` text. The clock: 12 at the top; a tap picks an hour; a
+  (`.birth-clock`) and gender (`.segment`, Male by default). The picked
+  segment has the accent gradient and `bg-0` text. The clock: 12 at the top; a tap picks an hour; a
   drag around the face turns the hand with the finger and picks the nearest
   hour (a short vibration per hour where the phone supports it); arrow keys
   step; the center shows the hour, its canh giờ and range.

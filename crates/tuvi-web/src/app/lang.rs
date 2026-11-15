@@ -37,7 +37,7 @@ pub async fn switch(cx: &Cx, Form(form): Form<Switch>) -> Result<SeeOther> {
 
 /// `back` when it is a path on this site that a GET can open, else `/`. A
 /// path like `//evil.example` would leave the site.
-fn safe_back(back: &str) -> &str {
+pub(super) fn safe_back(back: &str) -> &str {
     let local = back.starts_with('/') && !back.starts_with("//") && !back.contains('\\');
     // `/card` only takes the draw POST.
     if local && back != "/card" { back } else { "/" }

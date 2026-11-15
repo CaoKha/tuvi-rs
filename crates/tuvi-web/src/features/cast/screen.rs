@@ -66,42 +66,50 @@ pub async fn cast_screen(
             method="post"
             action=(href!(draw).resolve(cx))
             autocomplete="off"
-            class="grid justify-items-center gap-y-5 md:grid-cols-2 md:items-start md:gap-x-10"
+            class="cast-stage grid justify-items-center gap-y-5 lg:grid-cols-[1fr_minmax(0,24rem)_var(--stage-card)_1fr] lg:grid-rows-[auto_1fr] lg:justify-items-stretch lg:gap-x-20 lg:gap-y-0"
             data-cast=""
         >
-            <div
-                class="text-center md:col-start-1 md:row-start-1 md:justify-self-stretch md:text-left"
-            >
+            <div class="text-center lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mb-6">
                 <p
                     class="text-[10px] font-bold tracking-[0.28em] text-accent uppercase [text-shadow:0_0_14px_var(--accent-glow)]"
                 >
                     (t!(draw_kicker))
                 </p>
                 <h1
-                    class="mt-[9px] text-[clamp(26px,7.4vw,31px)] leading-[1.08] font-semibold tracking-[-0.01em] md:text-[clamp(30px,4.4vw,38px)]"
+                    class="mt-[9px] text-[clamp(26px,7.4vw,31px)] leading-[1.08] font-semibold tracking-[-0.01em] lg:text-[42px]"
                 >
                     (t!(draw_title_1))
-                    <br>
+                    " "
+                    <br class="lg:hidden">
                     (t!(draw_title_2))
                 </h1>
                 <p
-                    class="mt-[5px] text-[13.5px] font-light text-muted md:mt-[9px] md:max-w-[36ch] md:text-[15px]"
+                    class="mt-[5px] text-[13.5px] font-light text-muted lg:mx-auto lg:mt-2.5 lg:max-w-[62ch] lg:text-[15px]"
                 >
                     (t!(draw_intro))
                 </p>
             </div>
 
-            // The card: face down, then the constellation of cung Mệnh. From
-            // `md` it sits next to the form card with the same top and bottom:
-            // the cell takes no height of its own, the card fills it, and its
-            // width follows from the 9:16 ratio.
-            <div class="w-full md:relative md:col-start-2 md:row-start-2 md:self-stretch">
-                <div class="flex justify-center md:absolute md:inset-0">
+            // From `lg` one glass table holds the birth form and the card,
+            // side by side in the middle. It hugs them: the two middle
+            // columns plus 2.5rem on each side.
+            <div
+                class="hidden lg:glass lg:col-span-2 lg:col-start-2 lg:row-start-2 lg:-mx-10 lg:block lg:shadow-[0_30px_80px_-30px_color-mix(in_srgb,var(--accent)_35%,transparent)]"
+                aria-hidden="true"
+            ></div>
+
+            // The card and the main button. On a phone they are two cells
+            // (`contents`): the card under the title, the button last. From
+            // `lg` they are the right half of the table.
+            <div
+                class="contents lg:relative lg:col-start-3 lg:row-start-2 lg:flex lg:flex-col lg:justify-center lg:gap-4 lg:py-6"
+            >
+                <div class="flex w-full justify-center">
                     <div
-                        class="card-back relative flex aspect-[9/16] w-[min(240px,62vw)] flex-col items-center justify-between overflow-hidden rounded-[22px] border border-accent/40 bg-linear-168 from-bg-2 via-bg-1 to-bg-0 px-4 py-5 shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_26%,transparent)] md:h-full md:w-auto md:px-6 md:py-7"
+                        class="card-back card-face relative flex aspect-[9/16] w-full max-w-sm flex-col items-center justify-between overflow-hidden rounded-[22px] border border-accent/40 bg-linear-168 from-bg-2 via-bg-1 to-bg-0 px-6 py-7 shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_26%,transparent)] lg:w-(--stage-card) lg:max-w-none"
                     >
                         <p
-                            class="font-display text-[11px] font-semibold tracking-[0.3em] text-muted md:text-[13px]"
+                            class="font-display text-[13px] font-semibold tracking-[0.3em] text-muted"
                             aria-hidden="true"
                         >
                             "THIÊN HẠC"
@@ -114,17 +122,33 @@ pub async fn cast_screen(
                             pm: $(pm)
                         )
                         <p
-                            class="font-display text-[11px] font-semibold tracking-[0.3em] text-muted md:text-[13px]"
+                            class="font-display text-[13px] font-semibold tracking-[0.3em] text-muted"
                             aria-hidden="true"
                         >
                             "TỬ VI"
                         </p>
                     </div>
                 </div>
+
+                <div class="order-last flex w-full max-w-sm flex-col gap-2.5 lg:order-none">
+                    if let Some(error) = &error {
+                        <p role="alert" class="text-center text-sm text-fire">(error.as_str())</p>
+                    }
+                    <button
+                        type="submit"
+                        class="pill-primary h-[52px] w-full cursor-pointer rounded-full text-[15px] font-semibold"
+                    >
+                        "✦ "
+                        (t!(draw_button))
+                    </button>
+                </div>
             </div>
 
+            // The birth form: the date, the hour, the gender. A glass card
+            // on a phone; from `lg` it is the left half of the table, so its
+            // own glass goes.
             <div
-                class="glass w-full max-w-sm px-3.5 py-3 md:col-start-1 md:row-start-2 md:max-w-none"
+                class="glass w-full max-w-sm px-3.5 py-3 lg:relative lg:col-start-2 lg:row-start-2 lg:max-w-none lg:self-center lg:border-transparent lg:bg-transparent lg:px-0 lg:py-6 lg:backdrop-blur-none"
             >
                 <div class="relative grid grid-cols-[1fr_1fr_1.15fr] gap-2.5">
                     // The selection band behind the middle row of the wheels.
@@ -169,11 +193,7 @@ pub async fn cast_screen(
                 <p class="mt-2 text-center text-[11px] text-muted">(t!(cast_clock_hint))</p>
 
                 <div class="mt-3.5" data-gender="">
-                    <p class="dial-label">
-                        (t!(cast_gender_label))
-                        " "
-                        <span class="text-accent">(t!(cast_required))</span>
-                    </p>
+                    <p class="dial-label">(t!(cast_gender_label))</p>
                     segment(
                         name: "gender",
                         label: t!(cast_gender_label).resolve(cx).into_owned(),
@@ -181,25 +201,11 @@ pub async fn cast_screen(
                             ("Nam", t!(chart_male).resolve(cx).into_owned()),
                             ("Nu", t!(chart_female).resolve(cx).into_owned()),
                         ],
-                        checked: sent.and_then(|sent| sent.gender).map(gender_value),
+                        // Male by default, so the hour is the only pick left.
+                        checked: Some(sent.and_then(|sent| sent.gender).map_or("Nam", gender_value)),
                         picked: None
                     )
                 </div>
-            </div>
-
-            <div
-                class="flex w-full max-w-sm flex-col gap-2.5 md:col-start-1 md:row-start-3 md:max-w-none"
-            >
-                if let Some(error) = &error {
-                    <p role="alert" class="text-center text-sm text-fire">(error.as_str())</p>
-                }
-                <button
-                    type="submit"
-                    class="pill-primary h-[52px] w-full cursor-pointer rounded-full text-[15px] font-semibold"
-                >
-                    "✦ "
-                    (t!(draw_button))
-                </button>
             </div>
         </form>
 
