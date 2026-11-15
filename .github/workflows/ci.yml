@@ -1,4 +1,5 @@
-# Checks every push and pull request. On main, after the checks pass, it
+# Checks every push and pull request in three parallel jobs: format and lint,
+# tests, and the Docker image. On main, after all three pass, it
 # asks Render to deploy (when the RENDER_DEPLOY_HOOK_URL secret is set). A
 # manual run on main ("Run workflow" in the Actions tab) deploys too.
 name: CI
@@ -17,8 +18,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  check:
-    name: Format, lint, test, translations
+  lint:
+    name: Format and lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,14 +27,22 @@ jobs:
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - name: Install the Topcoat CLI
-        run: cargo install topcoat-cli --version 0.12.1 --locked
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets -- -D warnings
-      - run: cargo test --workspace
+      - name: Install the Topcoat CLI
+        run: cargo install topcoat-cli --version 0.12.1 --locked
       - name: Check translations
         working-directory: crates/tuvi-web
         run: topcoat l10n check
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace
 
   image:
     name: Docker image
@@ -63,7 +72,7 @@ jobs:
 
   deploy:
     name: Deploy to Render
-    needs: [check, image]
+    needs: [lint, test, image]
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
