@@ -58,7 +58,7 @@ pub fn router() -> RouterBuilder {
     module_router!()
         .font(DISPLAY_FONT)
         .font(BODY_FONT)
-        .assets(AssetBundle::load().unwrap())
+        .assets(asset_bundle())
         .route(web_manifest)
         // The live preview of the birth form.
         .route(menh_preview)
@@ -66,6 +66,17 @@ pub fn router() -> RouterBuilder {
         .layer(CookieLayer::new())
         // Lets the browser runtime rerun pages; register it after other layers.
         .layer(RuntimeLayer::new())
+}
+
+/// Loads the asset bundle from `TUVI_ASSETS` when it is set, else from the
+/// `assets` folder next to the binary. The Android app sets it, because its
+/// binary sits in a read-only folder.
+fn asset_bundle() -> AssetBundle {
+    match std::env::var_os("TUVI_ASSETS") {
+        Some(dir) => AssetBundle::load_dir(dir),
+        None => AssetBundle::load(),
+    }
+    .unwrap()
 }
 
 /// `GET /manifest.webmanifest`, for "Add to home screen". It is built per
