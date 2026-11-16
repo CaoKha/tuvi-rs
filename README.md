@@ -62,6 +62,13 @@ The app runs in a Docker container. It is on Render's free plan.
 
 A free Render service sleeps when idle. The first visit after that is slow.
 
+## Android
+
+`android/` wraps the same server in an Android app that works offline. A push
+to `main` publishes the APK as the
+[`android-latest` release](https://github.com/CaoKha/tuvi-rs/releases/tag/android-latest).
+Read [`android/README.md`](android/README.md) to install it or set up signing.
+
 ## Contribute
 
 - Read [`DESIGN.md`](DESIGN.md) before you change the look.
