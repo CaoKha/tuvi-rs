@@ -1,4 +1,5 @@
-//! Today in Vietnam (UTC+7, no daylight saving), from the system clock.
+//! Today in Vietnam (UTC+7, no daylight saving), from the system clock, and
+//! the date helpers of the calendar.
 
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -43,15 +44,68 @@ impl Now {
         usize::from(self.hour).div_ceil(2) % 12
     }
 
-    /// The day the current canh giờ belongs to. Giờ Tý starts at 23h and
-    /// belongs to the next day, as in the engine.
-    pub(super) fn tu_vi_day(self) -> (SolarYear, u8, u8) {
-        if self.hour == 23 {
-            let days = days_from_civil(self.year.0, self.month, self.day) + 1;
-            let (year, month, day) = civil_from_days(days);
-            (SolarYear(year), month, day)
-        } else {
-            (self.year, self.month, self.day)
+    /// The day count from 1970-01-01 of the day the current canh giờ
+    /// belongs to. Giờ Tý starts at 23h and belongs to the next day, as in
+    /// the engine.
+    pub(super) fn tu_vi_days(self) -> i64 {
+        days_from_civil(self.year.0, self.month, self.day) + i64::from(self.hour == 23)
+    }
+
+}
+
+/// The day count of an ISO date, `YYYY-MM-DD`, or `None` when it is not a
+/// real date.
+pub(super) fn parse_iso(text: &str) -> Option<i64> {
+    let mut parts = text.splitn(3, '-');
+    let year: i32 = parts.next()?.parse().ok()?;
+    let month: u8 = parts.next()?.parse().ok()?;
+    let day: u8 = parts.next()?.parse().ok()?;
+    let days = days_from_civil(year, month, day);
+    (civil_from_days(days) == (year, month, day)).then_some(days)
+}
+
+/// The ISO date, `YYYY-MM-DD`, of a day count.
+pub(super) fn iso(days: i64) -> String {
+    let (year, month, day) = civil_from_days(days);
+    format!("{year:04}-{month:02}-{day:02}")
+}
+
+/// The month of a calendar page: the day count of its 1st, how many days
+/// it has, and the weekday of the 1st, 0 for Monday.
+pub(super) fn month_page(year: i32, month: u8) -> (i64, i64, i64) {
+    let first = days_from_civil(year, month, 1);
+    let (next_year, next_month) = if month == 12 { (year + 1, 1) } else { (year, month + 1) };
+    let length = days_from_civil(next_year, next_month, 1) - first;
+    // 1970-01-01 was a Thursday, 3 days after Monday.
+    (first, length, (first + 3).rem_euclid(7))
+}
+
+/// The weekdays from Thursday, 1970-01-01: the keys of the `weekday`
+/// messages.
+const WEEKDAYS: [&str; 7] = ["thu", "fri", "sat", "sun", "mon", "tue", "wed"];
+
+/// One solar day.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(super) struct Day {
+    /// The day count from 1970-01-01.
+    pub n: i64,
+    pub year: SolarYear,
+    pub month: u8,
+    pub day: u8,
+    /// `mon` to `sun`.
+    pub weekday: &'static str,
+}
+
+impl Day {
+    /// The day at the day count `n`.
+    pub(super) fn at(n: i64) -> Self {
+        let (year, month, day) = civil_from_days(n);
+        Self {
+            n,
+            year: SolarYear(year),
+            month,
+            day,
+            weekday: WEEKDAYS[n.rem_euclid(7) as usize],
         }
     }
 }
@@ -112,7 +166,36 @@ mod tests {
             hour: 23,
         };
         assert_eq!(late.canh(), 0);
-        assert_eq!(late.tu_vi_day(), (SolarYear(2027), 1, 1));
+        let day = Day::at(late.tu_vi_days());
+        assert_eq!((day.year, day.month, day.day), (SolarYear(2027), 1, 1));
+    }
+
+    #[test]
+    fn gio_ty_day_and_weekdays() {
+        // Sunday, 2026-11-22, at 23h: giờ Tý, so the day is Monday the 23rd.
+        let late = Now {
+            year: SolarYear(2026),
+            month: 11,
+            day: 22,
+            hour: 23,
+        };
+        let day = Day::at(late.tu_vi_days());
+        assert_eq!((day.day, day.weekday), (23, "mon"));
+        let noon = Day::at(Now { hour: 12, ..late }.tu_vi_days());
+        assert_eq!((noon.day, noon.weekday), (22, "sun"));
+    }
+
+    #[test]
+    fn iso_dates_and_month_pages() {
+        let day = parse_iso("2026-11-22").unwrap();
+        assert_eq!(iso(day), "2026-11-22");
+        assert_eq!(Day::at(day).weekday, "sun");
+        assert_eq!(parse_iso("2026-02-30"), None);
+        assert_eq!(parse_iso("tomorrow"), None);
+        // November 2026 starts on a Sunday and has 30 days.
+        let (first, length, weekday) = month_page(2026, 11);
+        assert_eq!((iso(first).as_str(), length, weekday), ("2026-11-01", 30, 6));
+        assert_eq!(month_page(2028, 2).1, 29);
     }
 
     #[test]

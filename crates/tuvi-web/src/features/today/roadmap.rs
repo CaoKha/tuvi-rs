@@ -1,19 +1,26 @@
-//! The roadmap for today: the theme of the day, its Tứ Hóa, and the 12 canh
+//! The roadmap of one day, today or the day picked in the calendar
+//! (`?day=YYYY-MM-DD`): the theme of the day, its Tứ Hóa, and the 12 canh
 //! giờ with what to do in each.
 //!
 //! Each hour gets a score: hoàng đạo +1, Hóa Lộc +2, Hóa Quyền and Hóa Khoa
 //! +1, Hóa Kỵ −2. Up to three hoàng đạo hours with a score of 2 or more are
 //! marked best, and every hour with Hóa Kỵ asks for care.
 
+use serde::Deserialize;
 use topcoat::{
     Result,
+    asset::{Asset, asset},
     context::Cx,
-    router::error::not_found,
+    icon::{icon, iconify::iconify_icon},
+    router::{error::not_found, parse_query_params, request::uri},
     view::{View, class, view},
 };
 use tuvi_core::{Chart, DayFlow, day_flow};
 
-use super::{clock::Now, guide::Guide};
+use super::{
+    clock::{Day, Now, iso, month_page, parse_iso},
+    guide::{Guide, Palace},
+};
 use crate::{i18n::Lang, t};
 
 /// How many hours the roadmap marks as best.
@@ -141,19 +148,42 @@ fn rows<'a>(flow: &DayFlow, guide: &'a Guide, lang: Lang, now: Option<usize>) ->
     rows
 }
 
-/// The roadmap for today over `chart`.
-#[topcoat::view::component]
-pub async fn today_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
-    let lang = Lang::of(cx);
-    let guide = Guide::of(cx);
-    let now = Now::vietnam();
-    let (year, month, day) = now.tu_vi_day();
-    let flow = day_flow(chart, year, month, day).map_err(|_| not_found())?;
-    let (Some(menh), Some(month)) = (guide.palace(flow.menh_role), guide.palace(flow.month_role))
-    else {
-        return Err(not_found().into());
-    };
-    let hoa_lines: Vec<_> = flow
+/// Steps the calendar between months.
+const CALENDAR_JS: Asset = asset!("./calendar.js");
+
+/// The query of the card page: the day of the roadmap.
+#[derive(Debug, Deserialize)]
+struct DayQuery {
+    day: Option<String>,
+}
+
+/// One day, ready to show.
+struct DayView<'a> {
+    /// The day count from 1970-01-01.
+    n: i64,
+    /// `mon` to `sun`.
+    weekday: &'static str,
+    date: String,
+    lunar: String,
+    can: &'static str,
+    chi: &'static str,
+    menh: &'a Palace,
+    month: &'a Palace,
+    hoa_lines: Vec<HoaLine<'a>>,
+    rows: Vec<Row<'a>>,
+}
+
+/// The view of one day over `chart`. `now` is the current canh giờ when the
+/// day is today.
+fn day_view<'a>(
+    chart: &Chart,
+    guide: &'a Guide,
+    lang: Lang,
+    day: Day,
+    now: Option<usize>,
+) -> Option<DayView<'a>> {
+    let flow = day_flow(chart, day.year, day.month, day.day).ok()?;
+    let hoa_lines = flow
         .tu_hoa
         .iter()
         .filter_map(|hoa| {
@@ -168,48 +198,218 @@ pub async fn today_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
             })
         })
         .collect();
-    let rows = rows(&flow, guide, lang, Some(now.canh()));
-    let date = format!("{:02}/{:02}/{}", flow.day, flow.month, flow.year);
-    let lunar = format!("{}/{}", flow.lunar_day, flow.lunar_month);
+    let rows = rows(&flow, guide, lang, now);
+    Some(DayView {
+        n: day.n,
+        weekday: day.weekday,
+        date: format!("{:02}/{:02}/{}", flow.day, flow.month, flow.year),
+        lunar: format!("{}/{}", flow.lunar_day, flow.lunar_month),
+        can: flow.ngay_can,
+        chi: flow.ngay_chi,
+        menh: guide.palace(flow.menh_role)?,
+        month: guide.palace(flow.month_role)?,
+        hoa_lines,
+        rows,
+    })
+}
+
+/// The roadmap of one day over `chart`: the day in `?day=`, else today. A
+/// day the engine cannot show falls back to today. The day panel has a
+/// calendar button at its top right to pick another day.
+#[topcoat::view::component]
+pub async fn day_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
+    let lang = Lang::of(cx);
+    let guide = Guide::of(cx);
+    let now = Now::vietnam();
+    let today = now.tu_vi_days();
+    let picked = parse_query_params::<DayQuery>(cx)
+        .ok()
+        .and_then(|query| parse_iso(query.day.as_deref()?));
+    let build = |n: i64| day_view(chart, guide, lang, Day::at(n), (n == today).then(|| now.canh()));
+    let day = picked
+        .and_then(build)
+        .or_else(|| build(today))
+        .ok_or_else(not_found)?;
+    let path = uri(cx).path().to_owned();
 
     Ok(view! {
-        <section class="glass p-5 lg:p-6" aria-labelledby="today-title">
-            <p class="text-[10px] font-bold tracking-[0.26em] text-accent uppercase">
-                (t!(today_label))
-            </p>
-            <h2 id="today-title" class="mt-1 text-2xl font-semibold tabular-nums">(date)</h2>
-            <p class="mt-1 text-[13px] text-muted">
-                (t!(today_lunar, date: lunar.as_str(), can: flow.ngay_can, chi: flow.ngay_chi))
-            </p>
+        day_panel(day: &day, today: today, path: path.as_str())
+        <details class="mt-3 px-1 text-[12px] text-muted">
+            <summary class="cursor-pointer">(t!(today_method_title))</summary>
+            <p class="mt-2">(t!(today_method))</p>
+        </details>
+    })
+}
+
+/// The name of a day `offset` days from today: "Yesterday", "Today",
+/// "Tomorrow", else the weekday.
+#[topcoat::view::component]
+async fn day_name(cx: &Cx, offset: i64, weekday: &'static str) -> Result<impl View> {
+    Ok(view! {
+        if offset == -1 {
+            (t!(week_yesterday))
+        } else if offset == 0 {
+            (t!(today_label))
+        } else if offset == 1 {
+            (t!(week_tomorrow))
+        } else {
+            (t!(weekday_long, day: weekday))
+        }
+    })
+}
+
+/// The weekdays from Monday: the keys of the `weekday` messages.
+const MONDAY_FIRST: [&str; 7] = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
+/// One day of a calendar page.
+struct CalendarDay {
+    n: i64,
+    day: i64,
+    href: String,
+}
+
+/// The calendar button and its popover: a month page where each day links
+/// to `?day=`. It opens on the month of the day shown, filled; today is
+/// ringed. `calendar.js` steps between months; without it the page still
+/// picks a day in this month.
+#[topcoat::view::component]
+async fn day_calendar(cx: &Cx, shown: i64, today: i64, path: &str) -> Result<impl View> {
+    let start = Day::at(shown);
+    let (month_first, length, offset) = month_page(start.year.0, start.month);
+    let days: Vec<_> = (0..length)
+        .map(|day| CalendarDay {
+            n: month_first + day,
+            day: day + 1,
+            href: format!("{path}?day={}", iso(month_first + day)),
+        })
+        .collect();
+    let year = start.year.0.to_string();
+
+    Ok(view! {
+        <button
+            type="button"
+            popovertarget="day-calendar"
+            class="cal-button pill-quiet"
+            style="anchor-name: --cal-button"
+            aria-label=(t!(calendar_open))
+            title=(t!(calendar_open))
+        >
+            <span class="cal-icon">icon(data: iconify_icon!("lucide:calendar-days"))</span>
+        </button>
+        <div
+            id="day-calendar"
+            popover="auto"
+            class="cal-menu glass"
+            data-calendar="month"
+            data-path=(path)
+            data-year=(year.as_str())
+            data-month=(start.month.to_string())
+            data-today=(iso(today))
+            data-shown=(iso(shown))
+        >
+            <div class="flex items-center justify-between">
+                <button
+                    type="button"
+                    class="cal-step"
+                    data-cal-step="-1"
+                    aria-label=(t!(calendar_prev))
+                >
+                    icon(data: iconify_icon!("lucide:chevron-left"))
+                </button>
+                <p class="cal-title" data-cal-title="month" aria-live="polite">
+                    (t!(calendar_month, month: start.month, year: year.as_str()))
+                </p>
+                <button
+                    type="button"
+                    class="cal-step"
+                    data-cal-step="1"
+                    aria-label=(t!(calendar_next))
+                >
+                    icon(data: iconify_icon!("lucide:chevron-right"))
+                </button>
+            </div>
+            <div class="cal-week" aria-hidden="true">
+                for key in MONDAY_FIRST {
+                    <span>(t!(weekday, day: key))</span>
+                }
+            </div>
+            <div class="cal-grid" data-cal-grid="days">
+                for _ in 0..offset {
+                    <span></span>
+                }
+                for day in &days {
+                    <a
+                        href=(day.href.as_str())
+                        aria-current=((day.n == shown).then_some("date"))
+                        class=(class!(
+                            "cal-day",
+                            "is-today" if day.n == today,
+                            "is-shown" if day.n == shown,
+                        ))
+                    >
+                        <span>(day.day.to_string())</span>
+                    </a>
+                }
+            </div>
+            if shown != today {
+                <a href=(path) class="cal-back">(t!(calendar_back))</a>
+            }
+        </div>
+        <script type="module" src=(CALENDAR_JS)></script>
+    })
+}
+
+/// One day in two panels: its date (with the calendar at the top right),
+/// palace and Tứ Hóa; then its 12 canh giờ.
+#[topcoat::view::component]
+async fn day_panel<'a>(cx: &Cx, day: &DayView<'a>, today: i64, path: &str) -> Result<impl View> {
+    let lang = Lang::of(cx);
+
+    Ok(view! {
+        <section class="glass p-5 lg:p-6" aria-labelledby="day-title">
+            <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold tracking-[0.26em] text-accent uppercase">
+                        day_name(offset: day.n - today, weekday: day.weekday)
+                    </p>
+                    <h2 id="day-title" class="mt-1 text-2xl font-semibold tabular-nums">
+                        (day.date.as_str())
+                    </h2>
+                    <p class="mt-1 text-[13px] text-muted">
+                        (t!(today_lunar, date: day.lunar.as_str(), can: day.can, chi: day.chi))
+                    </p>
+                </div>
+                day_calendar(shown: day.n, today: today, path: path)
+            </div>
 
             <div class="mt-4 rounded-[18px] border border-accent/30 bg-accent/8 p-4">
                 <p class="text-[11px] font-semibold tracking-[0.18em] text-muted uppercase">
-                    (t!(today_palace_label))
+                    (t!(day_palace_label))
                 </p>
                 <p class="mt-1 font-display text-xl font-semibold text-accent">
-                    (menh.name.get(lang))
+                    (day.menh.name.get(lang))
                 </p>
-                <p class="mt-1 text-[13.5px] leading-relaxed">(menh.theme.get(lang))</p>
+                <p class="mt-1 text-[13.5px] leading-relaxed">(day.menh.theme.get(lang))</p>
                 <p class="mt-1 text-[12px] text-muted">
-                    (t!(today_month_palace, palace: month.name.get(lang)))
+                    (t!(today_month_palace, palace: day.month.name.get(lang)))
                 </p>
                 <dl class="mt-3 grid gap-2 text-[13px] leading-relaxed sm:grid-cols-2">
                     <div>
                         <dt class="font-semibold text-accent">"✓ " (t!(today_do))</dt>
-                        <dd class="text-muted">(menh.good.get(lang))</dd>
+                        <dd class="text-muted">(day.menh.good.get(lang))</dd>
                     </div>
                     <div>
                         <dt class="font-semibold text-coral">"✕ " (t!(today_avoid))</dt>
-                        <dd class="text-muted">(menh.avoid.get(lang))</dd>
+                        <dd class="text-muted">(day.menh.avoid.get(lang))</dd>
                     </div>
                 </dl>
             </div>
 
-            <h3 class="mt-5 text-[11px] font-semibold tracking-[0.18em] text-muted uppercase">
-                (t!(today_hoa_title, can: flow.ngay_can))
+            <h3 class="mt-5 font-sans text-[11px] font-semibold tracking-[0.18em] text-muted uppercase">
+                (t!(today_hoa_title, can: day.can))
             </h3>
             <ul class="mt-2 grid gap-2.5">
-                for line in &hoa_lines {
+                for line in &day.hoa_lines {
                     <li class="flex gap-3 text-[13px] leading-relaxed">
                         <span
                             class="mt-1.5 size-2 shrink-0 rounded-full bg-(--hoa) shadow-[0_0_8px_var(--hoa)]"
@@ -226,20 +426,15 @@ pub async fn today_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
             </ul>
         </section>
 
-        <section class="glass mt-4 p-5 lg:p-6" aria-labelledby="timeline-title">
-            <h2 id="timeline-title" class="text-lg font-semibold">(t!(today_timeline_title))</h2>
+        <section class="glass mt-4 p-5 lg:p-6" aria-labelledby="hours-title">
+            <h2 id="hours-title" class="text-lg font-semibold">(t!(today_timeline_title))</h2>
             <p class="mt-1 text-[12.5px] text-muted">(t!(today_timeline_hint))</p>
             <ol class="relative mt-4 grid gap-2 before:absolute before:top-2 before:bottom-2 before:left-[7px] before:w-px before:bg-glass-line before:content-['']">
-                for row in &rows {
+                for row in &day.rows {
                     hour_row(row: row)
                 }
             </ol>
         </section>
-
-        <details class="mt-3 px-1 text-[12px] text-muted">
-            <summary class="cursor-pointer">(t!(today_method_title))</summary>
-            <p class="mt-2">(t!(today_method))</p>
-        </details>
     })
 }
 

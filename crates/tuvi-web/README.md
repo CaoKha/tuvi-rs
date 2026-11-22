@@ -1,7 +1,7 @@
 # tuvi-web
 
 The Thiên Hạc web app, built with [Topcoat](https://github.com/tokio-rs/topcoat):
-the birth form, the destiny card, today's plan and the full chart. It has no
+the birth form, the destiny card, the day plan and the full chart. It has no
 database.
 
 Start it with `cargo up` from any folder in the repo, or with `topcoat dev`

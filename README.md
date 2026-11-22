@@ -1,7 +1,7 @@
 # Thiên Hạc
 
 Thiên Hạc is a web app for Tử Vi (Vietnamese astrology). You enter your birth
-date and hour. The app draws your destiny card and shows a plan for today,
+date and hour. The app draws your destiny card and shows a plan for today or any day you pick,
 hour by hour.
 
 - No accounts, no database, no AI. Nothing is stored.

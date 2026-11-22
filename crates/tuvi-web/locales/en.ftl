@@ -3,7 +3,7 @@
 
 ## Page
 meta_title = Draw a Tử Vi card
-meta_description = Pick a birth date and hour and draw your Tử Vi card: a real chart, with a roadmap for today.
+meta_description = Pick a birth date and hour and draw your Tử Vi card: a real chart, with a roadmap for any day.
 brand_tagline = Tử Vi cards
 
 ## Draw screen
@@ -41,7 +41,45 @@ chart_back = Destiny card
 ## Today
 today_label = Today
 today_lunar = Lunar { $date } · { $can } { $chi } day
-today_palace_label = Today's palace
+day_palace_label = The day's palace
+week_yesterday = Yesterday
+calendar_open = Pick a day
+calendar_prev = Previous month
+calendar_next = Next month
+calendar_back = Back to today
+calendar_month = { $month ->
+    [1] January
+    [2] February
+    [3] March
+    [4] April
+    [5] May
+    [6] June
+    [7] July
+    [8] August
+    [9] September
+    [10] October
+    [11] November
+   *[12] December
+} { $year }
+week_tomorrow = Tomorrow
+weekday = { $day ->
+    [mon] M
+    [tue] T
+    [wed] W
+    [thu] T
+    [fri] F
+    [sat] S
+   *[sun] S
+}
+weekday_long = { $day ->
+    [mon] Monday
+    [tue] Tuesday
+    [wed] Wednesday
+    [thu] Thursday
+    [fri] Friday
+    [sat] Saturday
+   *[sun] Sunday
+}
 today_month_palace = This lunar month's palace: { $palace }
 today_do = Do
 today_avoid = Avoid

@@ -1,6 +1,7 @@
-//! The Bản mệnh screen: the header, Lá Bài Bản Mệnh and today's roadmap.
-//! On a phone they stack. From `lg` the card is on the left (364px) and the
-//! roadmap on the right.
+//! The Bản mệnh screen: the header, Lá Bài Bản Mệnh and the roadmap of one
+//! day (today, or the day picked in its calendar). On a phone they stack.
+//! From `lg` the card is on the left (364px, sticky) and the roadmap on the
+//! right.
 //!
 //! The header names the birth moment of the card, solar and lunar, so the
 //! user sees which day the sky belongs to.
@@ -15,7 +16,10 @@ use tuvi_core::Chart;
 
 use super::{destiny::destiny_card, facts::Facts};
 use crate::{
-    features::{cast::card_name, today::today_roadmap},
+    features::{
+        cast::card_name,
+        today::day_roadmap,
+    },
     i18n::Lang,
     t,
 };
@@ -79,7 +83,7 @@ pub async fn deck_screen(cx: &Cx, chart: &Chart, chart_url: String) -> Result<im
             class="grid justify-items-center gap-5 px-4 py-8 lg:grid-cols-[364px_minmax(0,1fr)] lg:items-start lg:justify-items-stretch"
         >
             <div class="w-full md:max-w-md lg:sticky lg:top-6 lg:max-w-none">destiny_card(facts: &facts)</div>
-            <div class="w-full min-w-0">today_roadmap(chart: chart)</div>
+            <div class="w-full min-w-0">day_roadmap(chart: chart)</div>
         </div>
         <div class="mx-auto flex max-w-[calc(var(--container-md)+2rem)] flex-col gap-3 px-4">
             <a

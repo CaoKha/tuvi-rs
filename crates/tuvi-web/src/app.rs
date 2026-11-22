@@ -147,9 +147,9 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                         class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 pt-6 pb-5"
                     >
                         brand()
-                        <div class="flex items-center gap-2">
-                            language_menu(lang: lang)
+                        <div class="flex items-center">
                             theme_toggle(theme: theme)
+                            language_menu(lang: lang)
                         </div>
                     </header>
                     (slot)
@@ -176,11 +176,11 @@ async fn language_menu(cx: &Cx, lang: Lang) -> Result<impl View> {
                 type="button"
                 popovertarget="language-menu"
                 aria-label=(t!(lang_menu_aria).resolve(cx))
+                title=(t!(lang_menu_aria).resolve(cx))
                 style="anchor-name: --language-button"
-                class="pill-ghost inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-semibold"
+                class="pill-quiet inline-flex h-9 w-8 cursor-pointer items-center justify-center rounded-full text-base text-accent"
             >
-                <span class="text-base text-accent">icon(data: iconify_icon!("lucide:languages"))</span>
-                (lang.pick("En", "Vi"))
+                icon(data: iconify_icon!("lucide:languages"))
             </button>
             <div
                 id="language-menu"

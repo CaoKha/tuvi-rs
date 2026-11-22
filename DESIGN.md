@@ -62,14 +62,15 @@ Both fonts load with the Vietnamese subset. Small labels are uppercase, bold,
 | `glass` | Every card and panel: glass fill, hairline border, 26px radius, blur |
 | `pill-primary` | The one main action on a screen: accent gradient, round |
 | `pill-ghost` | Other choices, for example the gender toggle |
+| `pill-quiet` | Icon buttons (language, night and day, calendar): just the content, no fill or border; the light neutral accent on hover, focus and while open |
 | `cosmos` | The fixed page backdrop, with two slow nebulae |
 
 ## Header
 
 Every page has one header: the logo and the name, linked to the draw screen
-(`crates/tuvi-web/src/features/shell/`). On the right: the language switch
-(`pill-ghost`, the lucide `languages` icon and "En" or "Vi"), then the night
-and day switch. The language switch opens a `popover` dropdown
+(`crates/tuvi-web/src/features/shell/`). On the right: the night and day
+switch (`pill-quiet`), then the language switch (`pill-quiet`, just the
+lucide `languages` icon), side by side, both in the neutral accent. The language switch opens a `popover` dropdown
 (`.language-menu`) with "En · English" and "Vi · Tiếng Việt"; the current one
 is checked.
 
@@ -169,19 +170,32 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
   and glow. It shows the archetype chip, the constellations (`.chom-*`) and
   the mantra in italic Fraunces. Vô chính diệu shows
   the scattered sky.
-- Today's roadmap (`crates/tuvi-web/src/features/today/`), two `glass`
-  panels:
-  - The day: date, lunar date and day Can Chi; "Today's palace" in a light
-    accent box with the theme, ✓ Do (accent) and ✕ Avoid (coral); then the
-    four Hóa of the day, each with a dot in its color (Lộc `element-moc`,
-    Quyền `element-hoa`, Khoa `element-thuy`, Kỵ `coral`).
+- The day's roadmap (`crates/tuvi-web/src/features/today/`), two `glass`
+  panels for one day: today, or the day in `?day=YYYY-MM-DD`.
+  - The day: a kicker ("Yesterday", "Today", "Tomorrow", else the
+    weekday), date, lunar date and day Can Chi; "The day's palace" in a
+    light accent box with the theme, ✓ Do (accent) and ✕ Avoid (coral);
+    then the four Hóa of the day, each with a dot in its color (Lộc
+    `element-moc`, Quyền `element-hoa`, Khoa `element-thuy`, Kỵ `coral`).
+  - The calendar: the lucide `calendar-days` icon in the neutral accent,
+    like the language switch, as a `pill-quiet` button (`.cal-button`) at
+    the top right of the day panel.
+    It opens a `popover` month page (`.cal-menu`) in `glass`, like the
+    language menu, under the button, flipped above when there is no room.
+    On a phone (below 640px) it is a bottom drawer instead: full width,
+    rounded at the top, a grab handle, bigger days, over a soft veil; it
+    slides up. Weekdays from Monday; the day shown is filled with the accent,
+    today is ringed. Each day links to `?day=`; "Back to today" shows when
+    the day is not today. `calendar.js` steps between months (1801–2198);
+    without it the month of the day shown still works. A date the engine
+    cannot show falls back to today.
   - The timeline: 12 canh giờ on a vertical line. Each hour is a
     `<details>`: the summary shows the time, the hour's Can Chi, badges, the
     hour god (accent when hoàng đạo), the palace, the Hóa chips and the
-    advice; the body shows the hour god's advice and the palace theme. The
-    current hour is open, with an accent fill and a lit dot; past hours fade
-    to 55%. "✦ Best" marks up to three hours; "Take care" (coral) marks
-    hours with Hóa Kỵ.
+    advice; the body shows the hour god's advice and the palace theme. On
+    today the current hour is open, with an accent fill and a lit dot; past
+    hours fade to 55%. Other days have all hours closed. "✦ Best" marks up
+    to three hours; "Take care" (coral) marks hours with Hóa Kỵ.
   - A "Method" `<details>` under the panels: how the day is computed,
     ending with "This is guidance for reflection, not a prediction."
 - Under the deck: "✦ Draw another card" (`pill-primary`, back to the form)

@@ -84,7 +84,7 @@ pub async fn theme_toggle(cx: &Cx, theme: Theme) -> Result<impl View> {
                 title=(label.as_str())
                 data-to-day=(to_day.as_str())
                 data-to-night=(to_night.as_str())
-                class="theme-toggle pill-ghost inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-base text-accent"
+                class="theme-toggle pill-quiet inline-flex h-9 w-8 cursor-pointer items-center justify-center rounded-full text-base text-accent"
             >
                 <span class="theme-sun">icon(data: iconify_icon!("lucide:sun"))</span>
                 <span class="theme-moon">icon(data: iconify_icon!("lucide:moon"))</span>

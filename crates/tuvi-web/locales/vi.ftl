@@ -3,7 +3,7 @@
 
 ## Page
 meta_title = Rút lá bài Tử Vi
-meta_description = Chọn ngày giờ sinh và rút lá bài Tử Vi của bạn: lá số thật, kèm lộ trình cho hôm nay.
+meta_description = Chọn ngày giờ sinh và rút lá bài Tử Vi của bạn: lá số thật, kèm lộ trình cho bất kỳ ngày nào.
 brand_tagline = Rút lá bài Tử Vi
 
 ## Draw screen
@@ -41,7 +41,32 @@ chart_back = Lá bài bản mệnh
 ## Today
 today_label = Hôm nay
 today_lunar = Âm lịch { $date } · ngày { $can } { $chi }
-today_palace_label = Cung của hôm nay
+day_palace_label = Cung của ngày
+week_yesterday = Hôm qua
+calendar_open = Chọn ngày
+calendar_prev = Tháng trước
+calendar_next = Tháng sau
+calendar_back = Về hôm nay
+calendar_month = Tháng { $month } năm { $year }
+week_tomorrow = Ngày mai
+weekday = { $day ->
+    [mon] T2
+    [tue] T3
+    [wed] T4
+    [thu] T5
+    [fri] T6
+    [sat] T7
+   *[sun] CN
+}
+weekday_long = { $day ->
+    [mon] Thứ Hai
+    [tue] Thứ Ba
+    [wed] Thứ Tư
+    [thu] Thứ Năm
+    [fri] Thứ Sáu
+    [sat] Thứ Bảy
+   *[sun] Chủ nhật
+}
 today_month_palace = Cung của tháng âm lịch này: { $palace }
 today_do = Nên
 today_avoid = Tránh

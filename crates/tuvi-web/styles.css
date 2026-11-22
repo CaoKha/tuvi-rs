@@ -102,6 +102,24 @@
   border: 1px solid var(--color-glass-line);
 }
 
+/* Quiet button: just its content, no fill or border. On hover, on
+   keyboard focus and while its popover is open, it turns to the light
+   shade of the neutral accent. For the icon buttons: the language switch,
+   the night and day switch, the calendar. */
+@utility pill-quiet {
+  transition: color 0.2s;
+
+  &:hover,
+  &:focus-visible,
+  &:has(+ :popover-open) {
+    color: var(--accent-neutral-light);
+
+    & * {
+      color: inherit;
+    }
+  }
+}
+
 /* The page backdrop: twilight gradient with a warm glow at the bottom. */
 @utility cosmos {
   background:
@@ -247,6 +265,161 @@
     border-color: transparent;
     background: linear-gradient(135deg, var(--accent-2), var(--accent));
     color: var(--color-bg-0);
+  }
+
+  /* The calendar button at the top right of the day panel
+     (src/features/today/): a `pill-quiet` with the calendar icon in the
+     neutral accent, like the language switch in the header. It opens a
+     month page in a popover (calendar.js), under the button where anchor
+     positioning works, flipped above when there is no room; else centred
+     by the browser. */
+  .cal-button {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    place-items: center;
+    margin: -8px -10px 0 0;
+    border-radius: 9999px;
+    cursor: pointer;
+  }
+
+  .cal-icon {
+    display: grid;
+    font-size: 18px;
+    color: var(--accent-neutral);
+  }
+
+  .cal-button:focus-visible {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: 2px;
+  }
+
+  /* The month page wears `glass`, like the language menu. */
+  .cal-menu {
+    width: 300px;
+    margin: 0;
+    padding: 14px;
+    color: var(--color-ink);
+  }
+
+  @supports (position-anchor: --a) {
+    .cal-menu {
+      position-anchor: --cal-button;
+      inset: auto;
+      top: calc(anchor(bottom) + 10px);
+      right: anchor(right);
+      position-try-fallbacks: flip-block;
+    }
+  }
+
+  .cal-menu:popover-open {
+    animation: reward-in 0.18s ease both;
+  }
+
+  .cal-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .cal-step {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: 9999px;
+    font-size: 16px;
+    color: var(--color-muted);
+    cursor: pointer;
+  }
+
+  .cal-step:hover {
+    background: var(--color-glass);
+    color: var(--color-ink);
+  }
+
+  .cal-week,
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .cal-week {
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .cal-grid {
+    margin-top: 6px;
+    row-gap: 2px;
+  }
+
+  /* A day: its number over a round. The day shown is filled with the
+     accent; today is ringed. */
+  .cal-day {
+    display: grid;
+    height: 36px;
+    place-items: center;
+    font-size: 13.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink);
+  }
+
+  .cal-day::before,
+  .cal-day > span {
+    grid-area: 1 / 1;
+  }
+
+  .cal-day > span {
+    position: relative;
+  }
+
+  .cal-day::before {
+    content: "";
+    width: 34px;
+    height: 34px;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+  }
+
+  .cal-day:hover::before {
+    background: var(--color-glass);
+  }
+
+  .cal-day.is-shown {
+    font-weight: 700;
+    color: var(--color-bg-0);
+  }
+
+  .cal-day.is-shown::before {
+    background: linear-gradient(160deg, var(--accent-2), var(--accent));
+    box-shadow: 0 6px 16px -6px var(--accent-glow);
+  }
+
+  .cal-day.is-today:not(.is-shown) {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .cal-day.is-today:not(.is-shown)::before {
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .cal-back {
+    display: block;
+    margin-top: 10px;
+    border-top: 1px solid var(--color-glass-line);
+    padding-top: 10px;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent);
   }
 
   /* While a random pick flicks the chips, the flash is the pick. */
@@ -804,8 +977,8 @@
     position: fixed;
     inset: auto;
     top: 68px;
-    /* The theme switch (2.25rem + 0.5rem gap) sits right of the button. */
-    right: max(60px, calc((100vw - 64rem) / 2 + 60px));
+    /* The button ends the header, at the page's 1rem gutter. */
+    right: max(16px, calc((100vw - 64rem) / 2 + 16px));
     margin-top: 0;
     color: var(--color-ink);
     background: color-mix(in srgb, var(--color-bg-1) 94%, transparent);
@@ -975,4 +1148,75 @@
 .theme-sun,
 .theme-moon {
   display: inline-flex;
+}
+
+/* The calendar on a phone (src/features/today/): a bottom drawer instead
+   of a dropdown. Full width, glass with a denser fill, rounded at the top,
+   a grab handle, bigger days, over a soft veil. It slides up. Outside the
+   layers, so it wins over `glass`. */
+@media (max-width: 639.98px) {
+  .cal-menu {
+    position: fixed;
+    inset: auto 0 0;
+    width: 100%;
+    max-width: none;
+    border-bottom: 0;
+    border-radius: 26px 26px 0 0;
+    padding: 10px 20px calc(22px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--color-bg-1) 88%, transparent);
+    backdrop-filter: blur(20px);
+    position-try-fallbacks: none;
+  }
+
+  .cal-menu::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin: 0 auto 12px;
+    border-radius: 9999px;
+    background: var(--color-glass-line);
+  }
+
+  .cal-menu:popover-open {
+    animation: cal-drawer-up 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .cal-menu::backdrop {
+    background: rgba(10, 5, 24, 0.55);
+    backdrop-filter: blur(3px);
+  }
+
+  .light .cal-menu {
+    background: color-mix(in srgb, #ffffff 72%, transparent);
+  }
+
+  .light .cal-menu::backdrop {
+    background: rgba(60, 40, 100, 0.22);
+  }
+
+  .cal-title {
+    font-size: 18px;
+  }
+
+  .cal-step {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cal-day {
+    height: 46px;
+    font-size: 15px;
+  }
+
+  .cal-day::before {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@keyframes cal-drawer-up {
+  from {
+    transform: translateY(100%);
+  }
 }
