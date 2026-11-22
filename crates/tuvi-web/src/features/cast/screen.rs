@@ -141,7 +141,7 @@ pub async fn cast_screen(
                     }
                     <button
                         type="submit"
-                        class="pill-primary h-[52px] w-full cursor-pointer rounded-full text-[15px] font-semibold"
+                        class="pill-primary h-[52px] w-full cursor-pointer rounded-full text-[15px] font-semibold transition-opacity disabled:cursor-wait disabled:opacity-50"
                     >
                         "✦ "
                         (t!(draw_button))

@@ -395,6 +395,7 @@ function setUpPresets(form, tools, wheels, clock) {
   const chipsOf = (name) => form.elements[name][0].closest(".chips");
   const chipLabels = (name) => [...chipsOf(name).querySelectorAll("label")];
   const radio = (name, value) => [...form.elements[name]].find((input) => input.value === String(value));
+  const drawButton = form.querySelector("[data-draw] [type=submit]");
   let rolling = false;
   tools.hidden = false;
 
@@ -403,6 +404,8 @@ function setUpPresets(form, tools, wheels, clock) {
   const roll = async (button, picks) => {
     rolling = true;
     tools.setAttribute("aria-busy", "true");
+    // No draw while the controls spin: the form is not filled in yet.
+    if (drawButton) drawButton.disabled = true;
     if (button === random) play(button, "rolling", "dice-roll");
     if (stage) play(stage, "shuffling", "card-shuffle");
     // The reels stop one after another.
@@ -417,6 +420,7 @@ function setUpPresets(form, tools, wheels, clock) {
     announce([picks.day, picks.month, picks.year, picks.buoi, picks.gio, picks.gender]);
     rolling = false;
     tools.removeAttribute("aria-busy");
+    if (drawButton) drawButton.disabled = false;
   };
 
   random.addEventListener("click", () => {
@@ -536,7 +540,7 @@ function setUpSubmit(form, clock) {
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (cast) return;
+    if (cast || event.submitter?.disabled) return;
     if (!realDate(form)) {
       say(toast.dataset.invalidDate);
       return;

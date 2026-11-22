@@ -70,9 +70,11 @@ Both fonts load with the Vietnamese subset. Small labels are uppercase, bold,
 Every page has one header: the logo and the name, linked to the draw screen
 (`crates/tuvi-web/src/features/shell/`). On the right: the night and day
 switch (`pill-quiet`), then the language switch (`pill-quiet`, just the
-lucide `languages` icon), side by side, both in the neutral accent. The language switch opens a `popover` dropdown
-(`.language-menu`) with "En · English" and "Vi · Tiếng Việt"; the current one
-is checked.
+lucide `languages` icon), side by side, both in the neutral accent. The
+language switch opens a `popover` dropdown (`.language-menu`) with
+"En · English" and "Vi · Tiếng Việt"; the current one is checked. The
+dropdowns (language, calendar) are `glass` with the soft glow of the birth
+form's panel, in the neutral accent.
 
 ## Language
 
@@ -140,7 +142,9 @@ The home page (`crates/tuvi-web/src/features/cast/`).
     forgets it.
   - Both fill the form the same way, about 2.5 s with no zoom: the wheels
     spin like slot reels and stop one after another, AM/PM and gender flick
-    back and forth, the clock hand winds a full turn (no hour is lit until it stops), and the card sways. The card wakes once all have landed.
+    back and forth, the clock hand winds a full turn (no hour is lit until
+    it stops), and the card sways. The card wakes once all have landed.
+    Until then "✦ Draw a card" is disabled (half opacity).
 - The card (`.card-back`): 9:16, with "THIÊN HẠC" and "TỬ VI". Before an
   hour is picked it shows a quiet sky and a ✦. Then each chính tinh of cung
   Mệnh shows as its constellation (`.chom-*`), filling the card (twin stars

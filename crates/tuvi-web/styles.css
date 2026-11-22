@@ -992,6 +992,13 @@
     }
   }
 
+  /* The dropdowns (the language menu, the calendar) wear `glass` with the
+     soft glow of the birth form's panel, in the neutral accent. */
+  .language-menu,
+  .cal-menu {
+    box-shadow: 0 30px 80px -30px color-mix(in srgb, var(--accent-neutral) 35%, transparent);
+  }
+
   .language-menu:popover-open {
     animation: reward-in 0.18s ease both;
   }
