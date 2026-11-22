@@ -50,7 +50,6 @@ impl Now {
     pub(super) fn tu_vi_days(self) -> i64 {
         days_from_civil(self.year.0, self.month, self.day) + i64::from(self.hour == 23)
     }
-
 }
 
 /// The day count of an ISO date, `YYYY-MM-DD`, or `None` when it is not a
@@ -74,7 +73,11 @@ pub(super) fn iso(days: i64) -> String {
 /// it has, and the weekday of the 1st, 0 for Monday.
 pub(super) fn month_page(year: i32, month: u8) -> (i64, i64, i64) {
     let first = days_from_civil(year, month, 1);
-    let (next_year, next_month) = if month == 12 { (year + 1, 1) } else { (year, month + 1) };
+    let (next_year, next_month) = if month == 12 {
+        (year + 1, 1)
+    } else {
+        (year, month + 1)
+    };
     let length = days_from_civil(next_year, next_month, 1) - first;
     // 1970-01-01 was a Thursday, 3 days after Monday.
     (first, length, (first + 3).rem_euclid(7))
@@ -194,7 +197,10 @@ mod tests {
         assert_eq!(parse_iso("tomorrow"), None);
         // November 2026 starts on a Sunday and has 30 days.
         let (first, length, weekday) = month_page(2026, 11);
-        assert_eq!((iso(first).as_str(), length, weekday), ("2026-11-01", 30, 6));
+        assert_eq!(
+            (iso(first).as_str(), length, weekday),
+            ("2026-11-01", 30, 6)
+        );
         assert_eq!(month_page(2028, 2).1, 29);
     }
 

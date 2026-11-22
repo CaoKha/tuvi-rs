@@ -16,10 +16,7 @@ use tuvi_core::Chart;
 
 use super::{destiny::destiny_card, facts::Facts};
 use crate::{
-    features::{
-        cast::card_name,
-        today::day_roadmap,
-    },
+    features::{cast::card_name, today::day_roadmap},
     i18n::Lang,
     t,
 };

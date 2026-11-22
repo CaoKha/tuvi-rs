@@ -225,7 +225,15 @@ pub async fn day_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
     let picked = parse_query_params::<DayQuery>(cx)
         .ok()
         .and_then(|query| parse_iso(query.day.as_deref()?));
-    let build = |n: i64| day_view(chart, guide, lang, Day::at(n), (n == today).then(|| now.canh()));
+    let build = |n: i64| {
+        day_view(
+            chart,
+            guide,
+            lang,
+            Day::at(n),
+            (n == today).then(|| now.canh()),
+        )
+    };
     let day = picked
         .and_then(build)
         .or_else(|| build(today))

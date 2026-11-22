@@ -295,10 +295,11 @@
     outline-offset: 2px;
   }
 
-  /* The month page wears `glass`, like the language menu. */
+  /* The month page wears `glass`, like the language menu. It keeps the
+     browser's `margin: auto`, which centres the popover when anchor
+     positioning is missing. */
   .cal-menu {
     width: 300px;
-    margin: 0;
     padding: 14px;
     color: var(--color-ink);
   }
@@ -307,6 +308,7 @@
     .cal-menu {
       position-anchor: --cal-button;
       inset: auto;
+      margin: 0;
       top: calc(anchor(bottom) + 10px);
       right: anchor(right);
       position-try-fallbacks: flip-block;
@@ -1165,6 +1167,7 @@
   .cal-menu {
     position: fixed;
     inset: auto 0 0;
+    margin: 0;
     width: 100%;
     max-width: none;
     border-bottom: 0;

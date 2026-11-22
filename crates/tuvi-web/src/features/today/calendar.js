@@ -53,10 +53,14 @@ if (calendar) {
   calendar.addEventListener("click", (event) => {
     const step = event.target.closest("[data-cal-step]");
     if (!step) return;
-    month += Number(step.dataset.calStep);
-    if (month < 1) [year, month] = [year - 1, 12];
-    if (month > 12) [year, month] = [year + 1, 1];
-    year = Math.min(Math.max(year, FIRST_YEAR), LAST_YEAR);
+    // Months counted from year 0, so a step wraps the year with the month.
+    const current = year * 12 + month - 1;
+    const next = current + Number(step.dataset.calStep);
+    // Stop at the ends; a page the server drew past them may still step in.
+    const first = Math.min(FIRST_YEAR * 12, current);
+    const last = Math.max(LAST_YEAR * 12 + 11, current);
+    if (next < first || next > last) return;
+    [year, month] = [Math.floor(next / 12), (next % 12) + 1];
     draw();
   });
 }
