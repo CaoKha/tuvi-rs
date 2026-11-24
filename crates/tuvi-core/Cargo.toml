@@ -7,6 +7,3 @@ description = "Tử Vi chart engine. Pure computation: no IO, no network, no dat
 
 [dependencies]
 serde.workspace = true
-
-[dev-dependencies]
-serde_json.workspace = true
