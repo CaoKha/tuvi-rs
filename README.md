@@ -16,14 +16,15 @@ hour by hour.
 - **Destiny card.** The main stars of your Mệnh palace, an archetype and a
   short mantra.
 - **Today.** The palace and the four transformations of the day, and the 12
-  two-hour periods with what to do and what to avoid.
+  two-hour periods with what to do and what to avoid, shown in the
+  visitor's time zone.
 - **Full chart.** All 12 palaces with their stars.
 
 ## How it works
 
 The browser talks to one Rust server. The server builds the chart and
-renders every page as HTML. Two small scripts add the clock drag, the date
-wheels, the loading animation and the theme switch.
+renders every page as HTML. A few small scripts add the clock drag, the date
+wheels, the loading animation, the theme switch and the visitor's time zone.
 
 | Part | Role |
 | --- | --- |

@@ -53,6 +53,10 @@ const ANDROID_ICON_192: Asset = asset!("assets/icons/android-chrome-192x192.png"
 const ANDROID_ICON_512: Asset = asset!("assets/icons/android-chrome-512x512.png");
 const MASKABLE_ICON_512: Asset = asset!("assets/icons/maskable-icon-512x512.png");
 
+/// Detects the visitor's clock and keeps its offset in the `tz` cookie, so
+/// the day plan can show their local time.
+const ZONE_JS: Asset = asset!("./features/today/zone.js");
+
 /// Builds the application's router.
 pub fn router() -> RouterBuilder {
     module_router!()
@@ -134,6 +138,7 @@ async fn root(cx: &Cx, slot: Slot<'_>) -> Result<impl View> {
                 <link rel="icon" type="image/png" sizes="48x48" href=(LOGO)>
                 <link rel="apple-touch-icon" sizes="180x180" href=(APPLE_TOUCH_ICON)>
                 <link rel="manifest" href="/manifest.webmanifest">
+                <script src=(ZONE_JS)></script>
                 <link rel="stylesheet" href=(tailwind::stylesheet!())>
                 topcoat::font::link(font: DISPLAY_FONT)
                 topcoat::font::link(font: BODY_FONT)

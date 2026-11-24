@@ -11,6 +11,7 @@
 mod clock;
 mod guide;
 mod roadmap;
+mod zone;
 
 pub use guide::Guide;
 pub use roadmap::day_roadmap;

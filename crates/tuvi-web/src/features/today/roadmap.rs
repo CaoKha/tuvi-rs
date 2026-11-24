@@ -20,6 +20,7 @@ use tuvi_core::{Chart, DayFlow, day_flow};
 use super::{
     clock::{Day, Now, iso, month_page, parse_iso},
     guide::{Guide, Palace},
+    zone::Zone,
 };
 use crate::{i18n::Lang, t};
 
@@ -77,8 +78,14 @@ fn hoa_style(hoa: &str) -> (&'static str, i32) {
 }
 
 /// The rows of the day. `now` is the current canh giờ, or `None` for a day
-/// that is not today.
-fn rows<'a>(flow: &DayFlow, guide: &'a Guide, lang: Lang, now: Option<usize>) -> Vec<Row<'a>> {
+/// that is not today; labels show in the visitor's `zone`.
+fn rows<'a>(
+    flow: &DayFlow,
+    guide: &'a Guide,
+    lang: Lang,
+    now: Option<usize>,
+    zone: Zone,
+) -> Vec<Row<'a>> {
     let mut rows: Vec<_> = flow
         .gio
         .iter()
@@ -102,9 +109,8 @@ fn rows<'a>(flow: &DayFlow, guide: &'a Guide, lang: Lang, now: Option<usize>) ->
                 None if gio.hoang_dao => palace.good.get(lang),
                 None => palace.avoid.get(lang),
             };
-            let end = (gio.start_hour + 2) % 24;
             Some(Row {
-                time: format!("{:02}:00–{end:02}:00", gio.start_hour),
+                time: zone.label(gio.start_hour),
                 can: gio.can,
                 chi: gio.chi,
                 god: hour.name.get(lang),
@@ -181,6 +187,7 @@ fn day_view<'a>(
     lang: Lang,
     day: Day,
     now: Option<usize>,
+    zone: Zone,
 ) -> Option<DayView<'a>> {
     let flow = day_flow(chart, day.year, day.month, day.day).ok()?;
     let hoa_lines = flow
@@ -198,7 +205,7 @@ fn day_view<'a>(
             })
         })
         .collect();
-    let rows = rows(&flow, guide, lang, now);
+    let rows = rows(&flow, guide, lang, now, zone);
     Some(DayView {
         n: day.n,
         weekday: day.weekday,
@@ -221,6 +228,7 @@ pub async fn day_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
     let lang = Lang::of(cx);
     let guide = Guide::of(cx);
     let now = Now::vietnam();
+    let zone = Zone::of(cx);
     let today = now.tu_vi_days();
     let picked = parse_query_params::<DayQuery>(cx)
         .ok()
@@ -232,6 +240,7 @@ pub async fn day_roadmap(cx: &Cx, chart: &Chart) -> Result<impl View> {
             lang,
             Day::at(n),
             (n == today).then(|| now.canh()),
+            zone,
         )
     };
     let day = picked
@@ -561,7 +570,7 @@ mod tests {
         let guide = Guide::load().unwrap();
         let flow = flow();
         for lang in [Lang::En, Lang::Vi] {
-            let rows = rows(&flow, &guide, lang, Some(4));
+            let rows = rows(&flow, &guide, lang, Some(4), Zone::default());
             assert_eq!(rows.len(), 12);
             for row in &rows {
                 assert!(!row.text.is_empty() && !row.god_text.is_empty() && !row.palace.is_empty());
@@ -576,7 +585,7 @@ mod tests {
     fn best_hours_and_cautions_follow_the_scores() {
         let guide = Guide::load().unwrap();
         let flow = flow();
-        let rows = rows(&flow, &guide, Lang::En, None);
+        let rows = rows(&flow, &guide, Lang::En, None, Zone::default());
         let best = rows.iter().filter(|row| row.best).count();
         assert!(best <= BEST_HOURS);
         for (row, gio) in rows.iter().zip(&flow.gio) {
