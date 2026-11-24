@@ -27,7 +27,9 @@ pub(super) struct Zone {
 impl Zone {
     /// The zone of a request: the `tz` cookie, else Vietnam.
     pub(super) fn of(cx: &Cx) -> Self {
-        let value = cookies(cx).get(COOKIE).map(|cookie| cookie.value().to_owned());
+        let value = cookies(cx)
+            .get(COOKIE)
+            .map(|cookie| cookie.value().to_owned());
         Self::parse(value.as_deref()).unwrap_or_default()
     }
 
