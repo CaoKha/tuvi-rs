@@ -196,8 +196,10 @@ calls it `#s-home`; the roadmap is new and not in the prototype.
   - The timeline: 12 canh giờ on a vertical line. Each hour is a
     `<details>`: the summary shows the time, the hour's Can Chi, badges, the
     hour god (accent when hoàng đạo), the palace, the Hóa chips and the
-    advice; the body shows the hour god's advice and the palace theme. On
-    today the current hour is open, with an accent fill and a lit dot; past
+    advice; the body shows the hour god's advice and the palace theme. The
+    times follow the visitor's clock (`zone.js` keeps its offset from UTC in
+    the `tz` cookie); the canh giờ and the current hour stay Vietnam time.
+    On today the current hour is open, with an accent fill and a lit dot; past
     hours fade to 55%. Other days have all hours closed. "✦ Best" marks up
     to three hours; "Take care" (coral) marks hours with Hóa Kỵ.
   - A "Method" `<details>` under the panels: how the day is computed,
